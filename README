@@ -196,8 +196,7 @@ BUILDING AND INSTALLATION FOR PERL/TK
 
 TkZinc for Perl/Tk is available for Linux, Windows (Perl/Tk 804)
 and MacOSX. Also remember that the easiest way could be to use
-the CPAN. However new releases are usually first available on
-www.tkzinc.org/
+the CPAN.
 
 
 0. You need a working Perl (>= 5.6) and Perl/Tk distribution (800 or 804). You can either grab
