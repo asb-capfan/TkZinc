@@ -76,23 +76,30 @@ if ($] >= 5.008000) {
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 WriteMakefile(
-              'ABSTRACT'        => 'a canvas offering groups, tranformations, transparency, color gradient...',
+          'ABSTRACT'        => 'a canvas offering groups, tranformations, transparency, color gradient...',
 	      'AUTHOR'          => 'Patrick Lecoanet <lecoanet@cena.fr>',
-	      'NAME'		=> 'Tk::Zinc',
-	      'PREREQ_PM'	=> {
-			  Tk => 8.004
+	      'NAME'			=> 'Tk::Zinc',
+	      'PREREQ_PM'		=> {
+			  'Tk' => 8.004,
+			  'ExtUtils::MakeMaker' => '6.98',
 		  },
-	      'LIBS'		=> $NeededLibs, 
-              'OPTIMIZE'        => &optimize,
-	      'DEFINE'		=> &get_flags,
+	      'LIBS'			=> $NeededLibs, 
+          'OPTIMIZE'        => &optimize,
+	      'DEFINE'			=> &get_flags,
 	      'INC'             => $INC,
 	      'C'               => [@C],
 	      'XS_VERSION'      => $Tk::Config::VERSION,
 	      'XS'              => {'Zinc.xs' => 'Zinc.c'},
 	      'linkext'         => {LINKTYPE => 'dynamic'},
 	      'depend'          => {$ZincObj => '$(O_FILES) Zinc.c'},
-	      'LDFROM'		=> "\$(O_FILES) $ZincObj",
-	      );
+	      'LDFROM'			=> "\$(O_FILES) $ZincObj",
+		  'MIN_PERL_VERSION'  => 5.006,
+		  'META_MERGE'     	=> {
+			'resources' 	=> {
+				'repository' => 'https://github.com/asb-capfan/TkZinc',
+			},
+		  },
+);
 
 sub optimize {
   foreach my $arg (@ARGV) {
