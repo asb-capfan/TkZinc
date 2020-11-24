@@ -79,7 +79,9 @@ WriteMakefile(
               'ABSTRACT'        => 'a canvas offering groups, tranformations, transparency, color gradient...',
 	      'AUTHOR'          => 'Patrick Lecoanet <lecoanet@cena.fr>',
 	      'NAME'		=> 'Tk::Zinc',
-	      'PREREQ_PM'	=> $WIN ? {Tk => 8.004} : {Tk => 8.0},
+	      'PREREQ_PM'	=> {
+			  Tk => 8.004
+		  },
 	      'LIBS'		=> $NeededLibs, 
               'OPTIMIZE'        => &optimize,
 	      'DEFINE'		=> &get_flags,
