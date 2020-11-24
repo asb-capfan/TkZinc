@@ -21,20 +21,16 @@ Windows and Mac OSX (with X11 and fink).
 
 WHERE DOES IT COME FROM?
 
-  The newest version is found at: http://www.tkzinc.org/
-  It should be at least available in source form in a file
-  named Tkzinc<version>.tgz.
+  The newest version is found at: https://github.com/asb-capfan/TkZinc/releases
+  
   Distribution specific packages may also be available for
   Debian/Mandrake/Red Hat distributions, most likely for stable
   versions.
 
-  For Tcl/Tk users, TkZinc is also available as a multi-plateforme
-  (linux/windows) starkit on http://www.tkzinc.org/
   For Perl/Tk users, TkZinc is available on the CPAN, see for example
-  on http://search.cpan.org/search?query=TkZinc&mode=all
+  on https://metacpan.org/pod/Tk::Zinc
 
-  As a convenience the documentation (pdf+html) is made available
-  on the web site as a separate package.
+  As a convenience the documentation (pdf+html) is available.
 
 
 BUILDING AND INSTALLATION FOR TCL/TK
@@ -278,16 +274,12 @@ MAKE AND READ THE DOCUMENTATION
    You need tex4ht for doing this. It may be packaged separately from
    tetex on Linux, it is so on Debian distributions.
 
-   You can also download the doc from the TkZinc website:
-   http://www.tkzinc.org/index.php/Main/Download
-
 
 
 REPORT BUGS AND WISHES
 
 
-   Please report bugs and suggestions to the TkZinc mailing list
-   at zinc@tls.cena.fr.
+   Please report bugs and suggestions to: https://github.com/asb-capfan/TkZinc/issues
 
    When reporting bugs try to be as specific as possible.
    Include, if possible, the output from the program. Compile
