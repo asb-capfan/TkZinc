@@ -1,0 +1,17 @@
+Makefile
+depends
+config.h
+config.cache
+config.log
+config.status
+build
+tk
+bugs
+om
+ptk
+*.prj
+*.pws
+*.cache
+export2cpan
+build-stamp
+pkgIndex.tcl
