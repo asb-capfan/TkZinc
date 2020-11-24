@@ -1,8 +1,7 @@
 Tk::Zinc - another Canvas which proposes many new functions, some based on openGL
 
 Tk::Zinc for Perl/Tk is available for Linux, Windows and MacOSX. 
-the easiest way could be to use he CPAN. However new releases are usually 
-first available on www.tkzinc.org
+the easiest way could be to use he CPAN.
 To build it you need:
 
 * On a Linux system, you need Perl (>= 5.6) and perl-tk (800 or 804) as well as
@@ -20,7 +19,6 @@ To build it you need:
   - and
     - if you want to compile TkZinc by yourself:
       Visual C++ or the Free Visual C++ Command Line Tools
-    - or the TkZinc msi package available from www.tkzinc.org
 
 
 Install:
@@ -67,9 +65,7 @@ specific pathes of the alternative perl-tk installation:
 
 
 
-up-to-date documentation is also available at http://www.tkzinc.org/index.php/Main/Documentation
-You will find there the reference manual, a FAQ, a mailing list, its archive
-etc...
+documentation is also available at https://github.com/asb-capfan/TkZinc
 The source of the reference manual is available in the full source package,
 which also includes TkZinc for Tcl/Tk, for Perl/Tk, and for Python.
 
@@ -85,11 +81,7 @@ This software is delivered under new  BSD licence.
 For the copyright, please, read the Copyright file.
 
 For any question on Tk::Zinc usage, build or installation pb,
-please send email to zinc@tls.cena.fr 
-This mailing list can be subscribed from 
-http://www.tkzinc.org/index.php/Main/MailingList. You can
-also send a question without subscribing, but you will be asked
-for a confirmation to avoid spam on the list!
+please file an inquiry here: https://github.com/asb-capfan/TkZinc/issues
 
 
 Authors and Contributors:
