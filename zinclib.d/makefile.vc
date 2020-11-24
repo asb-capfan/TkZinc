@@ -1,0 +1,89 @@
+
+TCLTK_FULL_VER = 8.4.9
+TCLTK_LIB_VER = 84
+TKZINC_MAJOR = 3
+TKZINC_MINOR = 3
+TKZINC_PATCHLVL = 0
+
+CC		= cl
+LD		= link
+CP		= copy
+RM		= del
+#
+# The SDK lib path should be available in the
+# environment variable %LIB%
+libpath32	= /LIBPATH:"$(LIB)"
+#
+# The SDK include path should be available in the
+# environment variable %INCLUDE%
+include32	= /I"$(INCLUDE)" /I"C:\Program Files\Microsoft Platform SDK for Windows XP SP2\include\GL"
+
+#
+# Default location for ActiveTcl
+prefix = c:\Tcl
+exec_prefix = $(prefix)
+
+bindir = $(exec_prefix)\bin
+libdir = $(exec_prefix)\lib
+incdir = $(prefix)\include
+mandir = $(prefix)\man\man3
+
+rootdir = .
+srcdir = $(rootdir)\src
+testdir = $(rootdir)\test
+tmpdir = $(rootdir)\tmp
+
+INCLUDES    = /I"$(incdir)" /I$(srcdir) $(include32)
+
+# Assume that WISH is already INSTALLED
+TCLSH		= $(bindir)\tclsh$(TCLTK_LIB_VER)
+WISH		= $(bindir)\wish$(TCLTK_LIB_VER)
+WIN_LIBS	= user32.lib gdi32.lib ws2_32.lib
+GL_LIBS		= glu32.lib opengl32.lib
+TK_LIBS		= $(libdir)\tcl$(TCLTK_LIB_VER).lib \
+		  $(libdir)\tk$(TCLTK_LIB_VER).lib \
+      $(libdir)\Tkzinc$(TKZINC_MAJOR).$(TKZINC_MINOR).$(TKZINC_PATCHLVL)\Tkzinc$(TKZINC_MAJOR)$(TKZINC_MINOR)$(TKZINC_PATCHLVL).lib
+LIBS = $(WIN_LIBS) $(GL_LIBS) $(TK_LIBS) $(tmpdir)/zinclib.lib
+
+VERSION = \"$(TKZINC_MAJOR).$(TKZINC_MINOR).$(TKZINC_PATCHLVL)\"
+
+CDEBUG = /Z7 -Od
+CFLAGS = /c /W3 /nologo /YX $(CDEBUG)
+CPPFLAGS = /Fp$(tmpdir)\ $(INCLUDES) /DBUILD_zinclib
+
+LFLAGS	= /nologo /machine:IX86 $(libpath32) /FORCE:MULTIPLE /NODEFAULTLIB:uuid.lib /NODEFAULTLIB:OLDNAMES.lib
+
+OBJS = $(tmpdir)\ZincObjects.obj $(tmpdir)\ZincPath.obj $(tmpdir)\Zinc.obj
+
+$(tmpdir)\zinclib.lib: $(tmpdir) $(OBJS)
+  lib /OUT:$@ $(OBJS)
+
+$(tmpdir):
+  mkdir $(tmpdir)
+
+{$(srcdir)}.cpp{$(tmpdir)}.obj:
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Fo$(tmpdir)\ $<
+
+demos: $(testdir)/items.exe $(testdir)/widget.exe $(testdir)/test.exe $(testdir)/itemconf.exe
+
+$(testdir)/items.exe: $(tmpdir)/items.obj $(tmpdir)\zinclib.lib
+	$(LD) $(LFLAGS) $(LIBS) /OUT:$@ $**
+
+$(testdir)/widget.exe: $(tmpdir)/widget.obj $(tmpdir)\zinclib.lib
+	$(LD) $(LFLAGS) $(LIBS) /OUT:$@ $**
+
+$(testdir)/test.exe: $(tmpdir)/test.obj $(tmpdir)\zinclib.lib
+	$(LD) $(LFLAGS) $(LIBS) /OUT:$@ $**
+
+$(testdir)/itemconf.exe: $(tmpdir)/itemconf.obj $(tmpdir)\zinclib.lib
+	$(LD) $(LFLAGS) $(LIBS) /OUT:$@ $**
+
+
+{$(testdir)}.cpp{$(tmpdir)}.obj:
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Fo$(tmpdir)\ $<
+
+mostlyclean:
+	$(RM) *.bak *~ $(tmpdir)\*.obj
+clean:
+	$(RM) $(tmpdir)\*.obj $(tmpdir)\*.dll $(tmpdir)\*.lib $(tmpdir)\*.exp $(tmpdir)\*.pch
+

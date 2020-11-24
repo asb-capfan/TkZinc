@@ -1,0 +1,124 @@
+# Generated automatically from Makefile.in by configure.
+#  Copyright (c) 1993 - 2005 CENA, Patrick Lecoanet --
+#
+# See the file "Copyright" for information on usage and redistribution
+# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# $Revision$
+#
+srcdir = ..
+TCLTK_FULL_VER = 8.4.14
+TCLTK_LIB_VER = 84
+TKZINC_MAJOR = @MAJOR_VERSION@
+TKZINC_MINOR = @MINOR_VERSION@
+TKZINC_PATCHLVL = @PATCHLEVEL@
+
+CC		= cl
+LD		= link
+CP		= copy
+RM		= del
+#
+# The SDK lib path should be available in the
+# environment variable %LIB%
+libpath32	= /LIBPATH:"$(LIB)"
+#
+# The SDK include path should be available in the
+# environment variable %INCLUDE%
+include32	= /I"$(INCLUDE)" /I"C:\Program Files\Microsoft Platform SDK for Windows XP SP2\include\GL"
+
+#
+# Default location for ActiveTcl
+prefix = c:\Tcl
+exec_prefix = $(prefix)
+
+bindir = $(exec_prefix)\bin
+libdir = $(exec_prefix)\lib
+incdir = $(prefix)\include
+mandir = $(prefix)\man\man3
+
+windir = $(srcdir)\win
+genericdir = $(srcdir)\generic
+tmpdir = buildtcl
+
+tcl_inc_dir = $(srcdir)\..\tcl$(TCLTK_FULL_VER)
+tk_inc_dir = $(srcdir)\..\tk$(TCLTK_FULL_VER)
+INCLUDES    = $(include32) /I$(incdir) /I$(srcdir)/generic \
+              /I$(tk_inc_dir)/generic /I$(tk_inc_dir)/win /I$(tcl_inc_dir)/generic \
+              /I$(tcl_inc_dir)/win /I$(tk_inc_dir)/xlib
+
+# Assume that WISH is already INSTALLED
+TCLSH		= $(bindir)\tclsh$(TCLTK_LIB_VER)
+WISH		= $(bindir)\wish$(TCLTK_LIB_VER)
+WIN_LIBS	= user32.lib gdi32.lib ws2_32.lib
+GL_LIBS		= glu32.lib opengl32.lib
+TKLIBS		= $(libdir)\tclstub$(TCLTK_LIB_VER).lib $(libdir)\tkstub$(TCLTK_LIB_VER).lib \
+		        $(GL_LIBS) $(WIN_LIBS)
+
+VERSION = \"$(TKZINC_MAJOR).$(TKZINC_MINOR).$(TKZINC_PATCHLVL)\"
+
+#
+# Recognized compilation time flags are :
+#
+#	PROFILE			ask for profile support
+#	ATC			include code for atc specific items
+#	GL			include code that need GL support.
+#	GL_PRINT_CONFIG	display the detected hardware capabilities
+#	GL_DAMAGE		redraw only modified areas
+#	SHAPE			include code for reshaping windows.
+#
+DFLAGS= /DATC /DGL /DGL_PRINT_CONFIG
+#DFLAGS = /DTCL_MEM_DEBUG
+
+# Max speed
+#CDEBUG = /O2 /G6 /Gs
+# Debug
+CDEBUG = /Zi -Od
+CFLAGS = /c /W3 /nologo /YX $(CDEBUG) /D__STDC__ /DPACKAGE_VERSION=$(VERSION) /DDLL_BUILD /DBUILD_Tkzinc $(DFLAGS)
+TKCPPFLAGS = /Fp$(tmpdir)\ $(INCLUDES) /DTCL_THREADS=1 /DUSE_TCL_STUBS /DUSE_TK_STUBS /D__STDC__
+
+#LFLAGS	= /DEBUG /nologo /machine:IX86 $(libpath32) /FORCE:MULTIPLE /NODEFAULTLIB:uuid.lib /NODEFAULTLIB:OLDNAMES.lib
+LFLAGS	= /DEBUG /nologo /machine:IX86 $(libpath32) /FORCE:MULTIPLE \
+          /NODEFAULTLIB:uuid.lib /NODEFAULTLIB:OLDNAMES.lib
+
+DLLENTRY = @12
+DLLLFLAGS = $(LFLAGS) /entry:_DllMainCRTStartup$(DLLENTRY) /dll
+
+TKDLLOBJS = $(tmpdir)\Track.obj $(tmpdir)\Tabular.obj \
+	$(tmpdir)\Reticle.obj $(tmpdir)\Map.obj \
+	$(tmpdir)\Rectangle.obj $(tmpdir)\Arc.obj \
+	$(tmpdir)\Curve.obj $(tmpdir)\Item.obj  \
+  $(tmpdir)\PostScript.obj \
+# $(tmpdir)\perfos.obj \
+	$(tmpdir)\MapInfo.obj $(tmpdir)\Attrs.obj \
+	$(tmpdir)\Draw.obj $(tmpdir)\Geo.obj \
+	$(tmpdir)\List.obj $(tmpdir)\Transfo.obj \
+	$(tmpdir)\Group.obj $(tmpdir)\Icon.obj \
+	$(tmpdir)\Text.obj $(tmpdir)\Color.obj \
+	$(tmpdir)\Field.obj $(tmpdir)\Triangles.obj \
+	$(tmpdir)\Window.obj $(tmpdir)\tkZinc.obj \
+	$(tmpdir)\OverlapMan.obj $(tmpdir)\WinPort.obj \
+	$(tmpdir)\Image.obj
+
+DLL=Tkzinc$(TKZINC_MAJOR)$(TKZINC_MINOR)$(TKZINC_PATCHLVL).dll
+
+$(tmpdir)/$(DLL): $(tmpdir) $(TKDLLOBJS)
+	$(LD) $(DLLLFLAGS) $(TKLIBS) /OUT:$@ $(TKDLLOBJS)
+	@"$(WISH)" <<
+	package require Tk
+	pkg_mkIndex -load Tk $(tmpdir) $(DLL)
+	exit
+<<
+
+$(tmpdir):
+  mkdir $(tmpdir)
+
+{$(windir)}.c{$(tmpdir)}.obj:
+	$(CC) $(TKCPPFLAGS) $(CFLAGS) -Fo$(tmpdir)\ $<
+
+{$(genericdir)}.c{$(tmpdir)}.obj:
+	$(CC) $(TKCPPFLAGS) $(CFLAGS) -Fo$(tmpdir)\ $<
+
+mostlyclean:
+	$(RM) *.bak *~ $(tmpdir)\*.obj
+clean:
+	$(RM) $(tmpdir)\*.obj $(tmpdir)\*.dll $(tmpdir)\*.lib $(tmpdir)\*.exp $(tmpdir)\pkgIndex.tcl $(tmpdir)\*.pch

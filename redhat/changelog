@@ -1,0 +1,116 @@
+$Version = "3.302";
+$Release = 3;
+
+$ChangeLog = ' 
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-1
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-2
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-3
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-4
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-5
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-6
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-7
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-8
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-9
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-10
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-11
+
+ * Tue Oct 31 2000 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.19-12
+
+ * Mon Mar 12 2001 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.23-1
+
+ * Tue Mar 13 2001 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.23-2
+
+ * Tue Mar 13 2001 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.23-3
+
+ * Fri Mar 16 2001 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.24-1
+
+ * Tue Apr 10 2001 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.1.26-1
+
+ * Wed Jan 16 2002 Stéphane Chatty
+- Generation of version 3.2.3-1
+
+ * Thu Apr 4 2002 Stéphane Chatty <chatty@cena.fr>
+- Generation of version 3.2.4-1
+
+ * Wed Sep 18 2002 Stéphane Chatty <chatty@intuilab.com>
+- Generation of version 3.2.6-1
+
+ * Mon Feb 17 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.2.6h-1
+- Mandrake 9 compilation
+- Removes installgpc in redhat/rules
+
+ * Wed May 14 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.2.92-1
+- Mandrake 9 compilation
+
+ * Sat May 17 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.2.93-1
+- Mandrake 9 compilation
+
+ * Fri Jun 20 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.2.94-1
+- Mandrake 9 compilation
+
+ * Fri Jun 20 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.2.94-2
+- Mandrake 9.1 compilation
+
+ * Wed Oct 15 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.295-1
+- Mandrake 9 compilation
+
+ * Tue Oct 28 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.295-2
+
+ * Fri Nov 28 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.295-3
+
+ * Mon Dec 15 2003 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.296-1
+
+ * Thu Oct 21 2004 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.30-1
+- Build a Mandrake 9.2 package
+
+ * Mon Jun 27 2005 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.302-1
+- Mandrake 9.1 package
+
+ * Mon Jun 27 2005 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.302-2
+- Mandrake 10.0 package
+
+ * Mon Jun 27 2005 Alexandre Lemort <lemort@intuilab.com>
+- Generation of version 3.302-3
+- Mandrake 10.1 package
+
+';

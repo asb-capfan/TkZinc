@@ -1,0 +1,233 @@
+dnl 
+dnl Process this file with autoconf to produce a configure script.
+dnl autoconf 2.13 should work fine. However autoconf >= 2.53 and
+dnl perhaps versions in between (2.50 and 2.52) are not directly usuable.
+dnl 
+dnl
+dnl This configure.in is derived from the Sample TEA template which is:
+dnl
+dnl Copyright (c) 1999 Scriptics Corporation.
+dnl Copyright (c) 2002 ActiveState SRL.
+dnl
+dnl
+dnl $Id$
+
+#-----------------------------------------------------------------------
+# Define MAJOR_VERSION, MINOR_VERSION and PATCHLEVEL, they are
+# useful to built version strings without dots (windows).
+#
+# !!!MUST ALSO BE SUBSTITUTED in AC_INIT !!!
+#-----------------------------------------------------------------------
+MAJOR_VERSION=3
+MINOR_VERSION=3
+PATCHLEVEL=6
+
+#-----------------------------------------------------------------------
+# Check the source path of the package
+#-----------------------------------------------------------------------
+AC_INIT([Tkzinc], [3.3.6])
+
+#--------------------------------------------------------------------
+# Call TEA_INIT as the first TEA_ macro to set up initial vars.
+# This will define a ${TEA_PLATFORM} variable == "unix" or "windows".
+#
+# Keep it here we will need ${TEA_PLATFORM} soon.
+#--------------------------------------------------------------------
+TEA_INIT([3.5])
+
+#-----------------------------------------------------------------------
+# Setup the CONFIGDIR to the path of the directory containing the
+# configuration files
+#-----------------------------------------------------------------------
+AC_CONFIG_AUX_DIR(tclconfig)
+CONFIGDIR=${srcdir}/tclconfig
+AC_SUBST(CONFIGDIR)
+
+AC_SUBST(MAJOR_VERSION)
+AC_SUBST(MINOR_VERSION)
+AC_SUBST(PATCHLEVEL)
+
+#--------------------------------------------------------------------
+# Load the tclConfig.sh file
+#--------------------------------------------------------------------
+TEA_PATH_TCLCONFIG
+TEA_LOAD_TCLCONFIG
+
+#--------------------------------------------------------------------
+# Load the tkConfig.sh file
+#--------------------------------------------------------------------
+TEA_PATH_TKCONFIG
+TEA_LOAD_TKCONFIG
+
+#-----------------------------------------------------------------------
+# Handle the --prefix=... option by defaulting to what Tcl gave.
+# Must be called after TEA_LOAD_TCLCONFIG and before TEA_SETUP_COMPILER.
+#-----------------------------------------------------------------------
+TEA_PREFIX
+
+#-----------------------------------------------------------------------
+# Standard compiler checks.
+# This sets up CC by using the CC env var, or looks for gcc otherwise.
+# This also calls AC_PROG_CC, AC_PROG_INSTALL and a few others to create
+# the basic setup necessary to compile executables.
+#-----------------------------------------------------------------------
+TEA_SETUP_COMPILER
+#AC_MINGW32
+
+
+#--------------------------------------------------------------------
+# C source files
+#--------------------------------------------------------------------
+TEA_ADD_SOURCES([Tabular.c])
+TEA_ADD_SOURCES([Rectangle.c])
+TEA_ADD_SOURCES([Arc.c])
+TEA_ADD_SOURCES([Curve.c])
+TEA_ADD_SOURCES([Item.c])
+TEA_ADD_SOURCES([PostScript.c])
+TEA_ADD_SOURCES([Attrs.c])
+TEA_ADD_SOURCES([Draw.c])
+TEA_ADD_SOURCES([Geo.c])
+TEA_ADD_SOURCES([List.c])
+TEA_ADD_SOURCES([perfos.c])
+TEA_ADD_SOURCES([Transfo.c])
+TEA_ADD_SOURCES([Group.c])
+TEA_ADD_SOURCES([Icon.c])
+TEA_ADD_SOURCES([Text.c])
+TEA_ADD_SOURCES([Image.c])
+TEA_ADD_SOURCES([Color.c])
+TEA_ADD_SOURCES([Field.c])
+TEA_ADD_SOURCES([Triangles.c])
+TEA_ADD_SOURCES([Viewport.c])
+TEA_ADD_SOURCES([WindowUtils.c])
+TEA_ADD_SOURCES([Window.c])
+TEA_ADD_SOURCES([tkZinc.c])
+
+#--------------------------------------------------------------------
+# Choose which headers you need.  Extension authors should try very
+# hard to only rely on the Tcl public header files.  Internal headers
+# contain private data structures and are subject to change without
+# notice.
+# This MUST be called after TEA_LOAD_TCLCONFIG / TEA_LOAD_TKCONFIG
+#
+# Sorry but zinc needs the internal functionality provided by Tk
+# even if this is less convenient and secure.
+#--------------------------------------------------------------------
+TEA_PRIVATE_TCL_HEADERS
+TEA_PRIVATE_TK_HEADERS
+
+#--------------------------------------------------------------------
+# A few miscellaneous platform-specific items:
+#
+# Define the special symbol BUILD_Tkzinc for Windows so
+# that we create the export library with the dll.
+#
+# Windows creates a few extra files that need to be cleaned up.
+#
+# Define any extra compiler flags in the PACKAGE_CFLAGS variable.
+# These will be appended to the current set of compiler flags for
+# your system.
+#--------------------------------------------------------------------
+if test "${TEA_PLATFORM}" = "windows" ; then
+    AC_DEFINE(BUILD_Tkzinc)
+    CLEANFILES="pkgIndex.tcl *.lib *.dll *.exp *.ilk *.pdb vc*.pch"
+    TEA_ADD_SOURCES([WinPort.c])
+elif test "${TEA_WINDOWINGSYSTEM}" = "aqua" ; then
+    CLEANFILES="pkgIndex.tcl"
+    TEA_ADD_SOURCES([macosx/OSXPort.c])
+else
+    CLEANFILES="pkgIndex.tcl"
+fi
+CLEANFILES="${CLEANFILES} doc/*.dvi doc/*.aux doc/*.idx doc/*.ilg doc/*.ind"
+CLEANFILES="${CLEANFILES} doc/*.lof doc/*.log doc/*.out doc/*.toc doc/*.tpt"
+CLEANFILES="${CLEANFILES} doc/refman doc/refman.pdf"
+
+AC_SUBST(CLEANFILES)
+
+#--------------------------------------------------------------------
+# Check whether --enable-threads or --disable-threads was given.
+# This auto-enables if Tcl was compiled threaded.
+#--------------------------------------------------------------------
+TEA_ENABLE_THREADS
+
+#--------------------------------------------------------------------
+# The statement below defines a collection of symbols related to
+# building as a shared library instead of a static library.
+#--------------------------------------------------------------------
+TEA_ENABLE_SHARED
+
+#--------------------------------------------------------------------
+# This macro figures out what flags to use with the compiler/linker
+# when building shared/static debug/optimized objects.  This information
+# can be taken from the tclConfig.sh file, but this figures it all out.
+#--------------------------------------------------------------------
+TEA_CONFIG_CFLAGS
+
+#--------------------------------------------------------------------
+# Set the default compiler switches based on the --enable-symbols option.
+#--------------------------------------------------------------------
+TEA_ENABLE_SYMBOLS
+
+#--------------------------------------------------------------------
+# For Unix/Tk builds, make sure that the X libraries/headers are found.
+# This must be called after TEA_CONFIG_CFLAGS as it adjusts LIBS.
+#--------------------------------------------------------------------
+TEA_PATH_X
+
+#--------------------------------------------------------------------
+# Tkzinc is always linked against the tcl and tk stubs libraries
+#--------------------------------------------------------------------
+AC_DEFINE(USE_TCL_STUBS)
+AC_DEFINE(USE_TK_STUBS)
+
+#--------------------------------------------------------------------
+# Add platform libs to LIBS or SHLIB_LD_LIBS as necessary.
+#--------------------------------------------------------------------
+if test "${TEA_PLATFORM}" = "windows" ; then
+    LIBS="${LIBS} -lglu32 -lgdi32 -luser32 -lwsock32"
+elif test "${TEA_WINDOWINGSYSTEM}" = "aqua" ; then
+    LIBS="${LIBS} -framework Carbon"
+else
+    LIBS="${LIBS} -lGLU"
+fi
+AC_SUBST(GL_INCLUDES)
+
+#--------------------------------------------------------------------
+# This macro generates a line to use when building a library.  It
+# depends on values set by the TEA_ENABLE_SHARED, TEA_ENABLE_SYMBOLS,
+# and TEA_LOAD_TCLCONFIG macros above.
+#--------------------------------------------------------------------
+TEA_MAKE_LIB
+
+#--------------------------------------------------------------------
+# Find tclsh so that we can run pkg_mkIndex to generate the pkgIndex.tcl
+# file during the install process.  Don't run the TCLSH_PROG through
+# ${CYGPATH} because it's being used directly by make.
+# Require that we use a tclsh shell version 8.2 or later since earlier
+# versions have bugs in the pkg_mkIndex routine.
+# Add WISH as well since Tkzinc  is a Tk extension.
+#--------------------------------------------------------------------
+TEA_PROG_TCLSH
+TEA_PROG_WISH
+
+#--------------------------------------------------------------------
+# Define the SHAPE symbol to control the X shape extension support.
+# This must be called after TEA_CONFIG_CFLAGS as it adjusts LIBS.
+#--------------------------------------------------------------------
+ZINC_ENABLE_SHAPE
+
+#--------------------------------------------------------------------
+# Adjust the library set based on --enable-gl option. Define also
+# the GL and GL_DAMAGE symbols to configure the code.
+# This must be called after TEA_CONFIG_CFLAGS as it adjusts LIBS.
+#--------------------------------------------------------------------
+ZINC_ENABLE_GL
+
+#--------------------------------------------------------------------
+# Define the ATC symbol to control inclusion of the ATC specific code.
+#--------------------------------------------------------------------
+ZINC_ENABLE_ATC
+
+AC_SUBST(TCL_INCLUDE_SPEC)
+AC_SUBST(TK_INCLUDE_SPEC)
+
+AC_OUTPUT([Makefile starkit.tcl])

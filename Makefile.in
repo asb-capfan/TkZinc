@@ -1,0 +1,306 @@
+#  Copyright (c) 1993 - 2005 CENA, Patrick Lecoanet --
+#
+# See the file "Copyright" for information on usage and redistribution
+# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+# $Revision$
+#
+#
+# This Makefile.in is derived from the Sample TEA template which is:
+#
+# Copyright (c) 1999 Scriptics Corporation.
+# Copyright (c) 2002 ActiveState SRL.
+#
+
+PACKAGE_NAME      = @PACKAGE_NAME@
+PACKAGE_VERSION   = @PACKAGE_VERSION@
+
+PKG_SOURCES	      = @PKG_SOURCES@
+PKG_OBJECTS	      = @PKG_OBJECTS@
+
+PKG_STUB_SOURCES	= @PKG_STUB_SOURCES@
+PKG_STUB_OBJECTS	= @PKG_STUB_OBJECTS@
+
+PKG_TCL_SOURCES   = @PKG_TCL_SOURCES@
+
+PKG_HEADERS       = @PKG_HEADERS@
+
+PKG_LIB_FILE      = @PKG_LIB_FILE@
+PKG_STUB_LIB_FILE = @PKG_STUB_LIB_FILE@
+
+BINARIES	= $(PKG_LIB_FILE) $(PKG_STUB_LIB_FILE)
+
+SHELL		= @SHELL@
+
+srcdir		= @srcdir@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+libdir		= @libdir@
+includedir	= @includedir@
+
+DESTDIR		=
+
+PKG_DIR		= $(PACKAGE_NAME)$(PACKAGE_VERSION)
+pkglibdir	= $(libdir)/$(PKG_DIR)
+
+top_builddir	= .
+
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_DATA	= @INSTALL_DATA@
+INSTALL_SCRIPT	= @INSTALL_SCRIPT@
+
+CC		= @CC@
+CFLAGS_DEBUG	= @CFLAGS_DEBUG@
+CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
+CFLAGS_OPTIMIZE	= @CFLAGS_OPTIMIZE@
+CFLAGS_WARNING	= @CFLAGS_WARNING@
+CLEANFILES	= @CLEANFILES@
+EXEEXT		= @EXEEXT@
+MAKE_LIB	= @MAKE_LIB@
+MAKE_STUB_LIB	= @MAKE_STUB_LIB@
+MAKE_SHARED_LIB	= @MAKE_SHARED_LIB@
+MAKE_STATIC_LIB	= @MAKE_STATIC_LIB@
+OBJEXT		= @OBJEXT@
+RANLIB		= @RANLIB@
+SHLIB_CFLAGS	= @SHLIB_CFLAGS@
+SHLIB_LD	= @SHLIB_LD@
+SHLIB_LDFLAGS	= @SHLIB_LDFLAGS@
+SHLIB_LD_LIBS	= @SHLIB_LD_LIBS@
+STLIB_LD	= @STLIB_LD@
+TCL_BIN_DIR	= @TCL_BIN_DIR@
+TCL_SRC_DIR	= @TCL_SRC_DIR@
+TK_BIN_DIR	= @TK_BIN_DIR@
+TK_SRC_DIR	= @TK_SRC_DIR@
+#
+# This is necessary for packages that use private Tcl headers
+TCL_TOP_DIR_NATIVE	= @TCL_TOP_DIR_NATIVE@
+TK_TOP_DIR_NATIVE	= @TK_TOP_DIR_NATIVE@
+# Not used, but retained for reference of what libs Tcl required
+TCL_LIBS	= @TCL_LIBS@
+
+
+#========================================================================
+# TCLLIBPATH seeds the auto_path in Tcl's init.tcl so we can test our
+# package without installing.  The other environment variables allow us
+# to test against an uninstalled Tcl.  Add special env vars that you
+# require for testing here (like TCLX_LIBRARY).
+#========================================================================
+
+EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
+TCLSH_ENV	= TCL_LIBRARY=`@CYGPATH@ $(TCL_SRC_DIR)/library` \
+		  LD_LIBRARY_PATH="$(EXTRA_PATH):$(LD_LIBRARY_PATH)" \
+		  LIBPATH="$(EXTRA_PATH):${LIBPATH}" \
+		  SHLIB_PATH="$(EXTRA_PATH):${SHLIB_PATH}" \
+		  PATH="$(EXTRA_PATH):$(PATH)" \
+		  TCLLIBPATH="$(top_builddir)"
+TCLSH_PROG	= @TCLSH_PROG@
+WISH_PROG	= @WISH_PROG@
+TCLSH		= $(TCLSH_ENV) $(TCLSH_PROG)
+WISH		= $(TCLSH_ENV) $(WISH_PROG)
+SHARED_BUILD	= @SHARED_BUILD@
+
+# The local includes must come first, because the TK_XINCLUDES can be
+# just a comment
+TCL_INCLUDES = @TCL_INCLUDES@
+TK_INCLUDES = @TK_INCLUDES@
+GL_INCLUDES = @GL_INCLUDES@
+INCLUDES	= -I$(srcdir)/generic @TCL_INCLUDES@ @TK_INCLUDES@ @GL_INCLUDES@
+
+TCL_EXTRA_CFLAGS	= $(MEM_DEBUG_FLAGS) @TCL_EXTRA_CFLAGS@
+
+DEFS		= @DEFS@ $(TCL_EXTRA_CFLAGS)
+
+CONFIG_CLEAN_FILES = Makefile
+
+CPPFLAGS	= @CPPFLAGS@
+LIBS		= @PKG_LIBS@ @LIBS@
+AR		= @AR@
+CFLAGS		= @CFLAGS@
+COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+
+
+#
+# No stubs build right now
+#all: package libraries
+all: package
+
+package: $(PKG_LIB_FILE) pkgIndex.tcl
+
+libraries: $(PKG_STUB_LIB_FILE)
+
+
+#========================================================================
+# The doc target is for building man pages. Currently the zinc doc is
+# only available in html and pdf formats. These formats require tools
+# (LaTeX, pdfTeX, h4tex) that are not readily available on all
+# platforms. To ease automatic construction of the package the target
+# doc does not involve the construction of pdf and html.
+#========================================================================
+
+doc:
+
+doc-clean:
+	(cd doc; \
+				rm -f refman.aux refman.idx refman.ind refman.lof refman.lot; \
+				rm -f refman.log refman.out refman.toc texput.log refman.tpt; \
+				rm -f idxmake.dvi idxmake.log refman.4ct refman.4dx refman.4ix; \
+				rm -f refman.4tc refman.dvi refman.idx refman.ilg refman.ind; \
+				rm -f refman.log refman.tmp refman.xref refman.lg refman.idv)
+
+pdf: doc-clean doc/refman.tex
+	(cd doc; \
+	  pdflatex refman.tex; \
+		makeindex -o refman.ind refman.idx; \
+	  pdflatex refman.tex; \
+	  pdflatex refman.tex)
+
+html: doc-clean doc/refman.tex
+	(cd doc; \
+	  htlatex refman.tex refman; \
+	  tex '\def\filename{{refman}{idx}{4dx}{ind}}' '\input' idxmake.4ht; \
+		makeindex -o refman.ind refman.4dx; \
+		htlatex refman.tex refman)
+
+#
+# No stubs and no headers installed right now
+#install: install-package install-libraries install-headers install-demos
+install: install-package install-demos
+
+install-package:
+	@mkdir -p $(DESTDIR)$(pkglibdir)
+	$(INSTALL_PROGRAM) $(PKG_LIB_FILE) $(DESTDIR)$(pkglibdir)/$(PKG_LIB_FILE)
+	for p in $(srcdir)/library/*.tcl ; do \
+		destp=`basename $$p`; \
+		echo " Install $$destp $(DESTDIR)$(pkglibdir)/$$destp"; \
+		$(INSTALL_DATA) $$p $(DESTDIR)$(pkglibdir)/$$destp; \
+	done
+	cat pkgIndex.tcl >> $(DESTDIR)$(pkglibdir)/pkgIndex.tcl
+
+install-headers:
+	echo "Installing header files in $(DESTDIR)$(includedir)"; \
+	mkdir -p $(DESTDIR)$(includedir); \
+	for i in "$(PKG_HEADERS)" ; do \
+		echo "Install $(srcdir)/$$i" ; \
+		destp=`basename $$i`; \
+		$(INSTALL_DATA) $(srcdir)/$$i $(DESTDIR)$(includedir)/$$destp ; \
+	done
+
+install-libraries:
+	@echo "Installing $(PKG_STUB_LIB_FILE) in $(DESTDIR)$(libdir)"
+	@mkdir -p $(DESTDIR)$(libdir)
+	$(INSTALL_PROGRAM) $(PKG_STUB_LIB_FILE) $(DESTDIR)$(libdir)
+
+install-demos:
+	@mkdir -p $(DESTDIR)$(pkglibdir)/demos
+	@echo "Installing demo files in $(DESTDIR)$(pkglibdir)/demos"
+	@for p in $(srcdir)/demos/*; do \
+		p=`basename $$p`; \
+		echo " Install $$p $(DESTDIR)$(pkglibdir)/demos/$$p"; \
+		$(INSTALL_DATA) $(srcdir)/demos/$$p $(DESTDIR)$(pkglibdir)/demos/$$p; \
+	done
+	@mkdir -p $(DESTDIR)$(pkglibdir)/demos/images
+	@mkdir -p $(DESTDIR)$(pkglibdir)/demos/data
+	@for p in $(srcdir)/demos/images/*; do \
+		p=`basename $$p`; \
+		echo " Install $$p $(DESTDIR)$(pkglibdir)/demos/images/$$p"; \
+		$(INSTALL_DATA) $(srcdir)/demos/images/$$p $(DESTDIR)$(pkglibdir)/demos/images/$$p; \
+	done
+	@for p in $(srcdir)/demos/data/*; do \
+		p=`basename $$p`; \
+		echo " Install $$p $(DESTDIR)$(pkglibdir)/demos/data/$$p"; \
+		$(INSTALL_DATA) $(srcdir)/demos/data/$$p $(DESTDIR)$(pkglibdir)/demos/data/$$p; \
+	done
+
+test: package libraries
+	$(TCLSH) `@CYGPATH@ $(srcdir)/tests/all.tcl` $(TESTFLAGS) ; \
+
+shell: package libraries
+	@$(TCLSH) $(SCRIPT)
+
+gdb:
+	$(TCLSH_ENV) gdb $(TCLSH_PROG) $(SCRIPT)
+
+depend:
+
+$(PKG_LIB_FILE): $(PKG_OBJECTS)
+	-rm -f $(PKG_LIB_FILE)
+	${MAKE_LIB}
+	$(RANLIB) $(PKG_LIB_FILE)
+
+$(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
+	-rm -f $(PKG_STUB_LIB_FILE)
+	${MAKE_STUB_LIB}
+	$(RANLIB) $(PKG_STUB_LIB_FILE)
+  
+#========================================================================
+# We need to enumerate the list of .c to .o lines here.
+#
+# In the following lines, $(srcdir) refers to the toplevel directory
+# containing your extension.  If your sources are in a subdirectory,
+# you will have to modify the paths to reflect this:
+#
+# sample.$(OBJEXT): $(srcdir)/generic/sample.c
+# 	$(COMPILE) -c `@CYGPATH@ $(srcdir)/generic/sample.c` -o $@
+#
+# Setting the VPATH variable to a list of paths will cause the makefile
+# to look into these paths when resolving .c to .obj dependencies.
+# As necessary, add $(srcdir):$(srcdir)/compat:....
+#========================================================================
+
+VPATH = $(srcdir):$(srcdir)/generic:$(srcdir)/unix:$(srcdir)/win:$(srcdir)/macosx
+
+.SUFFIXES: .c .$(OBJEXT)
+
+.c.$(OBJEXT):
+	$(COMPILE) -c `@CYGPATH@ $<` -o $@
+
+#========================================================================
+# Create the pkgIndex.tcl file.
+# It is usually easiest to let Tcl do this for you with pkg_mkIndex, but
+# you may find that you need to customize the package.  If so, either
+# modify the -hand version, or create a pkgIndex.tcl.in file and have
+# the configure script output the pkgIndex.tcl by editing configure.in.
+#========================================================================
+
+pkgIndex.tcl:
+	(echo 'package ifneeded $(PACKAGE_NAME) $(PACKAGE_VERSION) \
+	    [list load [file join $$dir $(PKG_LIB_FILE)]]'\
+	) > pkgIndex.tcl
+
+#========================================================================
+# Don't modify the file to clean here.  Instead, set the "CLEANFILES"
+# variable in configure.in
+#========================================================================
+
+clean: doc-clean 
+	-test -z "$(BINARIES)" || rm -f $(BINARIES)
+	-rm -f *.$(OBJEXT) core *.core
+	-test -z "$(CLEANFILES)" || rm -Rf $(CLEANFILES)
+
+distclean: clean
+	-rm -f *.tab.c *~
+	-rm -f $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log config.status
+
+#========================================================================
+# Install binary object libraries.  On Windows this includes both .dll and
+# .lib files.  Because the .lib files are not explicitly listed anywhere,
+# we need to deduce their existence from the .dll file of the same name.
+# Library files go into the lib directory.
+# In addition, this will generate the pkgIndex.tcl
+# file in the install location (assuming it can find a usable tclsh shell)
+#
+# You should not have to modify this target.
+#========================================================================
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+.PHONY: all package clean depend distclean doc install libraries test
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

@@ -1,0 +1,154 @@
+#-*- mode:tcl -*-
+
+if {[lsearch [namespace children] ::tcltest] == -1} {
+#    package require tcltest
+#    namespace import ::tcltest::*
+    source [file join [pwd] [file dirname [info script]] defs.tcl]
+}
+
+proc setupHier {} {
+    set view [.r add group 1]
+    .r add rectangle $view "50 -150 100 -50" -tags "poly rectangle"
+    set model [.r add group $view]
+    .r add curve $model "50 -150 100 -50" -tags "poly foo"
+    .r add rectangle $model "50 -150 100 -50" -tags "rectangle"
+    .r add text $model -text "UnTexte" -tags "title"
+    .r clone $model
+    .r clone $model
+    .r clone $model
+    .r remove $model
+}
+
+load tkzinc3.1.so
+zinc .r
+pack .r
+update
+setupHier
+
+test FindItems-1.0 {Test subcommand 'all' with no args} {} {
+    .r find all
+} {2 3 16 19 18 17 12 15 14 13 8 11 10 9}
+
+test FindItems-1.1 {Test subcommand 'all' with top group} {} {
+    .r find all 1
+} {2 3 16 19 18 17 12 15 14 13 8 11 10 9}
+
+test FindItems-1.2 {Test subcommand 'all' with top group, non-recursive} {} {
+    .r find all 1 f
+} {2}
+
+test FindItems-1.3 {Test subcommand 'all' with inner group} {} {
+    .r find all 2
+} {3 16 19 18 17 12 15 14 13 8 11 10 9}
+
+test FindItems-1.4 {Test subcommand 'all' with inner group, non-recursive} {} {
+    .r find all 2 f
+} {3 16 12 8}
+
+test FindItems-1.5 {Test subcommand 'all' with inner most group} {} {
+    .r find all 8
+} {11 10 9}
+
+test FindItems-1.6 {Test subcommand 'all' with inner most group, non-recursive} {} {
+    .r find all 8 f
+} {11 10 9}
+
+test FindItems-2.0 {Test subcommand 'above' with id} {} {
+    .r find above 9
+} {10}
+
+test FindItems-2.1 {Test subcommand 'above' with tag} {} {
+    .r find above foo
+} {18}
+
+test FindItems-2.2 {Test subcommand 'above' with tag in group} {} {
+    .r find above foo 8
+} {10}
+
+test FindItems-2.3 {Test subcommand 'above' with tag in group} {} {
+    .r find above foo 2 f
+} {}
+
+test FindItems-3.0 {Test subcommand 'below' with id} {} {
+    .r find below 10
+} {9}
+
+test FindItems-3.1 {Test subcommand 'below' with tag} {} {
+    .r find below title
+} {10}
+
+test FindItems-3.2 {Test subcommand 'below' with tag in group} {} {
+    .r find below title 12
+} {14}
+
+test FindItems-3.3 {Test subcommand 'below' with tag in group, non-recursive} {} {
+    .r find below title 2 f
+} {}
+
+test FindItems-4.0 {Test subcommand 'atpriority'} {} {
+    .r find atpriority 2
+} {3 19 18 17 15 14 13 11 10 9}
+
+test FindItems-4.1 {Test subcommand 'atpriority' in group} {} {
+    .r find atpriority 2 2
+} {3 19 18 17 15 14 13 11 10 9}
+
+test FindItems-4.2 {Test subcommand 'atpriority' in group, non-recursive} {} {
+    .r find atpriority 2 2 f
+} {3}
+
+test FindItems-5.0 {Test subcommand 'withtag'} {} {
+    .r find withtag poly
+} {3 17 13 9}
+
+test FindItems-5.1 {Test subcommand 'withtag' in group} {} {
+    .r find withtag poly 2
+} {3 17 13 9}
+
+test FindItems-5.2 {Test subcommand 'withtag' in group, non-recursive} {} {
+    .r find withtag poly 2 f
+} {3}
+
+test FindItems-6.0 {Test subcommand 'withtype'} {} {
+    .r find withtype rectangle
+} {3 18 14 10}
+
+test FindItems-6.1 {Test subcommand 'withtype' in group} {} {
+    .r find withtype rectangle 2
+} {3 18 14 10}
+
+test FindItems-6.2 {Test subcommand 'withtype' in group, non-recursive} {} {
+    .r find withtype rectangle 2 f
+} {3}
+
+test FindItems-7.0 {Test tag operator '&&'} {} {
+    .r find withtag {poly && rectangle}
+} {3}
+
+test FindItems-7.1 {Test tag operator '||'} {} {
+    .r find withtag {poly || rectangle}
+} {3 18 17 14 13 10 9}
+
+test FindItems-7.2 {Test tag operator '!'} {} {
+    .r find withtag {!rectangle&&!poly}
+} {2 16 19 12 15 8 11}
+
+test FindItems-7.3 {Test tag operator '^'} {} {
+    .r find withtag {rectangle^poly}
+} {18 17 14 13 10 9}
+
+test FindItems-7.4 {Test tag grouping operator '()'} {} {
+    .r find withtag {!(rectangle&&poly)}
+} {2 16 19 18 17 12 15 14 13 8 11 10 9}
+
+test FindItems-7.5 {Test not using tag grouping operator '()'} {} {
+    .r find withtag {!rectangle&&poly}
+} {17 13 9}
+
+catch {destroy .r}
+#zinc .r
+#pack .r
+#update
+
+::tcltest::cleanupTests
+return

@@ -1,0 +1,56 @@
+How to use zinclib
+==================
+
+Required lines
+--------------
+
+To use zinclib in you code you need to include zinclib :
+
+ #include "Zinc.hpp"
+
+Then you must load the tcl interpreter and the zinc library :
+
+ Zinc::load (argv[0]);
+
+
+Zinc usage
+----------
+
+First create a zinc widget. Each widget has its own windows and
+instantly visible. 
+
+  Zinc* zn = new Zinc (ZINC_BACKEND_OPENGL);
+
+
+All available functions are in Zinc.hpp and ZincPath.hpp
+You can change and read properties of the widget with set and get
+commands. Ex :
+
+  zn->setWidth (640);
+
+
+To draw in the widget, you need to create items uning itemCreate
+functions. The parent group can be NULL, in which case, the default
+one will be used.
+
+  ZincItem* item = zn->itemCreateRectangle (NULL, 10, 10, 100, 100);
+
+To change item property, use itemSet functions.
+
+  zn->itemSetFilled (item, true);
+
+To remove an item use itemRemove
+
+  zn->itemRemove (item);
+
+Don't forget do delete item returned by itemCreate. This is different
+from removing it from zinc. Usualy, delete item is called after
+removing it, but you can delete it whenever you want.
+
+
+Many zinc function can take a tag as an argument. To use such a tag,
+create it using createTag.
+
+  ZincItem* tag = zn->createTag ("tag");
+  zn->itemSetFilled (tag, true);
+

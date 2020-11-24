@@ -1,0 +1,31 @@
+$Summary = "Zinc, a canvas replacement for Tk";
+$Name = "perl-Tk-Zinc";
+$Copyright = "LGPL";
+$Vendor = "Centre d'Etudes de la Navigation Aerienne";
+$Url = "http://www.cena.fr/divisions/PII/";
+$Distribution = "Zinc";
+$Group = "System Environment/Libraries";
+$BuildArchitectures = "i386";
+$Requires = "perl-Tk";
+
+$Build = "cd Perl
+./export2cpan
+cd ../export2cpan/tk-zinc
+perl Makefile.PL
+make";
+
+$Install = "rm -rf \$RPM_BUILD_ROOT
+mkdirhier \$RPM_BUILD_ROOT/usr/lib
+cd export2cpan/tk-zinc
+make PREFIX=\$RPM_BUILD_ROOT/usr prefix=\$RPM_BUILD_ROOT/usr INSTALLDIRS=perl pure_install
+find \$RPM_BUILD_ROOT/usr -type f -print | sed \"s\@^\$RPM_BUILD_ROOT\@\@g\" \| grep -v Zinc.bs | grep -v .packlist > ../../$Name-\%{version}-filelist";
+
+$Description = "Zinc is a canvas like widget for the Tk toolkit. Its has been
+ designed to provide a structured organization of its graphical
+ components. It provides also advanced geometrical and graphical
+ capabilities such as geometric construction (boolean ops),
+ transformations, non rectangular clipping gradient fills, smart
+ reliefs, etc.
+
+This contains the dynamic libraries that are necessary for
+running applications which use Zinc.";

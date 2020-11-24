@@ -1,0 +1,61 @@
+Zinclib
+=======
+
+Zinclib is a library that is made to use TkZinc into C++ code. It is
+a .o file that can be included directly into your executable.
+
+Zinclib has been contributed by IntuiLab (www.intuilab.com) to the open software 
+community and is available as open software under the same licence as Zinc.
+
+
+Directory structure
+-------------------
+
+- src : contains C++ sources of Zinclib
+
+- tmp : will contain temporary compilation file and the final zinclib.o
+
+- test : contains Zinclib tests' sources
+
+- doc : contains doxygen generated documentation and some examples of
+  Zinclib usage
+
+- gen.pl is a file that have been used to generate some of the c++
+source from TkZinc source.
+
+
+Code
+----
+
+API documentation is available into the doc directory as doxygen
+files. To use Zinclib in your own code, the 'HOWTO' file explains the
+basic on getting Zinclib working.
+
+
+Compilation with zinclib
+------------------------
+
+Before using zinclib into your application you need :
+
+- tcl/tk >= 8.4
+- TkZinc compiled for tcl usage and installed
+- zinclib.o made as described into 'INSTALL'
+
+zinclib is a .o file because this is the easiest way to compile and
+use. This may change. To use a .o file just add it to your link
+command during the compilation of your applicaion.
+
+To link with zinklib you will need to add these option to your linker :
+
+  -ltcl -ltk -lTkZinc zinclib.o
+
+
+Notes :
+
+- On some plateforms it can be -ltcl8.4 and -ltk8.4 if the linker
+  doesn't find tcl and tk.
+- You need to have tkzinc compiled for TCL under the name libTkZinc.<ext>
+  in your library search path. 
+
+- this software is still in its first release, e.g. this installation process 
+  is still incomplete.

@@ -1,0 +1,47 @@
+Zinclib compilation and installation
+====================================
+
+If you want to use zinclib in your application, compile it and
+read the 'README'
+
+
+Compilation
+-----------
+A Makefile is provided for unix, macosX and mingw. A makefile.vc
+is provided to compile with visual C++.
+Before compiling zinclib, you need Tcl and Tk headers installed.
+They must be in a standard include path (/usr/include).
+All compilation is done into a tmp directory. Compilation produces
+a zinclib.o file. This file can then be used in your application
+as described into 'REAMDE'
+
+To compile zinclib :
+  make
+
+
+Installation
+------------
+Installing zinclib consists in copying headers and object files into
+the IntuiKit source hierarchy in order to use it in IntuiKit.
+
+To install zinclib into Intuikit sources to use it as a library :
+  make install
+
+
+Tests
+-----
+Tests check that zinclib doesn't containy any know bug.
+Tests consist in using zinclib to display items. There is not yet
+any automated check. This means that tests will display their window
+and closing them will go to next test.
+Before compiling tests you need :
+
+- tcl/tk >= 8.4
+- TkZinc compiled for tcl usage and installed as done by IntuiKit's ThirdParty
+- Tkimg compiled and installed on your system, see ThirdParty/README for more informations
+
+To run tests :
+  make test
+
+
+

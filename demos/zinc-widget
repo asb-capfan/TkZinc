@@ -1,0 +1,326 @@
+#!/bin/sh
+# the next line restarts using wish \
+    exec wish "$0" "$@"
+
+#
+# Locate the zinc top level directory.
+#
+set ::zinc_demos [file dirname [info script]]
+if { [file exist [file join $::zinc_demos .. .. lib Tkzinc pkgIndex.tcl]] } {
+  set ::zinc_library [file join $::zinc_demos .. .. lib Tkzinc]
+} {
+  if { [lindex $::tcl_platform(os) 0] eq "Windows" } {
+    #
+    # For test purposes on the build site on windows.
+    set ::zinc_library [file join $::zinc_demos .. win buildtcl]
+  } {
+    set ::zinc_library [file join $::zinc_demos ..]
+  }
+}
+
+#
+# And adjust the paths accordingly.
+#
+lappend auto_path $::zinc_library
+
+package require Tkzinc 3.3
+set zincVersion [lindex [zinc] 0]
+
+eval destroy [winfo child .]
+wm title . "Zinc Widget Demonstration"
+set ::zincDemo	1
+
+set font {Helvetica 14}
+
+menu .menuBar -tearoff 0
+.menuBar add cascade -menu .menuBar.file -label File -underline 0
+menu .menuBar.file -tearoff 0
+
+.menuBar.file add command -label "About..." -command "aboutBox" \
+    -underline 0 -accelerator "<F1>"
+.menuBar.file add sep
+.menuBar.file add command -label Quit -command exit -underline 0 \
+    -accelerator Meta-Q
+. configure -menu .menuBar
+bind . <F1> aboutBox
+
+frame .statusBar
+label .statusBar.lab -text " " -relief sunken -bd 1 \
+    -font -*-Helvetica-Medium-R-Normal--*-120-*-*-*-*-*-* -anchor w
+label .statusBar.foo -width 8 -relief sunken -bd 1 \
+    -font -*-Helvetica-Medium-R-Normal--*-120-*-*-*-*-*-* -anchor w
+pack .statusBar.lab -side left -padx 2 -expand yes -fill both
+pack .statusBar.foo -side left -padx 2
+pack .statusBar -side bottom -fill x -pady 2
+
+frame .textFrame
+scrollbar .s -orient vertical -command {.t yview} -highlightthickness 0 \
+    -takefocus 1
+pack .s -in .textFrame -side right -fill y
+text .t -yscrollcommand {.s set} -wrap word -width 60 -height 30 -font $font \
+    -setgrid 1 -highlightthickness 0 -padx 4 -pady 2 -takefocus 0
+pack .t -in .textFrame -expand y -fill both -padx 1
+pack .textFrame -expand yes -fill both
+
+# Create a bunch of tags to use in the text widget, such as those for
+# section titles and demo descriptions. Also define the bindings for
+# tags.
+
+.t tag configure title -font {Helvetica 18 bold}
+
+# We put some "space" characters to the left and right of each demo description
+# so that the descriptions are highlighted only when the mouse cursor
+# is right over them (but not when the cursor is to their left or right)
+#
+.t tag configure demospace -lmargin1 1c -lmargin2 1c
+
+
+if {[winfo depth .] == 1} {
+    .t tag configure demo -lmargin1 1c -lmargin2 1c -underline 1
+    .t tag configure visited -lmargin1 1c -lmargin2 1c \
+	-underline 1
+    .t tag configure hot -background black -foreground white
+} else {
+    .t tag configure demo -lmargin1 1c -lmargin2 1c \
+	-foreground blue -underline 1
+    .t tag configure visited -lmargin1 1c -lmargin2 1c \
+	-foreground #303080 -underline 1
+    .t tag configure hot -foreground red -underline 1
+}
+.t tag bind demo <ButtonRelease-1> {
+    invoke [.t index {@%x,%y}]
+}
+set lastLine ""
+.t tag bind demo <Enter> {
+    set lastLine [.t index {@%x,%y linestart}]
+    .t tag add hot "$lastLine +1 chars" "$lastLine lineend -1 chars"
+    .t config -cursor hand2
+    showStatus [.t index {@%x,%y}]
+}
+.t tag bind demo <Leave> {
+    .t tag remove hot 1.0 end
+    .t config -cursor xterm
+    .statusBar.lab config -text ""
+}
+.t tag bind demo <Motion> {
+    set newLine [.t index {@%x,%y linestart}]
+    if {[string compare $newLine $lastLine] != 0} {
+	.t tag remove hot 1.0 end
+	set lastLine $newLine
+
+	set tags [.t tag names {@%x,%y}]
+	set i [lsearch -glob $tags demo-*]
+	if {$i >= 0} {
+	    .t tag add hot "$lastLine +1 chars" "$lastLine lineend -1 chars"
+	}
+    }
+    showStatus [.t index {@%x,%y}]
+}
+
+# Create the text for the text widget.
+
+.t insert end "Tkzinc Widget Demonstrations $zincVersion\n" title
+.t insert end {
+    This application provides a front end for several short scripts in Tcl/Tk that demonstrate what you can do
+    with the Tkzinc widget. Each of the numbered lines below describes a demonstration; you can click on it to invoke the demonstration. Once the demonstration window appears, you can click the "See Code" button to see the Tcl/Tk code that created the demonstration.
+}
+.t insert end "\n" {} "Small applications\n" title
+.t insert end "1. The famous tiger (better with openGL).\n" {demo demo-tiger}
+.t insert end "2. A toy radar display.\n" {demo demo-simpleRadar}
+.t insert end "3. ATC electronic strips demo (better with openGL).\n" {demo demo-groupsInAtcStrips}
+.t insert end "3. A magic lens simulation (need openGL).\n" {demo demo-magicLens}
+.t insert end "4. A demo of the Graphics tcl module (based on curves).\n" {demo demo-testGraphics}
+
+.t insert end "\n" {} "All Items\n" title
+.t insert end "1. Exemples of all items.\n" {demo demo-items}
+.t insert end "2. All items options (and their types).\n" {demo demo-allOptions}
+.t insert end "3. Examples of line style and line termination.\n" {demo demo-lines}
+.t insert end "4. Curves with multiple contours.\n" {demo demo-contours}
+.t insert end "7. Curves with cubic bezier control points.\n" {demo demo-curveBezier}
+.t insert end "8. Curves with multiple contours and various fillrule.\n" {demo demo-fillRule}
+
+.t insert end "\n" {} "Groups, Priority, Clipping and PathTags\n" title
+.t insert end "1. Groups and Priorities.\n" {demo demo-groupsPriority}
+.t insert end "2. Clipping examples (with simple or multiple contours).\n" {demo demo-clipping}
+.t insert end "3. Group atomicity.\n" {demo demo-atomicGroups}
+.t insert end "4. \"Windows\" with four glasses using curve with multiple contours.\n" {demo demo-windowContours}
+.t insert end "5. Pathtags demonstration.\n" {demo demo-pathTags}
+
+.t insert end "\n" {} "Transformation\n" title
+.t insert end "1. Transformation testbed.\n" {demo demo-transforms}
+
+.t insert end "\n" {} "Use of open GL\n" title
+.t insert end "1. The Tkzinc Logo.\n" {demo demo-tkZincLogo}
+.t insert end "2. Applying transformations to an icon.\n" {demo demo-iconTransform}
+.t insert end "3. Using the alpha information from an image (Need Img ext.).\n" {demo demo-photoAlpha}
+.t insert end "4. Axial color variation on the X axis.\n" {demo demo-colorX}
+.t insert end "5. Axial color variation on the Y axis.\n" {demo demo-colorY}
+.t insert end "6. Circular color variation.\n" {demo demo-colorCircular}
+.t insert end "7. The triangles item.\n" {demo demo-triangles}
+.t insert end "8. Relief testbed.\n" {demo demo-reliefs}
+
+.t insert end "\n" {} "ATC oriented features and items\n" title
+.t insert end "1. Examples of labelformat.\n" {demo demo-labelformat}
+.t insert end "2. Simple interaction on a track.\n" {demo demo-simpleInteractionTrack}
+.t insert end "3. Text input in a text item and a track item.\n" {demo demo-textInput}
+
+.t configure -state disabled
+focus .s
+
+# positionWindow --
+# This procedure is invoked by most of the demos to position a
+# new demo window.
+#
+# Arguments:
+# w -		The name of the window to position.
+
+proc positionWindow w {
+    wm geometry $w +300+300
+}
+
+# showVars --
+# Displays the values of one or more variables in a window, and
+# updates the display whenever any of the variables changes.
+#
+# Arguments:
+# w -		Name of new window to create for display.
+# args -	Any number of names of variables.
+
+proc showVars {w args} {
+    catch {destroy $w}
+    toplevel $w
+    wm title $w "Variable values"
+    label $w.title -text "Variable values:" -width 20 -anchor center \
+	-font {Helvetica 18}
+    pack $w.title -side top -fill x
+    set len 1
+    foreach i $args {
+	if {[string length $i] > $len} {
+	    set len [string length $i]
+	}
+    }
+    foreach i $args {
+	frame $w.$i
+	label $w.$i.name -text "$i: " -width [expr $len + 2] -anchor w
+	label $w.$i.value -textvar $i -anchor w
+	pack $w.$i.name -side left
+	pack $w.$i.value -side left -expand 1 -fill x
+	pack $w.$i -side top -anchor w -fill x
+    }
+    button $w.ok -text OK -command "destroy $w" -default active
+    bind $w <Return> "tkButtonInvoke $w.ok"
+    pack $w.ok -side bottom -pady 2
+}
+
+
+# invoke --
+# This procedure is called when the user clicks on a demo description.
+# It is responsible for invoking the demonstration.
+#
+# Arguments:
+# index -	The index of the character that the user clicked on.
+
+proc invoke index {
+    set tags [.t tag names $index]
+    set i [lsearch -glob $tags demo-*]
+    if {$i < 0} {
+	return
+    }
+    set cursor [.t cget -cursor]
+    .t configure -cursor watch
+    update
+    set demo [string range [lindex $tags $i] 5 end]
+    uplevel [list source [file join $::zinc_demos $demo.tcl]]
+    update
+    .t configure -cursor $cursor
+
+    .t tag add visited "$index linestart +1 chars" "$index lineend -1 chars"
+}
+
+# showStatus --
+#
+#	Show the name of the demo program in the status bar. This procedure
+#	is called when the user moves the cursor over a demo description.
+#
+proc showStatus index {
+    set tags [.t tag names $index]
+    set i [lsearch -glob $tags demo-*]
+    set cursor [.t cget -cursor]
+    if {$i < 0} {
+	.statusBar.lab config -text " "
+	set newcursor xterm
+    } else {
+	set demo [string range [lindex $tags $i] 5 end]
+	.statusBar.lab config -text "Run the \"$demo\" sample program"
+	set newcursor hand2
+    }
+    if [string compare $cursor $newcursor] {
+	.t config -cursor $newcursor
+    }
+}
+
+
+# showCode --
+# This procedure creates a toplevel window that displays the code for
+# a demonstration and allows it to be edited and reinvoked.
+#
+# Arguments:
+# w -		The name of the demonstration's window, which can be
+#		used to derive the name of the file containing its code.
+
+proc showCode w {
+    set file [string range $w 1 end].tcl
+    if ![winfo exists .code] {
+	toplevel .code
+	frame .code.buttons
+	pack .code.buttons -side bottom -fill x
+	button .code.buttons.dismiss -text Dismiss \
+	    -default active -command "destroy .code"
+	button .code.buttons.rerun -text "Rerun Demo" -command {
+	    eval [.code.text get 1.0 end]
+	}
+	pack .code.buttons.dismiss .code.buttons.rerun -side left \
+	    -expand 1 -pady 2
+	frame .code.frame
+	pack .code.frame -expand yes -fill both -padx 1 -pady 1
+	text .code.text -height 40 -wrap word\
+	    -xscrollcommand ".code.xscroll set" \
+	    -yscrollcommand ".code.yscroll set" \
+	    -setgrid 1 -highlightthickness 0 -pady 2 -padx 3
+	scrollbar .code.xscroll -command ".code.text xview" \
+	    -highlightthickness 0 -orient horizontal
+	scrollbar .code.yscroll -command ".code.text yview" \
+	    -highlightthickness 0 -orient vertical
+
+	grid .code.text -in .code.frame -padx 1 -pady 1 \
+	    -row 0 -column 0 -rowspan 1 -columnspan 1 -sticky news
+	grid .code.yscroll -in .code.frame -padx 1 -pady 1 \
+	    -row 0 -column 1 -rowspan 1 -columnspan 1 -sticky news
+	#	grid .code.xscroll -in .code.frame -padx 1 -pady 1 \
+	    #	 -row 1 -column 0 -rowspan 1 -columnspan 1 -sticky news
+	grid rowconfig .code.frame 0 -weight 1 -minsize 0
+	grid columnconfig .code.frame 0 -weight 1 -minsize 0
+    } else {
+	wm deiconify .code
+	raise .code
+    }
+    wm title .code "Demo code: [file join $::zinc_demos $file]"
+    wm iconname .code $file
+    set id [open [file join $::zinc_demos $file]]
+    .code.text delete 1.0 end
+    .code.text insert 1.0 [read $id]
+    .code.text mark set insert 1.0
+    close $id
+}
+
+# aboutBox --
+#
+#	Pops up a message box with an "about" message
+#
+proc aboutBox {} {
+    tk_messageBox -icon info -type ok -title "About Zinc Demo" -message \
+	"Tkzinc widget demonstration\n\n\
+Copyright (c) 2003 CENA\n\n
+The demo framework \n
+Copyright (c) 1996-1997 Sun Microsystems, Inc."
+    }

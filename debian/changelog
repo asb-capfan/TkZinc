@@ -1,0 +1,1540 @@
+zinc-tk (3.3.6) unstable; urgency=low
+
+  * Items of type window have a new attribute -windowtitle to retrieve and
+    display any top-level window (ie any application) whose title matches
+    the value of -windowtitle
+  * Damage support (ie OpenGL optimizations) can now be controlled by a
+    new TkZinc attribute (-usedamage)
+
+ -- Alexandre Lemort <lemort@intuilab.com>  Wed, 23 Jan 2008 17:00:07 +0200
+
+zinc-tk (3.3.5) unstable; urgency=low
+
+  * Fixed a core dump that occured following an error while configuring
+    a connected item (occuring only via tksubject).
+  * Fixed the slow loading bug #71 and incorrect rendering of the text bug #67
+    in Windows/GL (reverted to the previous code).
+  * Fixed the blur of the text in GL (Linux). Revert to nearest filtering
+    meaning no anti-aliasing.
+  * MouseWheel support under Windows bug #70. Thanks A. Lemort.
+  * Map items honor the filled attribute in GL bug #69. Thanks A. Lemort.
+  * Fixed an incorrect rendering of the selection (off by one) for text items.
+  * Introduced GL extension handling with GLEW.
+  * Capability to rotate the canvas via a texture.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue, 6 Mar 2007 15:35:07 +0200
+
+zinc-tk (3.3.4) unstable; urgency=low
+
+  * Ported to Mac Os X native. But, the quartz version does not support
+    stippling, clipping and as a side effect can't draw bitmap symbols.
+    This is probably only a minor annoyance since the GL version should
+    be fully functional and can be run without starting the X server.
+  * Started updating the small demos partly to simply and Tclisize the
+    code and partly to 'enhance' some rather old and ugly displays.
+  * Fixed a weird bug under windows/GL causing the application to be
+    throwed out after a short while because it was out of contexts.
+  * Close several bugzilla submitted bugs: #58, #63, #64, #60, #50.
+  * Added a collapsemotions command to control the Tk event queue
+    behavior with motion events.
+  * Added a -catchevent attribute to all items in order to control their
+    "transparency" to events.
+  * Update to the documentation.
+  * Better looking html documentation with a navigation sidebar.
+  * Merged requests and patches to enhance communication with the overlap
+    manager.
+  * Removal of the explicit dependency on xlibmesa3 - dh_shlibdeps should be able to
+    identify and list the shared library dependencies anyway IMHO.
+  * Add explicit path for tcl8.4 and tk8.4.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 18 Oct 2005 15:35:07 +0200
+
+zinc-tk (3.3.3) unstable; urgency=low
+
+  * Added fixes to compile the Linux debian packages (Thanks Till Varoquaux)
+  * Integrated a patch from D Pavet. This patch keep the angular position
+    of the leader in sync when changing the leader position with -labeldx
+    and -labeldy.
+  * Angles are seen as floating point numbers (they are still integers inside).
+  * Changed the text texture filtering to linear. This should provide better
+    looking text when scaled/rotated.
+  * Fix Bug 41 related to a badly updated connection between
+    tracks or waypoints. The update was dependant on the connection
+    ordrer between items. This bug induced a bad bounding box
+    and thus a failure to correctly detect enter/leaves on the
+    connection.
+  * Fix a text field drawing problem when alignment is center.
+  * Fix an annoying core dump with the gradients (bug 51).
+  * Labelformats field widths can be negative. This makes possible
+	  kerning adjustments.
+  * The transformation methods test if the tagOrId is not an empty string,
+	  if it is, it reports an error.
+  * Added three unicode points for the tendancy arrows in the GL renderer.
+  * Fixed (for good this time ?) the swap buffer problem. It showed up on
+    Intel i865 which really swap buffers instead of copying them. In fact
+		this is not really fixed, it can't work properly on all cards, the only
+		secure option is build without the damage option. It is safe on NVIDIA
+		though.
+  * The GL_Damage option default has been set to NO for perl-tk
+  * Rearranged the Window destroy handling to make it more robust.
+  * Other minors fixes.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 18 Jan 2006 15:35:07 +0200
+
+zinc-tk (3.3.2) unstable; urgency=low
+
+  * Updated Python binding and new demos added (Guillaume Vidon).
+    * python :Updated Python binding and new demos added (Guillaume Vidon).
+    * python :No more need to call explicitely the function havetkzinc to load
+      the library ELF tkzinc. On peut créer un objet Zinc avec ou sans conteneur. 
+    * python :A Zinc object can be created with or without container object.
+      If master arg is 0, a new object Tkinter.Frame is created and the object Zinc is inserted on.
+    * python :Add Zinc.Zinc.addtag_ancestors
+    * python :Del Zinc.Zinc.addtag_atpoint ( not anymore in specifications of Zinc API )
+    * python :Zinc.Zinc.addtag_closest can take a new arg : recursive
+    * python :Zinc.Zinc.addtag_atpriority can take a arg tagOrId which begin root of tree
+      where function act.
+    * python :Zinc.Zinc.addtag_overlapping and addtag_enclosed can take 2 new optional
+      params : inGroup et recursive
+    * python :addtag_withtype can take one new optional param tagOrId
+    * python :some docstrings for public methods of Zinc.Zinc
+    * python :Zinc.Zinc.find_atpoint becomes Zinc.Zinc.find_closest
+    * python :Fix Zinc.Zinc.hasfields
+    * python :Del Zinc.Zinc.hasparts ( not supported )
+    * python :Add Zinc.ZincItem.bbox Zinc.Zinc.find_ancestors Zinc.Zinc.contours
+      Zinc.Zinc.dchars Zinc.index Zinc.hastag Zinc.insert Zinc.numparts Zinc.postscript
+      vertexat Zinc.tset Zinc.tapply Zinc.tcompose Zinc.skew Zinc.smooth Zinc.select
+    * python :Fix find_overlapping : options ingroup et recursive
+    * python :Fix Zinc.scale Zinc.cget Zinc.configure Zinc.translate like in specs
+    * python :New attribut Zinc.Zinc.version return version of Zinc
+    * python :New __main__ : display a window wich show  version number
+    * python :ZincException Class added for generate Zinc exception (Not more TclError Later)
+    * python :ZincItem.getGroup return Group Item which is the parent of the ZincItem's instance
+    * python :Fix ZincItem.scale ZincItem.rotate and ZincItem.translate to run with
+      Zinc.Zinc Objects
+    * python :Add ZincItem.coords method because attribut accessor dont permit all possible
+      invocations (for exemple Cure Item we can manipulate multi contours)
+    * python :In Group getGroup method has been overwrited to treat the root group case
+    * python :In Curve constructor accepts a option contours which is a list of lists of coords
+      defining extended contours
+    * python :self._do deprecated. Use now self.tk.call (Thx JC Daudin)
+    * python :Add Mapinfo.duplicate which return a clone of the  Mapinfo instance
+    * python :Add Mapinfo.add_symbol Mapinfo.count Mapinfo.get Mapinfo.replace Mapinfo.remove
+    * python :Add de Videomap.ids, class method which return maps from the file
+    * python :add param backward_compatibility to Zinc.Zinc constructor. If it is set, the widget
+      use old format of currentpart and configure  
+    * python :havetkzinc doesnt return version number in some cases (M. Cousy)
+    * python :Add classes Colors AxialGradientColor RadialGradientColor ConicalGradientColor,
+      color's handler classes
+    * python :bbox doesnt return values (J. Tseng)
+    * python :Zinc.Zinc.itemconfigure doesnt work. the syntax of tk.call is different of _do
+      then we must deference list
+    * python :Zinc.Zinc.tget not implemented -> Added Thx M. Cousy
+    * python :Add Zinc.ZINC_NO_PART
+    * python :Add Zinc.ZincItem.transform Zinc.ZincItem.tget Zinc.ZincItem.tsave
+      Zinc.ZincItem.trestore Zinc.ZincItem.tset Zinc.ZincItem.treset 
+    * python :library Tkzinc load use now tcl require system.
+    * python :auto_path environment variable allows to change auto_set value
+    * python :return miss in some Zinc.methods
+    * python :type of return of currentpart must be string (M. Cousy)
+    * python :ZINC_NO_PART bad value (M. Cousy)
+
+  * In Perl, when doing an itemcget or itemconfigure on an image, the returned
+    value is now the image object not its name. This should be far more useful.
+  * Fixed a bug causing a segv when a gradient is specified outside an
+    item bbox.
+  * Added the new C++ binding contributed by Intuilab.
+  * Exported ZincObjCmd to support the new C++ wrapper
+  * Switched to the native GLU tesselator instead of the builtin.
+    Removed the builtin code.
+  * Merged new Postscript emitting code (still under developpement).
+  * Added a new track attribute -historywidth to separate the width of
+    the history points from the width of the main symbol.
+  * Extensive reformatting to suppress tabs which results in inaccurate
+    indenting depending on the editor used.
+  * Suppressed the use of the __unused attribute to suppress warnings
+    on unused attributes. It has raised several incompatibilities and
+    should be dealed with on the command line (gcc).
+  * Corrected a trace left by thick label borders under GL.
+  * Added a tcl script to automate the production of the code under
+    Windows/VC.
+  * A new packager build using Wix is available to install for Active
+    Tcl/Perl/Python.
+    
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 22 Jun 2005 10:10:07 +0200
+
+zinc-tk (3.3.01) unstable; urgency=low
+
+  * All the ATC specific code in now optional. To remove it add
+    --enable-atc=no to the configure invocation. In Perl you have
+    to say perl Makefile.PL with-atc=no.
+  * Changed the method used to position the label wrt the track
+  	position. Now regarless of its shape and its angular position,
+    the label is maintained at the requested distance.
+  * Corrected a nasty memory leak in the Curve geometry management.
+    It affected only the simple curves, convex with only one contour.
+    This bug might be the source of some performance problems observed
+    lately.
+  * Debug.pm (D.Etienne)
+    - built code correctly manages transformations.
+    - the transformation matrix can be displayed.
+    - transformation primitives parameters can be displayed and changed.
+    - added a new entry in the control bar to display the X cursor device
+      coordinates.
+    - added the -expandTagsField option to configure the tags display in
+      the attributes window.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 11 Nov 2004 17:10:07 +0200
+
+zinc-tk (3.3.0) unstable; urgency=low
+
+  * Reworked the X11 arc handling code in order to fix bugs
+    and improve coherence between X11 and openGL.
+  * Reworked once more the GL init code to cope with Windows.
+  * Many various bug fixes.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 5 Oct 2004 17:10:07 +0200
+
+zinc-tk (3.2.100) unstable; urgency=low
+
+  * Fixed a problem in GL init code which prevented zinc from
+    working with Mesa.
+  * A (hopefully) more useful warning is emitted when openGL
+    rendering is not good enough (most often 24 bits buffer
+    or stencil not available).
+  * Tweaking and bending the openGL init code to make it
+    work better.
+  * Changed the group picking code to enable correct picking with a
+    complex clipping shape.
+  * Fixed the font loading code when compiling for perl 800.
+    The error prevented the correct encoding of codes > 127.
+  * Fixed processing of extended gradient syntax (vector based
+    specification) which was completly wrong for axial gradients.
+  * Fixed some other minor bugs in gradient structure initialisation
+    which led to gradient fill extending outside the item boundary.
+  * Improved the two README to clarify how to compile
+    the two possible distributions (cpan or full distrib).
+  * Fixed the Perl compilation for MacOS.
+  * Fixed the crash when closing a TkZinc on MacOS OpenGL.
+  * Fixed the coredump due to a bug in the field text handling.
+  * Updated the doc.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 25 May 2004 17:10:07 +0200
+
+zinc-tk (3.2.98) unstable; urgency=low
+
+  * Suppressed the fieldbbox command. It is available when calling
+    the bbox command with the -field and -label options.
+  * Fixed a nasty openGL/Windows redraw bug when opening a window.
+  * GL contexts are destoyed when no longer needed.
+  * Fixed Enter/leave emission to match the Canvas (and better).
+  * Slightly rearranged the init sequence for openGL. This will
+    ensure that render will be reset has soon has possible if
+    GL is not there. It will _stay_ set if we discover later that
+    GL is not available. This will fix a rather bewildering situation
+    when using images: The image is created for GL, then all of a sudden
+    accessed in an X11 context.
+  * Bug fixes. These should have boosted the stability a lot.
+  * A new Tcl_Obj type "attribute" is used to cache the attribute
+    lookup from one command invocation to the other. This can
+    speed up the code slightly (or more). Available only for
+    Tcl.
+  * Text rendering in text items should be better quality.
+  * Fixed the scrollbar protocol to work with all versions
+    of Perl/Tk and Tcl.
+  * The "new" tk option configuration mecanism is used where
+    possible (not with Perl/TK 800).
+  * Only one tesselator is allocated regardless of how many
+    TkZinc widgets an application use. This potentially can
+    bring resource savings for applications using many
+    TkZincs with OpenGL.
+  * TkZinc perl works under Windows (Perl/Tk 804 only).
+  * Font loading under GL has been rewritten it is now as fast
+    as before and still utf8 based.
+  * coords has (yet) been modified (fixed) so that items which
+    exhibit only one meaningful coordinate will return this
+    coordinate as a flat list instead of as a list of lists.
+  * Redisplaying after a move or a resize even when clipped
+    by the display border is now rock stable. This has been
+    achieved by a full redisplay when moving/resizing.
+  * An msi package Tcl/Tk and Perl/Tk on Windows.
+  * makefile for building for Tcl with vc++ has been updated.
+  * Several fixes in Makefile.PL (pthreads, INC augmented,
+    Windows port)
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 3 May 2004 17:10:07 +0200
+
+zinc-tk (3.2.97) unstable; urgency=low
+
+  * Added a tget command. If called with a transform or an
+    item as parameter, it returns the transform factors as
+    a list (compatible with tset). An optional second parameter
+    can be given, either 'all' meaning decompose the transform
+    in translation, scale, rotation, skew and return the list
+    in this order, or 'translation', 'scale', 'rotation', 'skew'
+    which means return the corresponding value.
+  * Added an optional boolean parameter abs to the translate
+    command. If true it means that the translation should be
+    interpreted as absolute. If absent or false the usual
+    behavior is preserved.
+  * Under OpenGL, a single graphic context is used for all
+    zincs on a single display. Textures are put in common
+    for the display. This should greatly reduce the resource
+    consumption with GL.
+  * Potential memory bugs have been fixed thanks to valgrind.
+  * The code can be compiled either for perl/Tk 800 (define
+    PTK and PTK_800) or perl/Tk 804 (define PTK alone).
+  * The coords command returns a flat point instead of a list
+    of one point for all items with a -position attribute.
+  * The transformation of items with a -position has been slightly
+    modified. The point described by -position is no longer considered
+    in the coordinate space of the item but in the coordinate space
+    of its parent group. The item is always located in 0,0 of its
+    own coordinate space. This is so to make use of -composescale and
+    -composerotation a lot more useful (and compatible).
+  * The default value of -composescale and -composerotation on texts
+    and icons is now false. This is coherent with the default behavior
+    of these items (being rigids). The impact of this change is
+    greatly minored by the new processing of the -position attribute.
+  * Modified the command bindings for the transform
+    testbed demo. Added a new delete item command.
+  * Added two new Tcl demos ported from perl, testGraphics
+    and magicLens.
+  * Ported the Graphics package by JL Vinot to Tcl as
+    zincGraphics.
+  * Modified the behavior of options and arguments controlling
+    the display of track history. The -trackmanagehistory is
+    gone, a -trackvisiblehistorysize option has appeared, it
+    describe the length of the history for ALL tracks in a zinc
+    instance. In the Track class -visiblehistorysize has been
+    removed and replaced by a boolean attribute -historyvisible
+    that can be used to switch off the history for the concerned
+    track instance. !!! INCOMPATIBLE CHANGE !!!
+  * Fixed several problems with respect to UTF8 strings
+    rendering. It should be possible for the text item
+    to render OpenGL strings in all configurations.
+  * Fixed a bug in indexing a Text item with utf8 characters
+    (above 127).
+  * Re-ported the pathtag demo from Perl to Tcl.
+  * Fixed some bugs in the transform code (core dumps)
+  * The scale method takes an optional center
+  * The angle in the rotate method can be specified in
+    degrees, a flag has been added to tell if the angle
+    is given in degrees or radians.
+  * The find and addtag method can do spacial searches
+    (overlapping, enclosed, closest) in atomic
+    groups overriding the atomic specification. The
+    recursive flag takes the new value 'override' to do
+    so.
+  * a new command fieldbbox has been added. It returns the bounding
+    box of the given field for the specified item or the item's label
+    bounding box.
+  * The bounding box reported for groups with clip areas
+    takes into account the clipping. This was a long
+    standing bug.
+  * The enter leave processing as been sped somewhat by
+    correcting an omission in the detection code.
+  * The bind method now handles virtual events (an omission).
+  * The bind method accept an alternative syntax for specifying
+    bindings on fields instead of saying:
+        .z bind $id:3 <1> "script"
+    it is possible to say: 
+        .z bind $id 3 <1> "script"
+    This is coherent with the syntax used by the other methods.
+  * Icons are fully transformable in X. The same behavior is
+    achieved in both graphical environments.
+  * The anchors positions have been fixed for rotated icons.
+  * The text items are fully transformable in both environments.
+  * The insertion cursor wasn't displayed on the last text line
+    if empty. Fixed.
+  * The last character of a text selection was never displayed
+    as part of the selection (but correctly reported). Fixed.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon,  26 Jan 2004 13:37:48 +0200
+	
+zinc-tk (3.2.96) unstable; urgency=low
+
+  * Fixed a bad redraw of maps (traces) and adapted for floating
+    point MapInfos.
+  * MapInfo coordinates converted to floating point. This should
+    greatly improve map usefullness in Zinc.
+  * Fixed an erroneous clipping shape when specified with
+    an unaligned rectangle or an icon.
+  * Fixed a core dump in curve when -closed 1 under X.
+  * Added tcompose, tset, skew transformation commands.
+  * The transform command now accept the reserved tag 'device' as
+    source and destination. This specifies the device coordinate
+    space. A named transform can be given as source and destination.
+  * The tsave command accept the reserved tag 'identity' as source.
+    It can also take a named transform as source.
+  * Zinc is now able to use all font glyphs above 0x20 in a
+    256 glyph font.
+  * The smooth method reports a list of line segment vertices
+    instead of the incorrect list of bezier segment vertices.
+  * Added a -followpointer widget option to optimize pointer
+    motion processing (suppress enter/leave processing).
+  * The coords method correctly updates the control flags when
+    replacing the whole vertex list.
+  * Fixed a problem a the invalidation code which prevented
+    item with a transform update pending from being correctly
+    processed. All item specific invalidation flags were
+    ignored after a transform operation on the item.
+  * The -lastasfirst attribute of tracks failed to work causing
+    a mis-coloring of the history when -lastasfirst was turned on.
+  * Corrected a potential problem in the processing of end of lines
+    in multi-lines texts.
+  * Update of the refman, tanks C. Mertz.
+  * Fixed the Makefile.in to build a correct pkgIndex.tcl when
+    installing, it lacked an entry for loading the Tkzinc
+    library itself.
+  * Debug.pm :  A control bar and zoom/translate new functionalities
+    have been added. finditems(), tree(), snapshot() functions become
+    deprecated. Initialisation is done using the new init() function.
+    (D. Etienne).
+  * zinc-demo (perl variant) : the pathtag demo has been corrected.
+    Should be more explict now (C. Mertz)
+  * A first contribution by zentara : TripleRotatingWheel.
+  * New tests (perl variant) : find method with 'overlaped', 'enclosing',
+    'withtype', pathtags. More images tests. Tests for text items.
+    Tests for openGL fonts with multiple sizes (C. Mertz).
+	
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  28 Nov 2003 13:37:48 +0200
+	
+zinc-tk (3.2.95) unstable; urgency=low
+
+  * Configuration of image and bitmap valued attibutes is now
+    optimized against reconfiguration with the same value (image).
+    This has the side benefit of fixing a core dump ;-).
+  * Fixed the return type of the ZnPointInRegion prototype to return
+    a ZnBool (A. Lemort).
+  * Stephane Conversy has contributed diffs to compile the tcl
+    version on MacOs X Fink.
+  * ZincDebug: Contours of curves can be displayed and explored
+    (D. Etienne).
+  * ZincDebug: Fixed a bug in device coordinates when a non group
+    item has a transformation (D. Etienne).
+  * a new debian package has been created to install the doc
+    files (pdf and html) separately.
+  * Integrated the export script and Makefile contributed for
+    Perl by Somanos Sar. Merged the CPAN features written by
+    C. Mertz.
+  * The scrollbar protocol should now work with perl as well as
+    with tcl.
+  * libom is no more. It will be made into a loadable module
+    as soon as Tkzinc will have stubs and a tcl binding will be
+    written for the overlap manager api.
+  * No more perl building/configure code in the main trunk. All
+    perl related build and configuring tools are in Perl.
+  * Fixed a font texture allocation problem with large fonts.
+    The texture sizing has been changed with better results.
+  * Added a -tracksymbol option to act as the default value
+    for the -symbol attributes of tracks.
+  * The track default symbol for current positon is now correctly
+    read from the -tracksymbol option and not statically fixed.
+  * Changed the parameters of the new conical gradient.
+    If only one value is given, it is taken to be the gradient
+    starting angle, the center being 0,0. If two values are given,
+    they are taken as the gradient center, the starting angle being 0.
+    If three values are given, it's the gradient center followed by
+    the gradient starting angle. If four values are given, they are
+    two points defining the center and the angle/extent of the gradient
+    (vector based definition).
+  * Corrected a bug when tiling aligned rectangles under GL.
+    The rectangular form was not correctly clipped so that
+    it showed outside its area.
+  * Shaped icons should be rendered correctly under all environments
+    and for all image formats.
+    In fact the image/bitmap code has been reworked and integrated.
+    For the internals there is no difference now between images,
+    image supported bitmaps and old style bitmaps obtained by
+    Tk_DefineBitmap.
+  * The image update mecanism is now fully functional. It will
+    work for tiles, icon, symbols and even patterns if they are
+    made with image bitmaps.
+  * Icon item picking should be ok in all cases and all environments.
+    It used to be limited for rotated shaped images.
+  * Change in the font texture allocation to guarantee that it
+    will not fail. This is now postponed until first use for
+    drawing.
+  * Videomap loading is done through the Tcl_Channel api enabling
+    the use of Tkzinc and all of its datas in a starkit.
+  * no more dependencies between zinc-perl and zinc-tk
+  * a new perl module for building complex graphic objects:
+    Tk::Zinc::Graphics.pm
+  * Perl module Text is renamed Tk::Zinc::Text (beware: slight incompatible change!)
+  * Perl module Logo is renamed Tk::Zinc::Logo
+  * PerlModules ZincTrace, ZincTraceErrors and ZincDebug are renamed
+    Tk::Zinc::[Trace|TraceErrors|Debug]
+  * new demos :
+    - color-path-and-conic.pl to demonstrate conical and path gradient
+    - testGraphics.pl to demonstrate the power of Graphics.pm
+    - Magiclens.pl 
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  5 Sep 2003 13:37:48 +0200
+
+zinc-tk (3.2.94) unstable; urgency=low
+
+  * Added an optimization for aligned/textured rectangles in openGL.
+    This can really boost the performances of some apps.
+  * Fixed a core dump when destroying zinc after an error occured
+    during the first Configure.
+  * Fixed the picking of multi-contours curves. They should be
+    correctly detected now.
+  * Fixed a bug in the compilation of libtess around the inclusion
+    of glu.h
+  * Added a new vector based method to describe gradient geometry.
+    The vector is specified by two points (4 floats).
+    It is available for axial, radial and the new conical gradients.
+  * Added a new gradient type: conical, defined by an angle,
+    a center and an angle or a vector.
+  * (ZincDebug) A partir de l'arbre des items, possibilité de générer
+    du code perl correspondant à une branche (Daniel Etienne).
+  * Ajout d'un module ZincTraceError (perl) qui trappe les erreurs
+    Zinc et affiche pour chaque erreur l'instruction et le message
+    d'erreur (Daniel Etienne).
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 21 May 2003 09:22:18 +0200
+
+zinc-tk (3.2.93) unstable; urgency=low
+
+  * Fixed a bug preventing the loading and display of accented letters
+    in openGL.
+  * In zincText.tcl fixed a problem preventing insertion of accented
+    letters
+  * Added the documentation in the tk debian package
+  * Shaped images can be used both in perl/tk and in Tcl/Tk under
+    GL. Alpha channel is also supported in perl/tk (for image formats
+    that support the feature).
+  * Fixed a gradient filling bug on some (many usual) multi-contours
+    curves.
+  * Fixed a X Pixmap error problem (in GL) with some fonts reporting
+    a zero width on critical characters.
+  * Text item: Modified the processing of the white space/tab causing
+    a line break when a -width limiting atribute is in effect. The extra
+    space used to be located at the beginning of the new line. Now it is
+    suppressed. Other white spaces are still displayed at the begining
+    of the line. The new behavior seems more natural.
+  * Fixed a typo in zincText.tcl preventing the insertion of a new line.
+  * Fixed a core dump when destroying a map item due to
+    the freeing of an unallocated pattern in the symbols
+    list
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 12 May 2003 13:51:10 +0200
+
+zinc-tk (3.2.92) unstable; urgency=low
+
+  * Perl compilation ok even if no package installed
+  * Perl demo runable without installation. Idem for
+    tests (but there is no tests yet ;-).
+  * Fixed Enter/Leave bugs during grabs and in fields.
+  * Fixed stipple filling in openGL.
+  * Fixed several core dumps.
+  * Fixed several bugs in relation with contour manipulation
+    (adding, orientation evaluation, memory allocation, gradients).
+  * Fixed text cursor visibility if no text to display (text
+    item & fields).
+  * Fixed problems with some demos in Tcl.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  9 May 2003 17:12:14 +0200
+
+zinc-tk (3.2.91) unstable; urgency=low
+
+  * Corrected the scollbar/view bug under Windows.
+  * Polished quite a bit the install process.
+  * Added a makefile.vc to be used with Visual C++ on Windows.
+  * Small fixes on several demo scripts.
+  * Corrected a very touchy bug related to font texture
+    loading on Windows. The symptom is a blank window,
+    if it contains text and the mouse is in the window
+    when it is mapped.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 25 Apr 2003 11:50:38 +0200
+
+zinc-tk (3.2.90) unstable; urgency=low
+
+  * Portage Windows
+  * Changement du symbole de compilation openGL de GLX en GL.
+  * Tentative de préfixage exhaustif de tous les symboles externes
+    (fonctions, macros, variables, types) par Zn.
+  * Modification du code de traitement des images pour 1/ assurer
+    le portage sous Windows, 2/ Obtenir le rendu transparent pour
+    les images le supportant (PNG), 3/ Rétablir dans un deuxième
+    temps le mécanisme de mise à jour de Tk lors de la modif de
+    l'objet image. Le prix à payer est l'impossibilité temporaire
+    d'avoir des images détourées en perl/Tk **PROBLEME POTENTIEL**.
+  * Compilation avec tous les warnings réalistes et correction des
+    types de variables + casts explicites pour faire disparaitre
+    les warnings.
+  * Suppression de l'utilisation de strcasecmp pour la conversion
+    des valeurs certains attributs. Il faudra désormais les spécifier
+    obligatoirement en minuscules. **PROBLEME POTENTIEL**.
+  * Utilisation du code de gestion des couleurs de Tk plutôt que
+    celui qui avait été importé depuis Tk dans zinc.
+  * Gros remaniement du code de chargement des glyphes de fontes
+    sous forme de textures en openGL afin d'assurer le portage
+    Windows.
+  * Dans l'item Text -spacing et -width sont des entiers au lieu de
+    floats.
+  * Les priorités par défaut ont été modifiées et valent 0 pour Map
+    et Reticle et 1 pour tous les autres items. **PROBLEME POTENTIEL**.
+  * Grosse réorganisation des headers afin de regrouper par module
+    logique. Cela a permit de dégonfler Types.h.
+  * Déplacement des fonctions de parsing d'attributs de Item.c vers
+    Attrs.c comme de logique.
+  * Nouvelle chaine de configuration/Makefile basée sur TEA.
+  * Restructuration des fichiers afin d'être plus proche de l'architecture
+    TEA.
+  * Portage des démos en Tcl (J.P Imbert).
+  * Début de squelette pour des tests en Tcl.
+  * Le Makefile.PL est généré par configure. C'est également le cas
+    de Zinc.py. Cela permet une meileure configuration selon les
+    plateformes et les versions.
+  * Changement de module dans le repository CVS. Le module s'appelle
+    désormais Tkzinc. L'ancien module reste actif au cas où.
+  * Des corrections de bugs nécessités/découverts par le portage
+    Windows.v
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu, 24 Apr 2003 11:59:09 +0200
+
+zinc-tk (3.2.6i) unstable; urgency=low
+
+  * Les couleurs du relief de la fenêtre ne sont allouées que si
+    et lorsque le relief est différent de flat. Cela permet de
+    ménager les colormaps.
+  * zinc verifie que l'on ne demande pas à chggroup de placer un
+    ancestre dans un de ses descendants.
+  * Les infos GL au démarrage sont conditionnées à la présence de
+    la variable d'environnement ZINC_GLX_INFO.
+  * Les flags -composerotation et -composescale de Icon sont
+    positionnés à vrai par défaut. C'est un pis-aller, il faudra
+    repenser le traitement des icones et du texte dans un contexte
+    de transformation totale (rotation, echelle).
+  * Correction d'un bug de précision conduisant à la fameuse bande
+    non rafaichie à droite en 1600x1200 sous GL.
+  * Le paquet zinc debian devrait mieux se comporter quand aux
+    dépendances sur les autres paquets tant à la compil qu'au
+    runtime. La dépendance à openGL est supportée au travers
+    de mesa.
+  * Le répertoire test est renommé sandbox. IL FAUT RE-EXTRAIRE
+    une copie fraiche des sources depuis la base CVS ou tripoter
+    les fichiers dans les répertoires CVS de zinc et de sandbox
+    pour refléter la modif.
+  * Changement du format des gradients pour être compatible avec
+    les formats de nom de couleur normalisés. MODIF INCOMPATIBLE.
+  * Début d'architecure TEA pour la version Tcl. Le module Zinc
+    utilise désormais les stubs de tcl/tk plutot que le linker
+    dynamique pour résoudre les références sur tcl/tk. Il en
+    résulte une meilleure indépendance par rapport aux versions
+    de tcl/tk.
+  * Incorporation de libtess, ce qui permet de se passer de GLU/GL
+    dans des versions sans openGL.
+  * Améliorations et corrections de bugs dans ZincDebug (Daniel Etienne):
+  	Gestion de plusieurs instances de Zinc.
+        Paramétrage de ZincDebug sur la ligne de commande:
+          perl -MZincDebug monappli.pl <-options_monappli> <-options_zincdebug>
+        Ajout d'un bouton treset permettant de savoir si un item a subi des
+        transformations.
+        Correction de bug d'affichage :
+          des coordonnées d'un item curve.
+          de la bounding box de groupes vides.
+  * Incorporation d'un module python mis à jour (uillaume Vidon)
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 10 Mar 2003 17:42:53 +0100
+
+zinc-tk (3.2.6h) unstable; urgency=low
+
+  * Correction d'un bug provoquant la suppression d'un blanc
+    en début de lignes sur l'item text
+  * Correction d'un problème de spécialisation des images sous
+    X. Il fallait spécialiser par Screen et non par Display.
+  * Correction d'une erreur lors de la requête de bindings
+    sur un item/séquence.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 20 Jan 2003 13:53:19 +0100
+
+zinc-tk (3.2.6g) unstable; urgency=low
+
+  * Edition des attributs dans ZincDebug: la plupart des champs attributs
+    sont maintenant éditables (un <Control-z> dans un champ permet de
+    restaurer la valeur initiale)
+  * Possibilite de visualiser la bounding box d'un item dans ZincDebug.
+  * Ajout d'un module permettant de tracer les appels de commande 
+    zinc pour faciliter sensiblement le debugging d'une appli. Faire
+    perl -MZincTrace myscript.pl (Christophe/Daniel).
+  * Correction d'un bug d'analyse des listes de points d'ancienne forme.
+  * Correction d'un core dump lors d'une tentative de clonage du top
+    group.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 20 Jan 2003 10:53:40 +0100
+
+zinc-tk (3.2.6f) unstable; urgency=low
+
+  * Adaptation des méthodes fit, smooth, transform, coords, contour
+    pour obtenir un tout cohérent dans la nouvelle logique de gestion
+    des points et des contours.
+  * Correction d'un bug de gradient introduit par le debug.
+  * Ajout d'un attribut -fillrule à l'item curve (en liaison avec le
+    premier point.
+  * L'item curve ne détruit plus un contour vidé par la méthode coords.
+    Il n'en ajoute pas non plus (cas d'un item vide).
+  * Correction d'un bug d'affichage de texte en GL avec plusieurs
+    fenêtres (cycle de création/destruction).
+  * Corrections de bugs en relation avec le premier point.
+  * La limitation qui obligeait à déclarer comme globale l'instance de zinc
+    lorsque ZincDebug était chargé au runtime (perl -MZincDebug script.pl)
+    n'est plus.
+  * Correction de bug (ZincDebug): la selection du groupe 1 dans l'arbre des
+    items provoquait un segmentation fault.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue, 14 Jan 2003 12:14:38 +0100
+
+zinc-tk (3.2.6e) unstable; urgency=low
+
+  * Corrections de bugs
+  * Ajout du support UTF8 pour Tcl/Tk
+  * Possibilité d'invoquer ZincDebug sans modifier le code,
+    de la maniere suivante: perl -MZincDebug script.pl
+    (cf man ZincDebug). Ajout de D.Etienne.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 20 Dec 2002 14:56:42 +0100
+
+zinc-tk (3.2.6d) unstable; urgency=low
+
+  * Adaptations (mineures) pour TCL/TK 8.4.
+  * Corrections de bugs dans les méthodes Coords et Contour.
+  * Changement incompatible du code des gradients.
+  * Fin de réalisation des nouveaux contours utilisant le tesselateur GLU.
+  * Le tesselateur est disponible même si on utilise une version compilée sans GL.
+  * Fin de réalisation des paths dans Curve.
+  * Utilisation des display lists GL pour Arc, Curve, Rectangle, Text.
+    L'optimisation n'est effective que si l'item n'est pas modifié (ce qui est
+    souvent le cas quand même).
+  * Encore des corrections de bugs.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue, 10 Dec 2002 11:09:08 +0100
+
+zinc-tk (3.2.6c) unstable; urgency=low
+
+  * Correction d'un bug empéchant Zinc de s'initialiser (ZnBezier a disparu).
+  * Mise à jour de ZincDebug par Daniel Etienne:
+     Modification concernant la fonction tree() :
+     Possibilité d'afficher, pour chaque item de l'arbre, la valeur d'un ou
+     de plusieurs de ses attributs; utiliser les options -optionsToDisplay et
+     -optionsFormat.
+     Mécanisme de recherche de chaine de caractères.
+     Feedback pour signaler qu'un item sélectionné dans l'arbre n'est pas
+     visible car en dehors de la fenêtre.
+  * Suppression de la fabrication du paquet zinc python qui de toute manière
+    n'était plus maintenu et ne fonctionnait pas sous Woody.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed,  6 Nov 2002 09:59:13 +0100
+
+zinc-tk (3.2.6b) unstable; urgency=low
+
+  * Correction d'un bug empechant la mise à jour des bitmaps/images modifiées.
+  * Suppression du clippeur GPC et remplacement par le tesselateur de GLU.
+    Zinc est maintenant entièrement Open Source ;-).
+  * Les commandes contour ont entièrement changé: exit les union, xor, inter, diff
+    maintenant on peut faire des add, addhole et remove. Les contours ainsi manipulés
+    gardent leur position relative les uns par rapport aux autres.
+  * L'item Bezier n'existe plus, il est remplacé par un traitement plus général dans
+    Curve qui accepte maintenant la specification de controles sur les points. Il est
+    ainsi possible de décrire des chemins mélangeant segments de droites et de cubiques
+    de Bezier.
+  * Correction d'un oubli dans Zinc.pm qui empêchait l'usage de vertexat.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue,  5 Nov 2002 11:13:12 +0100
+
+zinc-tk (3.2.6a) unstable; urgency=low
+
+  * Correction du bug de rendu des lignes (hachures) sur GeForce 3/4
+  * Correction d'un bug de rendu de lignes avec alpha dans certaines
+    circonstances (modulation de la couluer).
+  * Adaptation du Makefile pour compil avec les derniers drivers NVidia.
+  * Correction du bug de mise à jour de la bbox d'un gruope suite à
+  l'ajout/suppression d'un item (Daniel Etiienne, Nathalie Banoun).
+  * Correction d'un bug sur l'épaisseur des lignes de 0.5 pixels en GL.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu, 26 Sep 2002 12:10:58 +0200
+
+zinc-tk (3.2.6) unstable; urgency=low
+
+  * Correction d'un bug lors de l'utilisation simultanée par
+    une appli d'un environnement X et GL (Bug détecté par A. Marion).
+  
+  * Corrections dans le Makefile.in.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 18 Sep 2002 15:07:37 +0200
+
+zinc-tk (3.2.5i) unstable; urgency=low
+
+  * Encore des corrections de bugs
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon,  9 Sep 2002 14:48:46 +0200
+
+zinc-tk (3.2.5h) unstable; urgency=low
+
+  * Corrections de bugs.
+  * la commande contour retourne le nombre de contours d'un item.
+  * Changements dans ZincDebug (Daniel Etienne), la liste suit :
+  * meilleure gestion des groupes atomiques : ils sont maintenant scannés
+    comme les autres.
+  * la mise en evidence des items selectionnés est modulable. Par defaut,
+    l'item est mis en avant-plan et encadré (click gauche), mais pour
+    faciliter sa distinction on peut egalement cacher les autres items de
+    son groupe (click milieu), voire ceux du groupe parent (click droit).
+  * il est possible de rechercher des items en specifiant un tagOrId dans
+    un champs de saisie (ouvert sur un Control-f)
+  * séparation des traitements : 2 fonctions sont maintenant exportées,
+    finditems() qui cree les bindings necessaires a la recherche d'items
+    et snapshot() qui cree ceux necessaires a la capture d'image. (action
+    sur Control-s)
+  * mise a jour du man ZincDebug
+  * Possibilite d'afficher l'arbre des items d'une application
+    (Control-t)
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon,  2 Sep 2002 14:36:04 +0200
+
+zinc-tk (3.2.5g) unstable; urgency=low
+
+  * Ajout de la commande find ancestors qui permet de retrouver, avec
+    un éventuel filtrage sur tag, l'ensemble des ancêtres d'un item.
+  * Corrections de bugs sur le curseur d'insertion : text et fields.
+  * Correction d'un bug dans find overlapping/enclosed qui retournait
+    des résultats aléatoires selon le groupe de départ.
+  * Correction du calcul des ancres pour les items icons.
+  * Nouveaux programmes de démos et amélioration de la doc (C. Mertz)
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  5 Jul 2002 17:08:12 +0200
+
+zinc-tk (3.2.5f) unstable; urgency=low
+
+  * Correction d'un bug génant (les items se déplacent suite à un
+    problème dans la méthode ToArea de group) introduit en 3.2.5d
+    et révélé en 3.2.5e.
+  * Ajustement de la doc pour find/addtag.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue, 25 Jun 2002 11:38:36 +0200
+
+zinc-tk (3.2.5e) unstable; urgency=low
+
+  * Corrections de qq bugs.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 24 Jun 2002 11:19:02 +0200
+
+zinc-tk (3.2.5d) unstable; urgency=low
+
+  * la commande de création de zinc rapporte le numéro de version
+    et énumère mes différentes têtes graphiques possibles (X11, GL).
+  * Les fonctions tsave et gsave permettent de savoir si un nom est déjà
+    utilisé.
+  * L'item Icon peut tourner et être redimensionné.
+  * QQ bug squashes.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 10 Jun 2002 15:33:46 +0200
+
+zinc-tk (3.2.5c) unstable; urgency=low
+
+  * Correction du calcul de l'angle du guideur (passage entre
+    antirec et Zinc + une erreur dans la fonction PointPolarToCartesian.
+  * Le rho n'était plus passé à l'antirec second problème expliquant
+    les perfos pitoyables de l'antirec.
+  * Correction d'un bug de specification d'angle créant un problème dans
+    les items arcs si on specifiait un extent de 360.
+  * Correction d'un core dump lors de la deallocation des fontes (cas
+    où plusieurs Zincs sont créés).
+  * Correction d'une boucle infinie lors de l'allocation d'une fonte
+    (cas où plusieurs Zincs sont créés).
+  * Correction d'un core dump se produisant dans certains cas lors de
+    l'utilisation d'un Curve en clipping.
+  * Correction d'un core dump lorsque l'on tentait d'éditer un texte
+    dans un champ.
+  * Les ressources Zinc de type images/bitmaps (-tile, -mapdistancesymbol,
+    etc), ne pouvaient pas être remises à "". Une consultation de la valeur
+    de ces ressources provoquait un core dump si la ressource valait "".
+  * L'item Icon ne possède plus qu'un attribut -image/-mask. Cependant il
+    est toujours possible de positionner cet attribut soit par -image soit
+    par -mask. La reconnaissance bitmap/image est automatique.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 27 May 2002 17:07:19 +0200
+
+zinc-tk (3.2.5b) unstable; urgency=low
+
+  * Les tags peuvent désormais comporter un chemin permettant de
+    préciser dans quelle partie de l'arborescence les items doivent
+    être recherchés. Le chemin consiste en une suite de tags séparés
+    par des . ou des *. Chaque tag désigne le groupe possédant ce tag
+    à un niveau donné de la hierarchie. Le caractère * premet de demander
+    la recherche en profondeur en sautant éventuellement des degrés dans
+    la hierarchie. LES CARACTERES . et * sont donc INTERDITS dans les tags.
+    Cette fonctionalité est particulièrement importante lors de l'utilisation
+    de la commande clone (création et paramétrage d'après un modèle,
+    programmation par prototype). Elle est sensée être à peu près transparente
+    pour ceux que cela n'interesse pas.
+  * Les sous commandes de find/addtag ont été remaniées pour tenir compte
+    du point précédent. En particulier 'find all' a disparu. Les
+    paramètres optionnels 'inGroup' et 'recursive' ont disparu des commandes
+    above, below, withtag. Ils sont remplacé par un simple tag optionnel
+    pour les commandes withtype et atpriority. Par contre les commandes
+    overlapping et enclosed gagnent ces mêmes paramètres optionnels 
+    'inGroup' et 'recursive'. La commande closest gagne le paramètre optionnel
+    'recursive' et le paramètre start voie son sens modifié : si 'start' est
+    un groupe non ATOMIC, la recherche démarre au premier item de ce groupe
+    sinon le sens précédent est conservé, la recherche démarre à l'item suivant
+    'start'
+  * Un tag chaine vide (ou un chemin sans tag final) est équivalent au
+    tag 'all'.
+  * Meilleure prise en compte de la présence de l'extension GLX. Son
+    absence ne devrait plus générer de core dump.
+  * La commande clone ne clone plus tous les items désignés par le tagOrId
+    mais seulement le premier dans l'ordre de la display list et elle
+    retourne l'id de ce nouvel item.
+  * Correction d'une erreur dans itemconfigure qui retournait une info
+    incorrecte quand on lui demandait la liste des attributs d'un field.
+  * Redesign complet de la gestion des images/bitmaps et fontes afin 1/
+    de gérer correctement les ressources sous GL avec plusieurs fenêtres
+    et 2/ de LIBERER les ressources automatiquement lorsqu'elles ne sont plus
+    utilisées (textures et mémoire process X et GL). Une conséquence est
+    que le nouveau code ne peut plus gérer le changement du contenu d'une
+    image Tk, il faut détruire l'image et la recréer.
+  * Correction d'un bug provoquant un core dump en 3.2.5a suite à la modification
+    du code de réparation de l'image. Un redisplay était planifié lors de la
+    destruction d'un widget et lorsqu'il était effectivement déclenché le
+    widget n'existait plus, bien sûr.... No comments
+  * Les bordures de champs n'étaient pas dessinées en GL, l'alpha n'étant
+    pas composé correctement et l'épaisseur de trait à été portée à 1.5.
+  * Correction du code de dessin des images dans les fields sous X. Elles ne
+    pouvaient pas être clippée correctement si elles avaient un masque.
+  * Correction d'un bug de clonage des fields, on tentait de dupliquer
+    un label format sur un groupe de champs vide.
+  * Mise en cohérence des types d'attributs entre le code et la doc, certains
+    type ont été modifiés dans le code : tags/taglist, justify/alignment,
+    autojustify/autoalignment, border/edgelist, gradients/gradientlist,
+    text/string, patterns/bitmaplist, pattern/bitmap.
+  * Retablissement du controle de la validité des attributs dans
+    itemconfigure même lorsqu'un tag est utilisé.
+  * Correction dans les lineshapes des types lineleftcorner et
+    linedoubleleftcorner qui étaient confondus avec leur analogues
+    droits.
+  * Sortie d'un message d'erreur lorsqu'un item n'est pas trouvé comme
+    valeur d'attribut.
+  * Correction du traitement des angles startangle et extent dans Arc, les
+    extents négatifs étaient erronés et si startangle était nul on obtenait
+    systématiquement un arc de 360 degrés.
+  * Ajout d'un attribut -composealpha à tous les items. Il agit de la même
+    manière que -composescale et -composerotate mais pour l'alpha des
+    couleurs de l'item.
+  * Correction d'un bug rendant inctif le paramètre de tension dans les gradients.
+  * Incorporation des corrections de Christophe dans la doc.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  3 May 2002 13:44:17 +0200
+
+zinc-tk (3.2.5a) unstable; urgency=low
+
+  * Correction d'un core dump lors de la destruction d'un
+    item text cloné dont on a modifié le texte.
+  * Le changement de fonte d'un texte (Text et Field) n'était
+    pas suivi d'effet en openGL, maintenant ça devrait aller
+    mieux.
+  * Tous les items peuvent avoir le focus, donc on peut utiliser
+    des bindings sur des evènements clavier sur tout item. C'est
+    également vrai pour les fields (extension de la commande focus).
+  * La selection et le curseur sont affiché en GL pour l'item Text
+  * La selection et le curseur sont affiché pour le texte dans les
+    fields (X et GL).
+  * L'édition de texte, la selection, et le curseur sont supportés
+    pour les fields.
+  * Restructuration du module Item, création du module Field et
+    suppression de l'ingérance de Item dans Group. Le code devrait
+    être plus clair et plus facile à maintenir (il reste à préfixer
+    toutes les fonctions externes par Zn).
+  * L'option -render n'est plus un booléen, elle peut prendre les
+    valeurs 0: rendu X, 1: rendu GL direct, 2: rendu GL indirect.
+  * Amélioration de ZincText.pm: correction de bugs, évolution des
+    bindings pour mieux gérer la sélection, intégration de l'édition
+    des textes dans les fields, possibilité d'aller en fin/début de
+    ligne, de monter/descendre d'une ligne (item text).
+  * Des nouveaux indices sont disponibles dans les items indexables:
+    bol, eol, bow, eow, up, down.
+  * Correction d'un core dans DeleteChars de Text (pointeur non
+    déréférencé).
+  * La commande currentpart prend un paramètre booléen optionnel
+    qui spécifie si elle doit reporter les parties privées de l'item
+    ou seulement les fields (elle retourne "" si le pointeur est
+    sur une partie privée).
+  * Toutes les commandes acceptant un paramètre field optionnel
+    comprennent un field index "" comme étant une absence de paramètre:
+    aucune erreur n'est générée et tout se passe comme si le paramètre
+    n'avait pas été spécifié.
+  * Les commandes 'focus' et 'select item' retournent une liste
+    (item, field) ou "" si pas d'item. La présence de field est
+    garantie (liste de longueur 2) mais peut être "", se qui veut
+    dire pas de field. On peut directement utiliser le résultat
+    de ces commandes comme paramètres pour les commandes prennant
+    un couple item, field.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 12 Apr 2002 13:02:05 +0200
+
+zinc-tk (3.2.4) unstable; urgency=low
+
+  * Correction de -lastasfirst, le bug était dû à un
+    débordement du champs de bits traitant les flags.
+    Il a été porté à 16 bits pour tous les flags d'item
+    (header et privé).
+  * Correction d'un core dump lors de clonage de rectangle,
+    arc, curve, bezier. La réallocation des structures
+    géométrique doit se faire tout de suite dans clone.
+  * Correction du bug faisant apparaitre un petit carré en
+    fin de ligne dans Text.
+  * Les coins supérieurs des bordures des rectangles n'étaient
+    pas fermés (visible sur les bordures épaisses).
+  * Zinc openGL marche un peu mieux sous Mesa (attention aux
+    -linewidth supérieurs à 3 et inférieurs à 11).
+  * Module perl ZincText.pm qui permet d'éditer les items textes
+    pour peu que ceux ci possèdent le tag 'text'. Il faut faire:
+    use ZincText; new ZincText($zinc);
+  * L'option -tile de Zinc n'avait pas subit le traitement destiné
+    à l'immuniser contre les images sans contenu. Il en resultait
+    l'infame XCreatePixmap error. C'est corrigé.
+  * itemconfigure a été (encore) modifié pour accepter les attributs
+    inconnus. Il est préferrable de na pas reporter d'erreur que
+    de bloquer un itemconfigure sur tag.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 29 Mar 2002 16:19:40 +0100
+
+zinc-tk (3.2.3g) unstable; urgency=low
+
+  * Correction d'un core d'un lors de la creation répétée
+    d'un label format erroné. L'entrée de cache n'était pas
+    détruite bien qu'invalide.
+  * Correction d'un bug très génant de redessin en openGL du
+    à un problème de calcul de la damaged area et révélé par
+    la modification du traitement de la zone de dessin du
+    widget (inset). Un contournement en 3.2.3f et de mettre
+    -borderwidth et highlightthickness à 0.
+  * Dans le code de reparation le scissor n'était pas réactivé
+    aprés le dessin de la bordure.
+  * Correction de la commande itemconfigure qui reportait à tort
+    une erreur attribut invalide sur un tag. L'erreur doit être
+    reportée que pour un id.
+  * Rectangle correction d'un core dump dû à une variable couleur
+    non initialisée (si -linewith != 0).
+  * Le code de redessin sur changement de focus nécessaire pour
+    corriger certains problèmes liés au redessin avec scissor n'était
+    pas compilé conditionnellement.
+  * Un pas de plus vers une doc potable.
+  * Ajout d'une démo sur les transformations.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue, 26 Mar 2002 10:42:27 +0100
+
+zinc-tk (3.2.3f) unstable; urgency=low
+
+  * Remplacement de la doc PostScript par une doc pdf.
+    Celle ci exploite les références hyper texte et la table
+    des matières latérale.
+  * Un grand pas en avant sur le contenu de la doc. Pas mal
+    d'explications supplémentaires et des chapitres vides qui
+    commencent doucement à se remplir. Mise à jour pour les
+    nouvelles fonctionalités (pas toutes encore). Index,
+    figures, etc Contribution de Christophe Mertz.
+  * Une suite de démos qui fonctionne et qui commence à être
+    sympa est apparue. Merci là aussi  Christophe Mertz, et qq
+    autres. Qui?
+  * Réalisation de reliefs pour les courbes exploitant
+    les possibilités de dégradés de GL. L'item curve
+    possède un attribut -smoothrelief qui permet de décider
+    si on veut traiter le relief comme pour un arc (en douceur)
+    ou par facettes.
+  * Les reliefs peuvent être bombés au lieu d'être simplement
+    biseautés (plusieurs variations).
+  * La couleur des reliefs est calculée sur le -linecolor et
+    non plus sur le -fillcolor. INCOMPATIBILITE.
+  * Portage de l'item Bezier en GL. Il peut se dessiner et servir
+    de clipping.
+  * Correction d'un bug dans LeaderAnchor qui empéchait le
+    paramétrage. Il n'y a pas beaucoup de monde qui a essayé
+    de s'en servir, apparement.
+  * Suppression du inset autour de la fenetre. L'origine des
+    coordonnées device est partout et pour toutes les commandes
+    le 0,0 de la fenetre.
+  * Amélioration de la détection des images bugées. Désormais
+    si une image est malencontreusement créée vide (nom de fichier
+    ""), zinc détecte l'anomalie et sort une erreur.
+  * Correction d'un bug qui affectait chggroup lorsqu'elle était
+    utilisée sur un groupe et sans ajustement : les fils du groupe
+    n'étaient pas replacés correctement.
+  * Rétablissement de l'option -lastasfirst de l'item track qui
+    était en panne du à un débordement de capacité des flags
+    privés.
+  * Correction de deux bugs dans le tracé des cercles. Un empéchait
+    le tracé correct d'un cercle complet dans arc (sous certaines
+    conditions). L'autre créait une petite facette sous certains
+    angles pour un arc non complet.
+  * Toutes les options couleurs de zinc sont exprimables sous forme
+    de gradient et donc possèdent un alpha. C'est appréciable sachant
+    par example que -forecolor sert de valeur par défaut à la plupart
+    des couleurs d'item.
+  * L'option de relief bénéficie également d'un traitement spécial
+    permettant toutes les valeurs de relief (pas seulement celles
+    acceptées par Tk).
+  * Makefile.in tricky enhancement for installing zinc-demos and its
+    components (H. Damiano)
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 15 Mar 2002 16:15:06 +0100
+  
+zinc-tk (3.2.3e) unstable; urgency=low
+
+  * Intégration des modifs des Didier Pavet concernant l'antirec.
+  * Petite mise à jour de l'interface Python (D.Pavet).
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 20 Feb 2002 14:02:59 +0100
+
+zinc-tk (3.2.3d) unstable; urgency=low
+
+  * Suppression des attributs alpha. Toutes les couleurs
+    sont des gradients et comportent un alpha. Les gradients
+    ont été totalement purgés du code développé pour le
+    rendu sous X (shades).
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 18 Feb 2002 17:03:05 +0100
+
+zinc-tk (3.2.3c) unstable; urgency=low
+
+  * Correction d'un bug de recalcul de la géométrie des
+    labels lors d'une modif d'un champ.
+  * Correction du dessin des arcs lorsqu'ils ne sont pas
+    complets (arc partiel). Meilleure prise en compte
+    des angles en utilisant le modulo plutôt que le bornage.
+  * Les attributs de type dimension comme les linewidth et autres
+    tailles, n'acceptent plus une spécification à la Tk avec
+    possibilité de décrire en point en millimètres etc. En
+    revanche ils sont promus valeur flottante et donc peuvent
+    être utilisé en GL pour spécifier des tailles fractionnaires.
+  * Correction d'un bug de clipping qui empéchait la remise à
+    jour de la scène après la suppression du clipping dans un
+    groupe.
+  * Correction du clonage et de la destruction d'un item Triangles.
+    Les couleurs n'étaient pas correctement dupliquées/libérées.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 15 Feb 2002 10:29:55 +0100
+
+zinc-tk (3.2.3b) unstable; urgency=low
+
+  * Ajout de démos de Christophe dans le répertoire
+    examples.
+  * Correction des bugs de dessin des polylines qui affectaient
+    gravement twinkle (entre autre).
+  * Correction de code de Daniel.
+  * Correction de tsave et trestore, les noms ne fonctionnaient
+    pas.
+  * Ajout du module PerlDebug et de quelques examples
+    contribués par Daniel Etienne.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 28 Jan 2002 14:57:57 +0100
+
+zinc-tk (3.2.3a) unstable; urgency=low
+
+  * Ajout d'attributs dans Track sur vecteur vitesse.
+  * Ajout de RenderPolyline qui débarasse de libgle et qui fournit
+    les flêches.
+  * Ajout de l'item Triangles.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon,  3 Dec 2001 15:29:13 +0100
+
+zinc-tk (3.2.2) unstable; urgency=low
+
+  * Ajout du clipping non rectangulaire.
+  * Gradient PATH
+  * Correction d'un bug de binding Enter/Leave dans item.
+  * Intégration de la gestion sélective du redessin.
+  * Réalisation de la bordure relief et du highlight de focus
+    directement en X ou en GL pour éviter les clignotements
+    (en GL).
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 26 Nov 2001 11:29:08 +0100
+
+zinc-tk (3.2.1) unstable; urgency=low
+
+  * Correction d'un core dump dans clonage de curve.
+  * Correction d'un break oublié dans mapinfo add symbol.
+  * Travail sur les gradients et les reliefs.
+  * Corrections de bugs dans la version OpenGL.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed,  7 Nov 2001 10:31:22 +0100
+
+zinc-tk (3.2.0) unstable; urgency=low
+
+  * Version avec OpenGL actif.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 24 Oct 2001 15:25:10 +0200
+
+zinc-tk (3.1.28) unstable; urgency=low
+
+  * Correction du core dump dans la fonction currentpart si
+    pas de current item.
+
+  * Recompilation avec la dernière version de perl woody.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 12 Oct 2001 09:50:39 +0200
+
+zinc-tk (3.1.27) unstable; urgency=low
+
+  * Correction d'un bug de sensibilité sur tabular et track
+
+  * Modification de la syntaxe des gradients (-fillcolor) et
+    réécriture des gradients.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 25 Jun 2001 13:27:40 +0200
+
+zinc-tk (3.1.26) unstable; urgency=low
+
+  * Correction de itemcget et itemconfigure afin qu'ils retournent
+    des tableaux perl et non des refs sur des tableaux.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 30 Mar 2001 14:19:54 +0200
+
+zinc-tk (3.1.25) unstable; urgency=low
+
+  * Retour arrière sur le traitement du grab lors d'un buttonpress.
+
+  * Correction du bug bloquant l'appel des callbacks d'enter lors du
+    dans l'item de grab (buttonpress actif).
+
+  * Correction de doc.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue, 20 Mar 2001 10:49:46 +0100
+
+zinc-tk (3.1.24) unstable; urgency=low
+
+  * Un début de scripts de démo en Perl.
+
+  * Des adaptations pour Redhat/Mandrake et Solaris au niveau
+    de la compilation (configure, Makefiles).
+
+  * Debut d'intégration d'un rendu à base de GLX.
+
+  * Corrections de bugs de rendu (rectangle, track), et de
+    clipping (champs). Le relief des curves est géré dans
+    le bon sens (il était inversé).
+
+  * Correction du bug des curves -closed (corre dump).
+
+  * Correction du core dump lors de la destruction d'un dépendant,
+    par example waypoint attachées.
+    
+  * Correction de la fonction contour, il est désormais possible
+    de fournir un contour sous forme de point. Correction d'un
+    core dump lié à la libération intempestive de mémoire.
+
+  * Correction de coords, il est possible d'ajouter/modifier des
+    points à un curve sans contours (curve vide à la construction).
+    
+  * Modification du traitment des évènements/bindings pour
+    les champs/parties. Maintenant les enter/leaves d'items
+    sont controlés exclusivement par la sensibilité de l'item
+    et les enter/leaves de champs par la sensibilité du champ
+    et celle de l'item.
+
+  * Suppression du grab sur bouton gauche appuyé, les enter/leave
+    sont toujours générés.
+
+  * Tentative d'homogénéiser la valeur de retour des fonctions
+    retournant une liste. Désormais ce sera un tableau en Perl.
+    Les fonctions touchées : bbox, monitor, find, mapinfo get.
+    
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  9 Feb 2001 11:22:22 +0100
+
+zinc-tk (3.1.23) unstable; urgency=low
+
+  * -curve est à false par défaut (conforme à l'ancien
+    usage).
+  * Une curve ouverte garde ses deux points extrèmes même
+    s'ils sont identiques.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 12 Jan 2001 17:39:42 +0100
+
+zinc-tk (3.1.22) unstable; urgency=low
+
+  * Ajout de sections de compilation conditionnelle pour libart.
+    Renommage de l'option -localrender en -render pour préparer
+    l'avenir (openGL ou extension Render de Xfree86).
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu,  4 Jan 2001 11:41:11 +0100
+
+zinc-tk (3.1.21) unstable; urgency=low
+
+  * Ajouté une dep sur libart. Corrige des bugs sur l'appel de l'antirec.
+    Corrge un bug de spec sur l'affichage de la derniere pos d'une piste
+    en surbrillance.
+    Implementation de la méthode Render sur plus d'items.
+    Le vecteur vitesse est codé en flottant et il est possible de modifier
+    sa largeur.
+    Blocage de la version Tk à 8.0 pour etre compatible perltk et tk :
+    Tk 8.2 implémente UTF8 et unicode.
+    Correction de plusieurs bugs sur l'appel de l'antirec (essentiellement
+    situés dans Track.c).
+    
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu, 16 Nov 2000 16:27:20 +0100
+
+zinc-tk (3.1.20) unstable; urgency=low
+
+  * Début d'ajout du rendu local. Modif de l'appel
+    de l'antirec (il était appelé trop fréquement).
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 13 Nov 2000 11:23:18 +0100
+
+zinc-tk (3.1.19) unstable; urgency=low
+
+  * Plus de doc.
+
+  * Ajout de deux attributs à l'item Track afin de permettre une colorisation
+    différenciée des positions passée et de la position courante.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 27 Sep 2000 10:58:01 +0200
+
+zinc-tk (3.1.18) unstable; urgency=low
+
+  * Correction de bugs: fuite de mémoire, segmentation au démarrage
+    alors que le pointeur est dans la fenêtre.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu, 29 Jun 2000 14:55:44 +0200
+
+zinc-tk (3.1.17) unstable; urgency=low
+
+  * MODIFICATIONS INCOMPATIBLES: find atpoint est remplacée par
+    find closest qui a la même sémantique que le find closest du
+    canvas. LEs parties privées (connexions, vecteurs vitesse, etc)
+    ne sont plus spécifiée par des nombres négatifs mais par des
+    symboles (connection, position, speedvector, leader).
+
+  * Tous les bindings associés à un item sont libérés lors de la
+    destruction de l'item y compris ceux associés aux champs et
+    aux parties privées.
+
+  * La nouvelle commande verticeat retourne le sommet d'un curve ou
+    bezier le plus près d'un point donné.
+
+  * Le système de tags à été entièrement revu et s'appuie maintenant
+    sur un seul jeuy de fonctions (plus de table de tag). Les items sont
+    désormais toujours énumérés par ordre de priorité d'affichage.
+    Il est désormais possible d'utiliser des connecteurs booléens là
+    où un tag est attendu (&& || () ! ^ sont reconnus).
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 21 Jun 2000 13:07:11 +0200
+
+zinc-tk (3.1.16) unstable; urgency=low
+
+  * Passage en Tcl_Objs.
+
+  * La compilation de GPC est optionnelle et la
+    commande contour n'est oérationnelle que si
+    GPC est inclu.
+
+  * Ajout du copyright de GPC dans le fichier copyright.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon,  5 Jun 2000 13:56:59 +0200
+
+zinc-tk (3.1.15) unstable; urgency=low
+
+  * Ajout de l'item Window
+
+  * Ajout du focus, de la selection et des commandes et
+    méthodes nécessaires à la saisie de texte.
+
+  * Ajout d'une spec de dimensionnement de field permettant
+    de specifier toute la hauteur et/ou toute la largeur
+    du label.
+    
+  * Corrections de bugs sur Curve, Coords, Recherche de
+    tags, etc.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 26 May 2000 10:41:38 +0200
+
+zinc-tk (3.1.14) unstable; urgency=low
+
+  * Ajout des polygones multi-contours (fonction contour),
+    de l'item Bezier, des fonctions fit et smooth (Bezier).
+  * Correction d'un bug sur l'antirec interdisant l'antirec
+    ailleurs que dans le top group.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu, 11 May 2000 16:09:30 +0200
+
+zinc-tk (3.1.13) unstable; urgency=low
+
+  * Fix de bugs. Réalisation des dégradés. Clipping par un arc.
+    find withtag ne sort plus en erreur si le tag/id n'est pas
+    trouvé
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu, 23 Mar 2000 15:27:32 +0100
+
+zinc-tk (3.1.12) unstable; urgency=low
+
+  * Fix de bugs et du paquetage. Amélioration des reliefs.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue,  7 Mar 2000 16:00:09 +0100
+
+zinc-tk (3.1.11) unstable; urgency=low
+
+  * 
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 25 Feb 2000 11:19:53 +0100
+
+zinc-tk (3.1.10) unstable; urgency=low
+
+  * Modifications pour une meilleure configuration de la compil
+    et du test en Perl.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  4 Feb 2000 15:42:11 +0100
+
+zinc-tk (3.1.9) unstable; urgency=low
+
+  * Passage du nom radar au nom zinc.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 31 Jan 2000 14:27:56 +0100
+
+xradar3-tk (3.1.8) unstable; urgency=low
+
+  * Fin de réalisation de ToArea pour Curve.
+  * Mise à dispo de l'item Arc complet (sauf relief).
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 26 Jan 2000 14:39:05 +0100
+
+xradar3-tk (3.1.7) unstable; urgency=low
+
+  * Ajout des commandes clone, group, monitor,
+  * extension de fonctionalité de coords,
+  * changement de nom de multipoint en curve,
+  * amélioration des commandes find et addtag,
+  * gestion des dégradés/couleurs en interne,
+  * Gestion des flêches dans track et curve.
+  * Gestion des bouts de lignes et des joints dans
+  curve.
+  * curve permet d'interpreter ses points comme des
+  controles de Bezier (en plus de la méthode smooth).
+  * Correction de bugs nombreuses.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu, 13 Jan 2000 11:12:35 +0100
+
+xradar3-tk (3.1.6) unstable; urgency=low
+
+  * Correction dans debian pour assurer la mise en paquet suite à
+  l'ajout de la bib dynamique ptkradar et om.
+  * Correction de bugs, ajout de la commande chggroup.
+  * Les reliefs ne sont plus fonctionnels.
+  
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu, 16 Dec 1999 11:30:43 +0100
+
+xradar3-tk (3.1.5) unstable; urgency=low
+
+  * Ajout du clip, du tuilage. Séparation de l'antirec dans une lib.
+  Mise à jour Perl, génération possible d'une bib debug pour perl.
+  Génération d'une bib dynamique pour perl. Correction de bug.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu,  9 Dec 1999 14:28:44 +0100
+
+xradar3-tk (3.1.4) unstable; urgency=low
+
+  * Remplacement de l'algo d'antirec par l'ancienne version de LAOM
+    qui peut être distribuée sous LGPL. Corrections de bugs en particulier
+    autour des transformations et du label format. Mise à jour partielle
+    de la doc, etc. Suppression des phidiasseries.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu,  2 Dec 1999 15:47:18 +0100
+
+xradar3-tk (3.1.3) unstable; urgency=low
+
+  * Grosses modifs autour des étiquettes, labelformats, guideurs
+    et ancres/attachements.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 29 Nov 1999 11:36:23 +0100
+
+xradar3-tk (3.1.2) unstable; urgency=low
+
+  * Ajout de l'item Rectangle. Correction de problèmes de binding.
+    et plein d'autres choses.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu,  4 Nov 1999 16:51:06 +0100
+
+xradar3-tk (3.1.1) unstable; urgency=low
+
+  * Première version de la branche instable 3.1. Comporte l'ajout des
+    transformations et des groupes et les items Icon et Text.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 29 Oct 1999 17:14:20 +0200
+
+xradar3-tk (3.0.12) unstable; urgency=low
+
+  * Quatrième version distribuée. Correction d'un bug bloquant sur itemcget
+    dans l'incarnation perl. Début de passage en RadarBBox.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  4 Jun 1999 13:30:02 +0200
+
+xradar3-tk (3.0.11) unstable; urgency=low
+
+  * Troisieme version distribuée. La XToolkit n'existe plus. Le paquetage
+    de base est désormais xradar3-tk. Corrections de bugs dans le widget.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri,  4 Jun 1999 13:30:02 +0200
+
+xradar (3.0.10) unstable; urgency=low
+
+  * Seconde version distribuée. Le schema de nommage debian incorpore
+    desormais le patch level en troisieme partie. De plus la numérotation
+    est celle d'un paquetage debian natif.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 21 May 1999 13:20:02 +0200
+
+xradar (3.0-2) unstable; urgency=low
+
+  * Premiere version distribuée. Elle correspond à la ALPHA_10.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 21 May 1999 11:20:02 +0200
+
+xradar (3.0-1) unstable; urgency=low
+
+  * Suppression de la dependance  xbase. Cration des paquetages xradar-tk et
+    xradar-perl.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Fri, 28 May 1999 14:26:02 +0200
+
+xradar (2.5-3) unstable; urgency=low
+
+  * Ajout des dépendances et du soname sur la bibliothèque dynamique.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed,  9 Dec 1998 11:05:27 +0100
+
+xradar (2.5-2) unstable; urgency=low
+
+  * Eclatement en trois paquetages. Un pour le runtime, un pour
+    le développement et un pour les fontes.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon, 24 Aug 1998 13:40:50 +0200
+
+xradar (2.5-1) unstable; urgency=low
+
+  * Passage en xradar 2.5.0 (beta de la 3.0)
+  * Installation sous /usr/X11R6
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Mon,  4 May 1998 15:29:50 +0200
+
+xradar (2.4-3) unstable; urgency=low
+
+  * Separation de la fonte curseur des autres fontes. Elle n'est plus
+    fabriquée automatiquement et elle n'est plus installée.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Thu,  2 Apr 1998 10:13:50 +0200
+
+xradar (2.4-2) unstable; urgency=low
+
+  * Ajout des fontes phidias.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Tue, 10 Mar 1998 11:04:38 +0100
+
+xradar (2.4-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Patrick Lecoanet <lecoanet@ath.cena.fr>  Wed, 25 Feb 1998 14:11:43 +0100
+
+

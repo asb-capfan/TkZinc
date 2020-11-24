@@ -1,0 +1,48 @@
+# -*- tcl -*-
+# This file is part of the Tkzinc test suite.
+# It tests the code in Rectangle.c which implements
+# the rectangle item.
+#
+
+package require tcltest 2.2
+eval tcltest::configure $argv
+
+lappend auto_path [file join [file dirname [info script]] ..]
+package require Tkzinc
+
+zinc .z -width 400 -height 300 -borderwidth 2 -relief sunken
+pack .z
+bind .z <1> {
+    puts "button down at (%x,%y)"
+}
+update
+
+namespace eval ::rectangle::test {
+    namespace import ::tcltest::*
+
+#    testConstraint X [expr {...}]
+
+    variable SETUP {
+	#common setup code
+    }
+    variable CLEANUP {
+	#common cleanup code
+    }
+
+    test example-1 {} -setup $SETUP {
+	set i 1
+    } -cleanup $CLEANUP
+
+#     test example-2 {} -constraints emptyTest -setup $SETUP {
+# 	# Second test; constrained
+#     } -cleanup $CLEANUP -result {...}
+
+#     test example-3 {} {
+# 	# Third test; no context required
+#     } {...}
+
+    cleanupTests
+}
+
+namespace delete ::rectangle::test
+	

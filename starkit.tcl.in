@@ -1,0 +1,161 @@
+#
+# This script is intended to be run in the top directory
+# with: tclsh starkit.tcl.
+# It needs a tclkit and the sdx command as a starkit in the path.
+#
+
+set MAJOR_VERSION @MAJOR_VERSION@
+set MINOR_VERSION @MINOR_VERSION@
+set PATCHLEVEL @PATCHLEVEL@
+
+
+#
+# Starkit structure
+#
+# demo.tcl
+# lib
+#   tkimg1.3
+#     files from the Tkimg starkit
+#   TkzincX.Y
+#     Copyright
+#     demos
+#       demos files and sub-directories
+#     Linux-x86
+#       Tkzinc.so
+#     pkgIndex.tcl
+#     Windows-x86
+#       Tkzinc.dll
+#     zincGraphics.tcl
+#     zincLogo.tcl
+#     zincText.tcl
+# main.tcl
+#
+
+proc Windows-x86-Compile {} {
+  set cwd [pwd]
+  puts "Compiling for Windows $cwd..."
+  cd win
+  if { [catch { exec tclsh package.tcl clean } result] } {
+    puts $result
+    exit
+  }
+  if { [catch { exec tclsh package.tcl subst } result] } {
+    puts $result
+    exit
+  }
+  if { [catch { exec tclsh package.tcl tcl } result] } {
+    puts $result
+    exit
+  }
+  #
+  # Copy the dll in the root dir for updateKit.
+  file copy -force [glob -directory buildtcl Tkzinc*.dll] [file join $cwd Tkzinc.dll]
+
+  cd $cwd
+}
+
+proc Linux-x86-Compile {} {
+}
+
+proc updateKit { TkzincVfs } {
+  global MAJOR_VERSION MINOR_VERSION PATCHLEVEL
+
+  set zincPath [file join $TkzincVfs lib Tkzinc$MAJOR_VERSION.$MINOR_VERSION]
+  set version $MAJOR_VERSION.$MINOR_VERSION.$PATCHLEVEL
+  set winVersion $MAJOR_VERSION$MINOR_VERSION$PATCHLEVEL
+
+  file copy -force [file join starkit demo.tcl] [file join starkit main.tcl] $TkzincVfs
+
+  set zincPath [file join $TkzincVfs lib Tkzinc$MAJOR_VERSION.$MINOR_VERSION]
+  file mkdir $zincPath
+  file copy -force Copyright \
+	  [file join library zincGraphics.tcl] \
+	  [file join library zincLogo.tcl] \
+	  [file join library zincText.tcl] \
+	  $zincPath
+
+  set demosPath [file join $zincPath demos]
+  file mkdir $demosPath
+  foreach f [glob -directory demos *.tcl] {
+	  file copy -force $f $demosPath
+  }
+  file delete -force [file join $demosPath data] [file join $demosPath images]
+  file copy -force [file join demos zinc-widget] [file join demos data] [file join demos images] $demosPath
+
+  #
+  # Emit a merged pkgIndex.tcl
+  #
+  set fOut [open [file join $zincPath pkgIndex.tcl] w]
+  puts $fOut "proc Platform {} {"
+  puts -nonewline $fOut [info body Platform]
+  puts $fOut "}"
+  set fIn [open [file join library pkgIndex.tcl]]
+  foreach line [split [read $fIn] \n] {
+  	if {![regexp {^\s*$|^#} $line]} {
+	    puts $fOut $line
+	  }
+  }
+  close $fIn
+  puts -nonewline $fOut "package ifneeded Tkzinc $version "
+  puts $fOut {[list load [file join $dir [Platform] Tkzinc[info sharedlibext]]]}
+  close $fOut
+
+  #
+  # Copy the platform dependent libraries
+  #
+  if { [file exists libTkzinc$version.so] } {
+	  set platformPath [file join $zincPath Linux-x86]
+	  file mkdir $platformPath
+	  file copy -force libTkzinc$version.so [file join $platformPath Tkzinc.so]
+  }
+  if { [file exists Tkzinc.dll] } {
+	  set platformPath [file join $zincPath Windows-x86]
+	  file mkdir $platformPath
+	  file copy -force Tkzinc.dll [file join $platformPath Tkzinc.dll]
+  }
+}
+
+
+proc Platform {} {
+  global tcl_platform
+  set plat [lindex $tcl_platform(os) 0]
+  set mach $tcl_platform(machine)
+  switch -glob -- $mach {
+  	sun4* { set mach sparc }
+  	intel -
+	  i*86* { set mach x86 }
+	  "Power Macintosh" { set mach ppc }
+  }
+  switch -- $plat {
+	  AIX   { set mach ppc }
+	  HP-UX { set mach hppa }
+  }
+  return "$plat-$mach"
+}
+
+#
+# Build the current platform variant
+[Platform]-Compile
+
+set TkzincVfs Tkzinc.vfs
+set TkzincKit Tkzinc.kit
+
+set cwd [pwd]
+cd ..
+
+if { ! [file exists $TkzincVfs] } {
+  if { [file exists $TkzincKit] } {
+	  exec sdx unwrap $TkzincKit
+  } else {
+    puts "Unable to find either Tkzinc.kit or Tkzinc.vfs in .. , giving up."
+    exit
+  }
+}
+cd $cwd
+updateKit [file join .. $TkzincVfs]
+
+puts "Now wrapping the starkit"
+
+cd ..
+exec sdx wrap $TkzincKit
+

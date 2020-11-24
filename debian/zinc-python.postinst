@@ -1,0 +1,23 @@
+#! /bin/bash -e
+#
+# Debian postinst script for Python hierarchical modules
+# Written by Gregor Hoffleit <flight@debian.org>
+#
+
+NAME=zinc-python
+DEFAULT_VERSION_PYTHON=`dpkg -p python| grep -e "^Version:" |cut -d" " -f2|cut -d"." -f1-2`
+DIRLIST="/usr/lib/python${DEFAULT_VERSION_PYTHON}/site-packages"
+
+case "$1" in
+    configure|abort-upgrade|abort-remove|abort-deconfigure)
+        for i in $DIRLIST ; do
+             python -O /usr/lib/python${DEFAULT_VERSION_PYTHON}/compileall.py -q $i
+             python /usr/lib/python${DEFAULT_VERSION_PYTHON}/compileall.py -q $i
+        done
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
