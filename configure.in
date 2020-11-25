@@ -20,12 +20,12 @@ dnl $Id$
 #-----------------------------------------------------------------------
 MAJOR_VERSION=3
 MINOR_VERSION=3
-PATCHLEVEL=6
+PATCHLEVEL=7
 
 #-----------------------------------------------------------------------
 # Check the source path of the package
 #-----------------------------------------------------------------------
-AC_INIT([Tkzinc], [3.3.6])
+AC_INIT([Tkzinc], [3.3.7])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
