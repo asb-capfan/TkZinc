@@ -19,6 +19,7 @@
 # $Id$
 
 use strict;
+use Cwd qw(cwd);
 
 my $ZINC_PREFIX = 'tk-zinc';
 my $DEFAULT_SERVER = 'cvs.tkzinc.org';
@@ -73,8 +74,9 @@ sub filesubst {
 my $VERSION;
 my $FROM_CVS = (scalar(@ARGV) != 0);
 my $DIR_FROM_CVS;
-my $CWD;
-chomp($CWD = `pwd`);
+my $CWD = cwd();
+chomp($CWD);
+
 #
 # See if parameters are given (there should be a cvs tag
 # and may be the repository machine).
