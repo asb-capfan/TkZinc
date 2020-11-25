@@ -13,7 +13,7 @@
 BEGIN {
     if (!eval q{
 #        use Test::More qw(no_plan);
-        use Test::More tests => 18;
+        use Test::More tests => 11;
         1;
     }) {
         print "# tests only work properly with installed Test::More module\n";
@@ -33,6 +33,7 @@ BEGIN {
 }
 
 use strict;
+use Tk::Zinc; # satisfy editor debugger
 my $mw = MainWindow->new();
 my $zinc = $mw->Zinc(-width => 200, -height => 200, -backcolor => "white",
                      -render => 1)->pack;
@@ -64,46 +65,40 @@ $zinc->remove($circle1);
 $zinc->remove($circle2);
 
 my $gradient;
-for (1..4) { 
-  for (my $i = 0; $i <=360; $i++) {
-    $gradient = "=axial $i | red | white 50 | blue";
-    $zinc->itemconfigure($curve, -fillcolor => $gradient); 
-    $zinc->update;
-  }
+for (my $i = 0; $i <=360; $i++) {
+  $gradient = "=axial $i | red | white 50 | blue";
+  $zinc->itemconfigure($curve, -fillcolor => $gradient); 
+  $zinc->update;
 }
 pass("turning gradient one side");
 
-for (1..4) {
-  for (1..100) {
-    $zinc->translate($curve,0.5,0.5);
-    $zinc->update;
-  }
-  for (1..800) {
-    $zinc->rotate($curve, 3.14159/400, 100,100);
-    $zinc->update;
-  }
-  for (1..100) {
-    $zinc->translate($curve,0.5,0.5);
-    $zinc->update;
-  }
-  
-  for (1..400) {
-    $zinc->translate($curve,-0.5,-0.5);
-    $zinc->update;
-  }
-  for (1..200) {
-    $zinc->translate($curve,0.5,0.5);
-    $zinc->update;
-  }
-  pass ("shaking the circle around");
+for (1..100) {
+  $zinc->translate($curve,0.5,0.5);
+  $zinc->update;
+}
+for (1..800) {
+  $zinc->rotate($curve, 3.14159/400, 100,100);
+  $zinc->update;
+}
+for (1..100) {
+  $zinc->translate($curve,0.5,0.5);
+  $zinc->update;
 }
 
-for (1..4) { 
-  for (my $i = 359; $i > 0; $i--) {
-    $gradient = "=axial $i | red | white 50 | blue";
-    $zinc->itemconfigure($curve, -fillcolor => $gradient); 
-    $zinc->update;
-  }
+for (1..400) {
+  $zinc->translate($curve,-0.5,-0.5);
+  $zinc->update;
+}
+for (1..200) {
+  $zinc->translate($curve,0.5,0.5);
+  $zinc->update;
+}
+pass ("shaking the circle around");
+
+for (my $i = 359; $i > 0; $i--) {
+  $gradient = "=axial $i | red | white 50 | blue";
+  $zinc->itemconfigure($curve, -fillcolor => $gradient); 
+  $zinc->update;
 }
 pass("turning gradient the other side");
 
@@ -119,22 +114,20 @@ $zinc->itemconfigure($gr, -clip => $curve);
 
 
 pass("displaying a translated rectangle filled with froggy colors and clipped by two circles");
-for (1..2) {
-  for (my $i = 0; $i<500 ; $i++) {
-    $zinc->translate($rect, 0,1);
-    $zinc->update;
-  }
-  for (my $i = 0; $i<500 ; $i++) {
-    $zinc->translate($rect, 0,-1);
-    $zinc->update;
-  }
-  pass ("a thousand translation");
+for (my $i = 0; $i<500 ; $i++) {
+  $zinc->translate($rect, 0,1);
+  $zinc->update;
 }
+for (my $i = 0; $i<500 ; $i++) {
+  $zinc->translate($rect, 0,-1);
+  $zinc->update;
+}
+pass ("a thousand translation");
 
 $zinc->translate($rect, 0,250);
 
 
-for (1..1000) {
+for (1..500) {
   $zinc->scale($rect, 1, 0.998, 100,100);
   $zinc->update;
 }
@@ -161,7 +154,7 @@ for (1..360) {
 }
 
 
-for (1..1000) {
+for (1..500) {
   $zinc->scale($rect, 1, 1/0.998, 100,100);
   $zinc->update;
 }
@@ -169,17 +162,15 @@ pass("a thousand scaling up");
 
 
 
-for (1..4) {
-  for my $i (0..200) {
-    $zinc->itemconfigure($gr, -alpha => (200-$i)/2);
-    $zinc->update;
-  }
-  for my $i (0..200) {
-    $zinc->itemconfigure($gr, -alpha => $i/2);
-    $zinc->update;
-  }
-  pass("fade out/in in 400 steps");
+for my $i (0..200) {
+  $zinc->itemconfigure($gr, -alpha => (200-$i)/2);
+  $zinc->update;
 }
+for my $i (0..200) {
+  $zinc->itemconfigure($gr, -alpha => $i/2);
+  $zinc->update;
+}
+pass("fade out/in in 400 steps");
 
 exit;
 

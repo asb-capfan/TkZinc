@@ -15,7 +15,7 @@ my $mw;
 BEGIN {
     if (!eval q{
 #        use Test::More qw(no_plan);
-        use Test::More tests => 69;
+        use Test::More tests => 51;
         1;
     }) {
         print "# tests only work properly with installed Test::More module\n";
@@ -44,7 +44,7 @@ BEGIN {
 }
 
 use strict;
-
+use Tk::Zinc; # satisfy editor debugger
 my $zinc = $mw->Zinc(-render => 1,
 		     -width => 400, -height => 1200)->pack;
 
@@ -125,7 +125,7 @@ sub testExecute {
 
 
 
-    foreach my $size (9..60) {
+    foreach my $size (9..42) {
         $zinc->fontCreate("font$size", -family => $family, -size => -$size, -weight => 'normal');
         $zinc->add('text', $g1, -position => [10,$y],  -tags => ["txt$size"], -font => "font$size",
                    -text => "$size pixels $family");
