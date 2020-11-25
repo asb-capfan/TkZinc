@@ -80,7 +80,6 @@ chomp($CWD = `pwd`);
 # and may be the repository machine).
 #
 if ($FROM_CVS) {
-    my $tag_version;
     my $cvstag = $ARGV[0];
     my $server = $DEFAULT_SERVER;
     if (scalar(@ARGV) == 2) {
