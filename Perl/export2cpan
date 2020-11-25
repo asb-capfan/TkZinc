@@ -33,18 +33,18 @@ sub version4cpan {
     
     my ($major, $minor, $patchlevel);
     while (<FD>) {
-	if (/^MAJOR_VERSION=(\d+)/)
-	    {
-		$major = $1;
-	    }
-	elsif (/^MINOR_VERSION=(\d+)/)
-	    {
-		$minor = $1;
-	    }
-	elsif (/^PATCHLEVEL=(\d+)/)
-	    {
-		$patchlevel = $1;
-	    }
+        if (/^MAJOR_VERSION=(\d+)/)
+        {
+            $major = $1;
+        }
+        elsif (/^MINOR_VERSION=(\d+)/)
+        {
+            $minor = $1;
+        }
+        elsif (/^PATCHLEVEL=(\d+)/)
+        {
+            $patchlevel = $1;
+        }
     }
 
     close (FD);
@@ -60,10 +60,10 @@ sub filesubst {
     open(FDOUT, ">$fileOut") or die "Could not open output file $fileOut";
 
     while (<FDIN>) {
-	if (/$key/) {
-	    s/$key/$val/g;
-	}
-	print FDOUT $_;
+        if (/$key/) {
+            s/$key/$val/g;
+        }
+        print FDOUT $_;
     }
 
     close(FDIN);
@@ -83,13 +83,13 @@ if ($FROM_CVS) {
     my $cvstag = $ARGV[0];
     my $server = $DEFAULT_SERVER;
     if (scalar(@ARGV) == 2) {
-	$server = $ARGV[1];
+        $server = $ARGV[1];
     }
     print "Building a CPAN release tarball from tag $cvstag.\n";
     $cvstag =~ /^.*?([\d_]+)$/;
     my $tag_version = $1;
     if ($tag_version =~ /(\d+)_(\d+)_(\d+)/) {
-	$tag_version = "$1_$2$3";
+        $tag_version = "$1_$2$3";
     }
     $VERSION = version4cpan;   # version computed from the source directory
     $DIR_FROM_CVS = "$ZINC_PREFIX-$VERSION";
@@ -97,7 +97,7 @@ if ($FROM_CVS) {
     system ("mkdir $TMP");
     chdir("$TMP");
     # the following command always fail with cvs 1.11.1p1 !!
-     my $command = "cd $TMP; cvs -d $server:$DEFAULT_CVS_MODULE export -r $cvstag -d $DIR_FROM_CVS Tkzinc";
+    my $command = "cd $TMP; cvs -d $server:$DEFAULT_CVS_MODULE export -r $cvstag -d $DIR_FROM_CVS Tkzinc";
     # my $command = "cd $TMP; cvs -d /pii/repository export -r $cvstag -d $DIR_FROM_CVS Tkzinc";
     print "$command\n";
     my $error = system($command);
@@ -105,12 +105,12 @@ if ($FROM_CVS) {
     chdir("$DIR_FROM_CVS/Perl");
     my $EXTRACTED_VERSION = version4cpan; # version gotten from the tagged CVS files
     if ($EXTRACTED_VERSION ne $VERSION) {
-	print "Oops! the tag version '$tag_version' does not match the version '$VERSION' in the sources, aborting\n";
-	exit(1);
+        print "Oops! the tag version '$tag_version' does not match the version '$VERSION' in the sources, aborting\n";
+        exit(1);
     }
     system ("cd $TMP/$DIR_FROM_CVS; ./configure");
-}
-else {
+
+} else {
     $VERSION = version4cpan;
     print "cd ..; ./configure\n";
     system ("cd ..; ./configure"); # for creating  Makefile.pl from xxx.in files
@@ -123,15 +123,15 @@ my $CP = 'cp -r';
 my $CPonlyIfDifferent = 'cp -r';
 my $RSYNC = 0;
 if (-x '/usr/bin/rsync') {
-  $CP = '/usr/bin/rsync -rp';        # the --delete option has been removed to avoid deleting Makefile in demos
-  $CPonlyIfDifferent = '/usr/bin/rsync -rc';
+    $CP = '/usr/bin/rsync -rp';        # the --delete option has been removed to avoid deleting Makefile in demos
+    $CPonlyIfDifferent = '/usr/bin/rsync -rc';
 #  print "\$CP = '$CP'\n";
   $RSYNC = 1;
 } elsif (-x '/usr/local/bin/rsync') {
-  $CP = '/usr/local/bin/rsync -rp';  # the --delete option has been removed to avoid deleting Makefile in demos
-  $CPonlyIfDifferent = '/usr/local/bin/rsync -rc';
+    $CP = '/usr/local/bin/rsync -rp';  # the --delete option has been removed to avoid deleting Makefile in demos
+    $CPonlyIfDifferent = '/usr/local/bin/rsync -rc';
 #  print "\$CP = '$CP'\n";
-  $RSYNC = 1;
+    $RSYNC = 1;
 }
 
 my $EXPORT_DIR = '../export2cpan';
@@ -145,7 +145,7 @@ if (! -d $EXPORT_DIR) {
     mkdir($EXPORT_DIR);
 }
 if (! -d "$EXPORT_DIR/$VERSION_DIR") {
-  mkdir("$EXPORT_DIR/$VERSION_DIR");
+    mkdir("$EXPORT_DIR/$VERSION_DIR");
 }
 symlink ("$EXPORT_DIR/$VERSION_DIR", "$EXPORT_DIR/$ZINC_PREFIX");
 
