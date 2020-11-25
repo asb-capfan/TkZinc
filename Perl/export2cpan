@@ -120,26 +120,12 @@ if ($FROM_CVS) {
 
 print "VERSION $VERSION\n";
 
-# using rsync if available rather than cp
 my $CP = 'cp -r';
-my $CPonlyIfDifferent = 'cp -r';
-my $RSYNC = 0;
-if (-x '/usr/bin/rsync') {
-    $CP = '/usr/bin/rsync -rp';        # the --delete option has been removed to avoid deleting Makefile in demos
-    $CPonlyIfDifferent = '/usr/bin/rsync -rc';
-#  print "\$CP = '$CP'\n";
-  $RSYNC = 1;
-} elsif (-x '/usr/local/bin/rsync') {
-    $CP = '/usr/local/bin/rsync -rp';  # the --delete option has been removed to avoid deleting Makefile in demos
-    $CPonlyIfDifferent = '/usr/local/bin/rsync -rc';
-#  print "\$CP = '$CP'\n";
-    $RSYNC = 1;
-}
 
 my $EXPORT_DIR = '../export2cpan';
 my $VERSION_DIR = "$ZINC_PREFIX-$VERSION";
 
-if (-d "$EXPORT_DIR/$VERSION_DIR" and !$RSYNC) {
+if (-d "$EXPORT_DIR/$VERSION_DIR") {
     system("rm -rf $EXPORT_DIR/$VERSION_DIR");
 }
 
