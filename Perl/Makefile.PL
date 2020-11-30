@@ -83,6 +83,9 @@ WriteMakefile(
 			  'Tk' => 8.004,
 			  'ExtUtils::MakeMaker' => '6.98',
 		  },
+          'TEST_REQUIRES' => {
+			  'Test::More' => '0.98',
+          },
 	      'LIBS'			=> $NeededLibs, 
           'OPTIMIZE'        => &optimize,
 	      'DEFINE'			=> &get_flags,
