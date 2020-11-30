@@ -25,9 +25,9 @@ print "Configuring version $VERSION for $platform platform...\n";
 print "Using $TkLibDir as Tk library...\n";
 
 my @GENERIC_C = ('Tabular.c', 'Rectangle.c', 'Arc.c', 'Curve.c',
-		 'Item.c', 'PostScript.c', 'Attrs.c', 'Draw.c', 'Geo.c', 'List.c',
-		 'perfos.c', 'Transfo.c', 'Group.c', 'Icon.c', 'Text.c', 'Image.c', 'Color.c',
-		 'Field.c', 'Triangles.c', 'Viewport.c', 'WindowUtils.c', 'Window.c', 'tkZinc.c');
+         'Item.c', 'PostScript.c', 'Attrs.c', 'Draw.c', 'Geo.c', 'List.c',
+         'perfos.c', 'Transfo.c', 'Group.c', 'Icon.c', 'Text.c', 'Image.c', 'Color.c',
+         'Field.c', 'Triangles.c', 'Viewport.c', 'WindowUtils.c', 'Window.c', 'tkZinc.c');
 
 my @ATC_C = ('OverlapMan.c', 'Track.c', 'Reticle.c', 'Map.c', 'MapInfo.c');
 
@@ -76,89 +76,89 @@ if ($] >= 5.008000) {
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 WriteMakefile(
-          'ABSTRACT'        => 'a canvas offering groups, tranformations, transparency, color gradient...',
-	      'AUTHOR'          => 'Patrick Lecoanet <lecoanet@cena.fr>',
-	      'NAME'			=> 'Tk::Zinc',
-	      'PREREQ_PM'		=> {
-			  'Tk' => 8.004,
-			  'ExtUtils::MakeMaker' => '6.98',
-		  },
-          'TEST_REQUIRES' => {
-			  'Test::More' => '0.98',
-          },
-	      'LIBS'			=> $NeededLibs, 
-          'OPTIMIZE'        => &optimize,
-	      'DEFINE'			=> &get_flags,
-	      'INC'             => $INC,
-	      'C'               => [@C],
-	      'XS_VERSION'      => $Tk::Config::VERSION,
-	      'XS'              => {'Zinc.xs' => 'Zinc.c'},
-	      'linkext'         => {LINKTYPE => 'dynamic'},
-	      'depend'          => {$ZincObj => '$(O_FILES) Zinc.c'},
-	      'LDFROM'			=> "\$(O_FILES) $ZincObj",
-		  'MIN_PERL_VERSION'  => 5.006,
-		  'META_MERGE'     	=> {
-			'resources' 	=> {
-				'repository' => 'https://github.com/asb-capfan/TkZinc',
-			},
-		  },
+    'ABSTRACT'        => 'a canvas offering groups, tranformations, transparency, color gradient...',
+    'AUTHOR'          => 'Patrick Lecoanet <lecoanet@cena.fr>',
+    'NAME'            => 'Tk::Zinc',
+    'PREREQ_PM'       => {
+        'Tk' => 8.004,
+        'ExtUtils::MakeMaker' => '6.98',
+    },
+    'TEST_REQUIRES' => {
+        'Test::More' => '0.98',
+    },
+    'LIBS'            => $NeededLibs, 
+    'OPTIMIZE'        => &optimize,
+    'DEFINE'          => &get_flags,
+    'INC'             => $INC,
+    'C'               => [@C],
+    'XS_VERSION'      => $Tk::Config::VERSION,
+    'XS'              => {'Zinc.xs' => 'Zinc.c'},
+    'linkext'         => {LINKTYPE => 'dynamic'},
+    'depend'          => {$ZincObj => '$(O_FILES) Zinc.c'},
+    'LDFROM'          => "\$(O_FILES) $ZincObj",
+    'MIN_PERL_VERSION'  => 5.006,
+    'META_MERGE'      => {
+        'resources'     => {
+            'repository' => 'https://github.com/asb-capfan/TkZinc',
+        },
+    },
 );
 
 sub optimize {
-  foreach my $arg (@ARGV) {
-    if ($arg =~ /(enable-symbols)/i) {
-      return "-g";
+    foreach my $arg (@ARGV) {
+        if ($arg =~ /(enable-symbols)/i) {
+            return "-g";
+        }
     }
-  }
-  return "-O";
+    return "-O";
 }
 
 sub get_flags {
     my %DEF_FLAGS = ('GL'        => 1,
-		     'SHAPE'     => 1,
-		     'ATC'        => 1
-		     );
+             'SHAPE'     => 1,
+             'ATC'        => 1
+             );
     
     foreach my $arg (@ARGV) {
-	print "$arg ....\n";
-	my ($name, $value) = split(/[=]+/, $arg);
-	if ($name =~ /(with-gl)/i) {
-	    if ($value =~ /no/i) {
-		$DEF_FLAGS{'GL'} = 0;
-	    }
-	}
-	elsif ($name =~ /(with-atc)/i) {
-	    if ($value =~ /no/i) {
-		$DEF_FLAGS{'ATC'} = 0;
-	    }
-	}
-	elsif ($name =~ /(with-shape)/i) {
-	    if ($value =~ /no/i) {
-		$DEF_FLAGS{'SHAPE'} = 0;
-	    }
-	}
+    print "$arg ....\n";
+    my ($name, $value) = split(/[=]+/, $arg);
+    if ($name =~ /(with-gl)/i) {
+        if ($value =~ /no/i) {
+        $DEF_FLAGS{'GL'} = 0;
+        }
+    }
+    elsif ($name =~ /(with-atc)/i) {
+        if ($value =~ /no/i) {
+        $DEF_FLAGS{'ATC'} = 0;
+        }
+    }
+    elsif ($name =~ /(with-shape)/i) {
+        if ($value =~ /no/i) {
+        $DEF_FLAGS{'SHAPE'} = 0;
+        }
+    }
     }
     
     my $defines = "-DPTK -DPACKAGE_VERSION=\\\"$VERSION\\\"";
 
     if ($WIN) {
-	#
-	# No shape extension on Windows (planned later).
-	$DEF_FLAGS{'SHAPE'} = 0;
-	#
-	# Visual C++ does not define __STDC__ by default
-	$defines .= ' -D__STDC__';
+    #
+    # No shape extension on Windows (planned later).
+    $DEF_FLAGS{'SHAPE'} = 0;
+    #
+    # Visual C++ does not define __STDC__ by default
+    $defines .= ' -D__STDC__';
     }
 
     print "Configuring with:\n    ";
     foreach my $flag (keys %DEF_FLAGS) {
-	print "$flag=", $DEF_FLAGS{$flag} ? 'ok' : 'no', " ";
-	if ($DEF_FLAGS{$flag}) {	    
-	    $defines = $defines . " " . "-D$flag";
-	    if ($flag eq 'ATC') {
-		push @C, @ATC_C
-	    }
-	}
+    print "$flag=", $DEF_FLAGS{$flag} ? 'ok' : 'no', " ";
+    if ($DEF_FLAGS{$flag}) {        
+        $defines = $defines . " " . "-D$flag";
+        if ($flag eq 'ATC') {
+        push @C, @ATC_C
+        }
+    }
     }
     if ($Tk::VERSION =~ /^800/) {
       $defines .= " -DPTK_800";
