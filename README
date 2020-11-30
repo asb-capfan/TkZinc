@@ -39,7 +39,11 @@ BUILDING AND INSTALLATION FOR TCL/TK
 0. You need a working Tcl/Tk distribution (version >= 8.4). You can either grab
    it using your regular package manager, or build it and install it from scratch.
 
-   On a Linux system, you need tcl tcl-dev tk tk-dev packages.
+   On a Linux system, you need the following packages:
+	tcl tcl-dev tk tk-dev
+
+   For GL support, you will need the following packages in addition:
+	mesa-common-dev libglu1-mesa-dev freeglut3-dev libglew-dev
 
    On MacOSX you need:
 	- fink with tcltk and tcltk-dev package (http://fink.sf.net)
