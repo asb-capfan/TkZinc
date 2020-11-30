@@ -18,9 +18,9 @@ BEGIN {
         exit;
     }
     if (!eval q{
-	use Tk::Zinc;
+        use Tk::Zinc;
         use Tk::Font;
- 	1;
+    1;
     }) {
         print "unable to load Tk::Zinc";
         print "1..1\n";
@@ -28,8 +28,8 @@ BEGIN {
         exit;
     }
     if (!eval q{
- 	MainWindow->new();
- 	1;
+        MainWindow->new();
+    1;
     }) {
         print "# tests only work properly when it is possible to create a mainwindow in your env\n";
         print "1..1\n";
@@ -144,24 +144,24 @@ ok(&similarFlatArray ([ $zinc->bbox($wpt) ],
 
 my $tab = $zinc->add('tabular', 1, 1, -position => [61, 81]);
 is_deeply([ $zinc->bbox($tab) ],
-	  [ ],
-	  "bbox of a tabular without labelformat");
+      [ ],
+      "bbox of a tabular without labelformat");
 
 #print "tab bbox=(", join(',', $zinc->bbox(-label, $tab)),")\n";
 is_deeply([ $zinc->bbox(-label, $tab) ],
-	  [ ],
-	  "bbox of a tabular without labelformat");
+      [ ],
+      "bbox of a tabular without labelformat");
 
 #print "tab bbox=(", join(',', $zinc->bbox(-field, 0, $tab)),")\n";
 is_deeply([ $zinc->bbox(-field, 0, $tab) ],
-	  [ ],
-	  "bbox of a tabular field without labelformat");
+      [ ],
+      "bbox of a tabular field without labelformat");
 
 
 # $zinc->itemconfigure($tab, -labelformat => 'x20x18+0+0');
 # is_deeply([ $zinc->coords($tab) ],
-# 	  [ 61,81 ],
-# 	  "coords of a tabular with a labelformat");
+#     [ 61,81 ],
+#     "coords of a tabular with a labelformat");
 
 
 
