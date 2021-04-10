@@ -80,7 +80,7 @@ WriteMakefile(
     'AUTHOR'          => 'Patrick Lecoanet <lecoanet@cena.fr>',
     'NAME'            => 'Tk::Zinc',
     'PREREQ_PM'       => {
-        'Tk' => 8.004,
+        'Tk' => 800.004,
         'ExtUtils::MakeMaker' => '6.98',
     },
     'TEST_REQUIRES'   => {
