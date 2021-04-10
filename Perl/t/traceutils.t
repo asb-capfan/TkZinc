@@ -9,18 +9,9 @@
 
 #use Tk::Zinc::TraceUtils;
 use strict;
+use Test::More tests => 15;
 
 BEGIN {
-    if (!eval q{
-#        use Test::More qw(no_plan);
-        use Test::More tests => 15;
-        1;
-    }) {
-        print "# tests only work properly with installed Test::More module\n";
-        print "1..1\n";
-        print "ok 1\n";
-        exit;
-    }
     if (!eval q{
 	use Tk::Zinc::TraceUtils;
  	1;
