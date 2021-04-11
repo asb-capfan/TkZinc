@@ -13,10 +13,10 @@ my $VERSION = SEEexport2cpan;
 
 if (!$TkLibDir)
 {
-    print stderr "==================================================================\n";
-    print stderr "Could not find the Perl/Tk (pTk) library.\n";
-    print stderr "Please, install first Perl/Tk interface before installing Tk::Zinc\n";
-    print stderr "==================================================================\n";
+    print STDERR "==================================================================\n";
+    print STDERR "Could not find the Perl/Tk (pTk) library.\n";
+    print STDERR "Please, install first Perl/Tk interface before installing Tk::Zinc\n";
+    print STDERR "==================================================================\n";
     die;
 }
 
