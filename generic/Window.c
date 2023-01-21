@@ -350,7 +350,7 @@ WindowReleaseExternalWindow(ZnItem item)
 #endif /* ifdef _WIN32 */
 
    /* Reset externalwindow */
-   wind->externalwindow = NULL;
+   wind->externalwindow = 0;
 }
 
 
@@ -384,7 +384,7 @@ Init(ZnItem             item,
   wind->connection_anchor = TK_ANCHOR_SW;
   wind->win = NULL;
   wind->windowtitle = NULL;
-  wind->externalwindow = NULL;
+  wind->externalwindow = 0;
   
   return TCL_OK;
 }
@@ -407,7 +407,7 @@ Clone(ZnItem    item)
    */
   wind->win = NULL;
   wind->windowtitle = NULL;
-  wind->externalwindow = NULL;
+  wind->externalwindow = 0;
 }
 
 
