@@ -1271,7 +1271,7 @@ ZnRenderPolyline(ZnWInfo        *wi,
       glEnd();
     }
     else {
-      int       num_cpoints;
+      unsigned int num_cpoints;
       ZnReal    lw_2 = line_width / 2.0;
       ZnPoint   *cpoints = ZnGetCirclePoints(3, ZN_CIRCLE_COARSE,
                                              0.0, 2*M_PI, &num_cpoints, NULL);
@@ -2000,7 +2000,7 @@ ZnRenderString(ZnTexFontInfo    *tfi,
   Tcl_UniChar   c;
 
   while (len) {
-    clen = Tcl_UtfToUniChar(string, &c);
+    clen = Tcl_UtfToUniChar((const char *)string, &c);
 
     ZnRenderGlyph(tfi, c);
 

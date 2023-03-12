@@ -170,7 +170,8 @@ ZnGetBorder(ZnWInfo     *wi,
             Tcl_Obj     *name,
             ZnBorder    *border)
 {
-  unsigned int j, len, largc;
+  unsigned int j, len;
+  int          largc;
   Tcl_Obj      **largv;
   char         *str;
 

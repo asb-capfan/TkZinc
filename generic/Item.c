@@ -350,7 +350,8 @@ ZnConfigureAttributes(ZnWInfo           *wi,
       {
         ZnList   new_grad_list = NULL;
         ZnGradient       **grads;
-        unsigned int num_grads, j, k;
+        int          num_grads;
+        unsigned int j, k;
         Tcl_Obj  **elems;
             
         if (Tcl_ListObjGetElements(wi->interp, args[i+1],
@@ -467,7 +468,8 @@ ZnConfigureAttributes(ZnWInfo           *wi,
       {
         ZnList   new_pat_list = NULL;
         ZnImage  *pats;
-        unsigned int num_pats, j, k;
+        int      num_pats;
+        unsigned int j, k;
         Tcl_Obj  **elems;
         ZnBool   is_bmap = True;
         
