@@ -350,7 +350,8 @@ UpdateRenderShape(ArcItem       arc)
 {
   ZnPoint       *p_list, p, p2, o, o2;
   ZnReal        width, height, d;
-  int           num_p, i, quality;
+  unsigned int  num_p;
+  int           i, quality;
   ZnTransfo     *t = ((ZnItem) arc)->wi->current_transfo;
   
   if (!arc->render_shape) {
@@ -1026,7 +1027,8 @@ static void
 UpdateRenderShapeX(ArcItem      arc)
 {
   ZnReal        ox, oy, width_2, height_2;
-  int           i, num_p;
+  int           i;
+  unsigned int  num_p;
   ZnPoint       *p_list;
   
   if (!arc->render_shape) {

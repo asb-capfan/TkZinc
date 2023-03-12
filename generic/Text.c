@@ -1105,7 +1105,7 @@ Render(ZnItem   item)
   int           font_height;  
   int           underline_thickness, underline_pos=0, overstrike_pos=0;
   int           sel_first_line=-1, sel_last_line=-1, cursor_line=-1;
-  int           sel_start_offset=0, sel_stop_offset=0, cursor_offset=0;
+  unsigned int  sel_start_offset=0, sel_stop_offset=0, cursor_offset=0;
 
   if (!text->text_info) {
     return;

@@ -1207,7 +1207,8 @@ Draw(ZnItem     item)
    * if last point join first point suppress markers at end points.
    */
   if (ISSET(cv->flags, MARKER_OK)) {
-    unsigned int h_width, h_height, width, height;
+    unsigned int h_width, h_height;
+    int          width, height;
     int          tmp_x, tmp_y;
 
     ZnSizeOfImage(cv->marker, &width, &height);

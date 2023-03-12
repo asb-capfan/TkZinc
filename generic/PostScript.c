@@ -1796,7 +1796,7 @@ ZnPostscriptImage(Tcl_Interp        *interp,
                   int               h)
 {
   int              result;
-  XImage           *ximage;
+  XImage           *ximage = NULL;
   Tk_PhotoHandle   tkphoto;
   
   if (((TkPostscriptInfo *) ps_info)->prepass) {
