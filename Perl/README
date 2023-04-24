@@ -1,7 +1,7 @@
 Tk::Zinc - another Canvas which proposes many new functions, some based on openGL
 
 Tk::Zinc for Perl/Tk is available for Linux, Windows and MacOSX. 
-the easiest way could be to use he CPAN.
+The easiest way could be to use he CPAN.
 To build it you need:
 
 * On a Linux system, you need Perl (>= 5.6) and perl-tk (800 or 804) as well as
@@ -65,7 +65,7 @@ specific patches of the alternative perl-tk installation:
 
 
 
-documentation is also available at https://github.com/asb-capfan/TkZinc
+Documentation is also available at https://github.com/asb-capfan/TkZinc
 The source of the reference manual is available in the full source package,
 which also includes TkZinc for Tcl/Tk, for Perl/Tk, and for Python.
 
@@ -73,11 +73,10 @@ which also includes TkZinc for Tcl/Tk, for Perl/Tk, and for Python.
 After installation, we recommend you to launch the zinc-demos script,
 a front-end to more than 30 small demos.
 
-For more information on building Tk::Zinc, a README is available in 
-the tkzinc-*tgz tar file (on Tkzinc web site) used for building all
-flavor of TkZinc (ie tcl, perl and python)
+For more information on building Tk::Zinc, a README is available for building all
+flavors of TkZinc (i.e. tcl, perl and python).
 
-This software is delivered under new BSD license.
+This software is delivered under the new BSD license.
 For the copyright, please, read the Copyright file.
 
 For any question on Tk::Zinc usage, build or installation,
@@ -89,7 +88,7 @@ Authors and Contributors:
 Tk::Zinc main author is Patrick Lecoanet (CENA)
 Sub-Modules, demos and documentation have been developped by
 Daniel Etienne (CENA), Christophe Mertz (formerly CENA and now IntuiLab), 
-Jean-Luc Vinot (CENA), with contributions from Stéphane Chatty (Intuilab), 
-Céline Schlienger (IntuiLab), Alexandre Lemort (IntuiLab)
-Stéphane Conversy (CENA) contributed to the MacOSX port.
+Jean-Luc Vinot (CENA), with contributions from StÃ©phane Chatty (Intuilab), 
+CÃ©line Schlienger (IntuiLab), Alexandre Lemort (IntuiLab)
+StÃ©phane Conversy (CENA) contributed to the MacOSX port.
 Many others contributed with their bug reports!
