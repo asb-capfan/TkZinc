@@ -88,7 +88,7 @@ typedef struct _ZnGLContextEntry {
   int           ipixel;
   HWND          hwnd;   /* Temporary storage between MakeCurrent and Release */
   HDC           hdc;
-#elif defined(__APPLE__)
+#elif defined(MAC_OSX_TK)
   AGLPixelFormat pix_fmt;
   GWorldPtr     gworld;
   Tk_Window     top_win;
