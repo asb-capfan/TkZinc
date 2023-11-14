@@ -250,7 +250,7 @@ ZnAttributesInfo(Tcl_Interp     *interp,
                  void           *record,
                  ZnAttrConfig   *desc_table,
                  int            argc,
-                 Tcl_Obj *CONST args[])
+                 Tcl_Obj *const args[])
 {
   Tcl_Obj       *l, *entries[5];
   
@@ -298,7 +298,7 @@ ZnConfigureAttributes(ZnWInfo           *wi,
                       void              *record,
                       ZnAttrConfig      *desc_table,
                       int               argc,
-                      Tcl_Obj *CONST    args[],
+                      Tcl_Obj *const    args[],
                       int               *flags)
 {
   int           i;
@@ -1669,7 +1669,7 @@ ZnItem
 ZnCreateItem(ZnWInfo        *wi,
              ZnItemClass   item_class,
              int            *argc,
-             Tcl_Obj *CONST *args[])
+             Tcl_Obj *const *args[])
 {
   ZnItem        item;
 
@@ -1776,7 +1776,7 @@ static int
 ConfigureItem(ZnItem            item,
               int               field,
               int               argc,
-              Tcl_Obj   *CONST  argv[],
+              Tcl_Obj   *const  argv[],
               ZnBool            init)
 {
   ZnWInfo       *wi = item->wi;
@@ -1835,7 +1835,7 @@ static int
 QueryItem(ZnItem                item,
           int                   field,
           int                   argc,
-          Tcl_Obj *CONST        argv[])
+          Tcl_Obj *const        argv[])
 {
   if (field < 0) {
     return item->class->Query(item, argc, argv);

@@ -170,7 +170,7 @@ static ZnAttrConfig     viewport_attrs[] = {
 static int
 Init(ZnItem             item,
      int                *argc,
-     Tcl_Obj *CONST     *args[])
+     Tcl_Obj *const     *args[])
 {
   ZnWInfo       *wi = item->wi;
   ViewportItem  rect = (ViewportItem) item;
@@ -330,7 +330,7 @@ Destroy(ZnItem  item)
 static int
 Configure(ZnItem        item,
           int           argc,
-          Tcl_Obj *CONST argv[],
+          Tcl_Obj *const argv[],
           int           *flags)
 {
   ZnWInfo       * wi = item->wi;
@@ -428,7 +428,7 @@ Configure(ZnItem        item,
 static int
 Query(ZnItem            item,
       int               argc,
-      Tcl_Obj *CONST    argv[])
+      Tcl_Obj *const    argv[])
 {
   if (ZnQueryAttribute(item->wi->interp, item, viewport_attrs, argv[0]) == TCL_ERROR) {
     return TCL_ERROR;

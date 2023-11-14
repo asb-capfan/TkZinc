@@ -1152,7 +1152,7 @@ SuckGlyphsFromServer(ZnWInfo    *wi,
   unsigned int  numToGrab, glyph;
   ZnTexGVI      *tgvip;
   Tk_FontMetrics fm;
-  CONST unsigned char   *cur, *next;
+  const unsigned char   *cur, *next;
 #ifndef PTK_800
   Tcl_UniChar   uni_ch;
 #endif

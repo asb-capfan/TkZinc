@@ -211,10 +211,10 @@ typedef struct _ZnPickStruct {
 /*
  * Item class record --
  */
-typedef int (*ZnItemInitMethod)(ZnItem item, int *argc, Tcl_Obj *CONST *args[]);
-typedef int (*ZnItemConfigureMethod)(ZnItem item, int argc, Tcl_Obj *CONST args[],
+typedef int (*ZnItemInitMethod)(ZnItem item, int *argc, Tcl_Obj *const *args[]);
+typedef int (*ZnItemConfigureMethod)(ZnItem item, int argc, Tcl_Obj *const args[],
                                      int *flags);
-typedef int (*ZnItemQueryMethod)(ZnItem item, int argc, Tcl_Obj *CONST args[]);
+typedef int (*ZnItemQueryMethod)(ZnItem item, int argc, Tcl_Obj *const args[]);
 typedef void (*ZnItemCloneMethod)(ZnItem item);
 typedef void (*ZnItemDestroyMethod)(ZnItem item);
 typedef void (*ZnItemDrawMethod)(ZnItem item);
@@ -299,9 +299,9 @@ typedef struct _ZnItemClassStruct {
 extern struct _ZnITEM {
   ZnItem (*CloneItem)(ZnItem model);
   void (*DestroyItem)(ZnItem item);
-  int (*ConfigureItem)(ZnItem item, int field, int argc, Tcl_Obj *CONST args[],
+  int (*ConfigureItem)(ZnItem item, int field, int argc, Tcl_Obj *const args[],
                        ZnBool init);
-  int (*QueryItem)(ZnItem item, int field, int argc, Tcl_Obj *CONST args[]);
+  int (*QueryItem)(ZnItem item, int field, int argc, Tcl_Obj *const args[]);
   void (*InsertItem)(ZnItem item, ZnItem group, ZnItem mark_item, ZnBool before);
   void (*UpdateItemPriority)(ZnItem item, ZnItem mark_item, ZnBool before);
   void (*UpdateItemDependency)(ZnItem item, ZnItem old_connection);
@@ -333,15 +333,15 @@ extern struct _ZnITEM {
  */
 void ZnItemInit();
 ZnItem ZnCreateItem(struct _ZnWInfo *wi, ZnItemClass item_class,
-                  int *argc, Tcl_Obj *CONST *args[]);
+                  int *argc, Tcl_Obj *const *args[]);
 void ZnAddItemClass(ZnItemClass class);
 ZnItemClass ZnLookupItemClass(char *class_name);
 ZnList ZnItemClassList();
 int ZnConfigureAttributes(struct _ZnWInfo *wi, ZnItem item, void *record,
-                          ZnAttrConfig *attr_desc, int argc, Tcl_Obj *CONST args[],
+                          ZnAttrConfig *attr_desc, int argc, Tcl_Obj *const args[],
                           int *flags);
 int ZnAttributesInfo(Tcl_Interp *interp, void *record,
-                     ZnAttrConfig *attr_desc, int argc, Tcl_Obj *CONST args[]);
+                     ZnAttrConfig *attr_desc, int argc, Tcl_Obj *const args[]);
 int ZnQueryAttribute(Tcl_Interp *interp, void *record, ZnAttrConfig *attr_desc,
                      Tcl_Obj *attr_name);
 void ZnInitTransformStack(struct _ZnWInfo *wi);

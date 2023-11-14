@@ -142,7 +142,7 @@ static ZnAttrConfig     arc_attrs[] = {
 static int
 Init(ZnItem             item,
      int                *argc,
-      Tcl_Obj *CONST    *args[])
+      Tcl_Obj *const    *args[])
 {
   ZnWInfo       *wi = item->wi;
   ArcItem       arc = (ArcItem) item;
@@ -299,7 +299,7 @@ SetRenderFlags(ArcItem  arc)
 static int
 Configure(ZnItem        item,
           int           argc,
-          Tcl_Obj *CONST argv[],
+          Tcl_Obj *const argv[],
           int           *flags)
 {
   ArcItem       arc = (ArcItem) item;
@@ -326,7 +326,7 @@ Configure(ZnItem        item,
 static int
 Query(ZnItem            item,
       int                   argc,
-      Tcl_Obj *CONST    argv[])
+      Tcl_Obj *const    argv[])
 {
   if (ZnQueryAttribute(item->wi->interp, item, arc_attrs, argv[0]) == TCL_ERROR) {
     return TCL_ERROR;

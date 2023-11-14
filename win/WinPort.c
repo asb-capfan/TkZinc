@@ -183,7 +183,7 @@ static int tkpWinRopModes[] = {
  */
 
 typedef BOOL (CALLBACK *WinDrawFunc) _ANSI_ARGS_((HDC dc,
-			    CONST POINT* points, int npoints));
+			    const POINT* points, int npoints));
 
 typedef struct ThreadSpecificData {
     POINT *winPoints;    /* Array of points that is reused. */

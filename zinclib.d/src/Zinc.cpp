@@ -61,10 +61,10 @@
 //predeclare private function
 #ifdef _WIN32
 int __cdecl tclCallback (ClientData client_data, Tcl_Interp *interp,
-                  int argc, Tcl_Obj *CONST args[]);
+                  int argc, Tcl_Obj *const args[]);
 #else
 int tclCallback (ClientData client_data, Tcl_Interp *interp,
-                  int argc, Tcl_Obj *CONST args[]) __attribute__((cdecl));
+                  int argc, Tcl_Obj *const args[]) __attribute__((cdecl));
 #endif
 
 /*******************************************************
@@ -1872,7 +1872,7 @@ void Zinc::itemMatrix (ZincItem * item,
  * @param args table of arguments
  */
 int tclCallback (ClientData client_data, Tcl_Interp *interp,
-                  int argc, Tcl_Obj *CONST args[])
+                  int argc, Tcl_Obj *const args[])
 {
   Zinc *zinc = (Zinc*) client_data;
   int cb;

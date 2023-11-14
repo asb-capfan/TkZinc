@@ -552,13 +552,13 @@ static int      FetchSelection _ANSI_ARGS_((ClientData clientData, int offset,
                                             char *buffer, int maxBytes));
 static void     SelectTo _ANSI_ARGS_((ZnItem item, int field, int index));
 static int      WidgetObjCmd _ANSI_ARGS_((ClientData client_data,
-                                          Tcl_Interp *, int argc, Tcl_Obj *CONST args[]));
+                                          Tcl_Interp *, int argc, Tcl_Obj *const args[]));
 #ifdef PTK_800
 static int      Configure _ANSI_ARGS_((Tcl_Interp *interp, ZnWInfo *wi,
-                                       int argc, Tcl_Obj *CONST args[], int flags));
+                                       int argc, Tcl_Obj *const args[], int flags));
 #else
 static int      Configure _ANSI_ARGS_((Tcl_Interp *interp, ZnWInfo *wi,
-                                       int argc, Tcl_Obj *CONST args[]));
+                                       int argc, Tcl_Obj *const args[]));
 #endif
 static void     Redisplay _ANSI_ARGS_((ClientData client_data));
 static void     Destroy _ANSI_ARGS_((ZnWInfo *wi));
@@ -1339,7 +1339,7 @@ ZincObjCmd(ClientData           client_data,    /* Main window associated with
                                                  * interpreter. */
            Tcl_Interp           *interp,        /* Current interpreter. */
            int                  argc,           /* Number of arguments. */
-           Tcl_Obj      *CONST  args[])         /* Argument strings. */
+           Tcl_Obj      *const  args[])         /* Argument strings. */
 {
   Tk_Window     top_w = (Tk_Window) client_data;
   ZnWInfo       *wi;
@@ -2746,14 +2746,14 @@ ZnItemWithTagOrId(ZnWInfo       *wi,
 static int
 LayoutItems(ZnWInfo     *wi,
             int         argc,
-            Tcl_Obj     *CONST args[])
+            Tcl_Obj     *const args[])
 {
   int           index/*, result*/;
   /*ZnItem              item;*/
 #ifdef PTK_800
   static char *layout_cmd_strings[] =
   #else
-  static CONST char *layout_cmd_strings[] =
+  static const char *layout_cmd_strings[] =
 #endif
   {
     "align", "grid", "position", "scale", "space", NULL
@@ -3116,7 +3116,7 @@ ZnDoItem(Tcl_Interp     *interp,
  */
 static int
 FindArea(ZnWInfo        *wi,
-         Tcl_Obj *CONST args[],
+         Tcl_Obj *const args[],
          Tk_Uid         tag_uid,
          ZnBool         enclosed,
          ZnBool         recursive,
@@ -3188,7 +3188,7 @@ FindArea(ZnWInfo        *wi,
 static int
 FindItems(ZnWInfo       *wi,
           int           argc,
-          Tcl_Obj *CONST args[],
+          Tcl_Obj *const args[],
           Tcl_Obj       *tag,           /* NULL to search or tag to add tag. */
           int           first,          /* First arg to process in args */
           ZnTagSearch   **search_var)
@@ -3201,7 +3201,7 @@ FindItems(ZnWInfo       *wi,
 #ifdef PTK_800
   static char *search_cmd_strings[] =
 #else
-  static CONST char *search_cmd_strings[] =
+  static const char *search_cmd_strings[] =
 #endif
   {
     "above", "ancestors", "atpriority", "below", "closest", "enclosed",
@@ -3684,7 +3684,7 @@ ZnParseCoordList(ZnWInfo        *wi,
 static int
 Contour(ZnWInfo *wi,
         int             argc,
-        Tcl_Obj *CONST  args[],
+        Tcl_Obj *const  args[],
         ZnTagSearch     **search_var)
 {
   ZnPoint       *points;
@@ -3703,7 +3703,7 @@ Contour(ZnWInfo *wi,
 #ifdef PTK_800
   static char *op_strings[] =
 #else
-  static CONST char *op_strings[] =
+  static const char *op_strings[] =
 #endif
   {
     "add", "remove", NULL
@@ -3969,7 +3969,7 @@ Contour(ZnWInfo *wi,
 static int
 Coords(ZnWInfo          *wi,
        int              argc,
-       Tcl_Obj  *CONST  args[],
+       Tcl_Obj  *const  args[],
        ZnTagSearch      **search_var)
 {
   ZnPoint       *points;
@@ -4213,7 +4213,7 @@ static int
 WidgetObjCmd(ClientData         client_data,    /* Information about the widget. */
              Tcl_Interp         *interp,        /* Current interpreter. */
              int                argc,           /* Number of arguments. */
-             Tcl_Obj *CONST     args[])         /* Arguments. */
+             Tcl_Obj *const     args[])         /* Arguments. */
 {
   ZnWInfo       *wi = (ZnWInfo *) client_data;
   int           length, result, cmd_index, index;
@@ -4236,7 +4236,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
 #ifdef PTK_800
   static char *sub_cmd_strings[] =
 #else
-  static CONST char *sub_cmd_strings[] =
+  static const char *sub_cmd_strings[] =
 #endif
   {
     "add", "addtag", "anchorxy", "bbox", "becomes", "bind",
@@ -4267,7 +4267,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
 #ifdef PTK_800
   static char *sel_cmd_strings[] =
 #else
-  static CONST char *sel_cmd_strings[] =
+  static const char *sel_cmd_strings[] =
 #endif
   {
     "adjust", "clear", "from", "item", "to", NULL
@@ -4646,7 +4646,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           Tcl_SetObjResult(interp, command);
         }
 #else
-        CONST char *command;
+        const char *command;
         command = Tk_GetBinding(interp, wi->binding_table, elem,
                                 Tcl_GetString(args[0]));
         if (command == NULL) {
@@ -6738,7 +6738,7 @@ static int
 Configure(Tcl_Interp            *interp,/* Used for error reporting. */
           ZnWInfo               *wi,    /* Information about widget. */
           int                   argc,   /* Number of valid entries in args. */
-          Tcl_Obj       *CONST  args[], /* Arguments. */
+          Tcl_Obj       *const  args[], /* Arguments. */
           int                   flags)  /* Flags to pass to Tk_ConfigureWidget. */
 {
 #define CONFIG_PROBE(offset) (ISSET(config_specs[offset].specFlags, \
@@ -6752,7 +6752,7 @@ Configure(Tcl_Interp            *interp,/* Used for error reporting. */
 #ifdef PTK
                          (Tcl_Obj **) args, (char *) wi, flags) != TCL_OK)
 #else
-                         (CONST char **) args, (char *) wi, flags|TK_CONFIG_OBJS) != TCL_OK)
+                         (const char **) args, (char *) wi, flags|TK_CONFIG_OBJS) != TCL_OK)
 #endif
   {
     return TCL_ERROR;
@@ -6913,7 +6913,7 @@ Configure(Tcl_Interp            *interp,/* Used for error reporting. */
 #ifdef PTK
       Arg       *args2;
 #else
-      CONST char **args2;
+      const char **args2;
 #endif
 
 #ifdef PTK
@@ -6991,7 +6991,7 @@ static int
 Configure(Tcl_Interp            *interp,/* Used for error reporting. */
           ZnWInfo               *wi,    /* Information about widget. */
           int                   argc,   /* Number of valid entries in args. */
-          Tcl_Obj       *CONST  args[]) /* Arguments. */
+          Tcl_Obj       *const  args[]) /* Arguments. */
 {
   ZnBool                init;
   int                   render, mask, error;

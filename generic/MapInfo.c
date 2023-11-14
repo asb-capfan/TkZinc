@@ -1569,7 +1569,7 @@ int
 ZnMapInfoObjCmd(ClientData      client_data,
                 Tcl_Interp      *interp,        /* Current interpreter. */
                 int             argc,           /* Number of arguments. */
-                Tcl_Obj *CONST  args[])
+                Tcl_Obj *const  args[])
 {
   ZnPos           x, y;
   int             index, index2, result;
@@ -1578,7 +1578,7 @@ ZnMapInfoObjCmd(ClientData      client_data,
 #ifdef PTK_800
   static char *sub_cmd_strings[] =
 #else
-  static CONST char *sub_cmd_strings[] =
+  static const char *sub_cmd_strings[] =
 #endif
   {
     "add", "count", "create", "delete", "duplicate",
@@ -1587,7 +1587,7 @@ ZnMapInfoObjCmd(ClientData      client_data,
 #ifdef PTK_800
   static char *e_type_strings[] =
 #else
-  static CONST char *e_type_strings[] =
+  static const char *e_type_strings[] =
 #endif
   {
     "arc", "line", "symbol", "text", NULL
@@ -2048,7 +2048,7 @@ int
 ZnVideomapObjCmd(ClientData     client_data,
                  Tcl_Interp     *interp,        /* Current interpreter. */
                  int            argc,           /* Number of arguments. */
-                 Tcl_Obj        *CONST  args[])
+                 Tcl_Obj        *const  args[])
 {
   ZnList        ids;
   int           index;
@@ -2057,7 +2057,7 @@ ZnVideomapObjCmd(ClientData     client_data,
 #ifdef PTK_800
   static char *sub_cmd_strings[] =
 #else
-  static CONST char *sub_cmd_strings[] =
+  static const char *sub_cmd_strings[] =
 #endif
   {
     "ids", "load", NULL
