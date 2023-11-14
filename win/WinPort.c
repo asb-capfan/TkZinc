@@ -25,8 +25,6 @@
 #include <tkIntPlatDecls.m>
 #endif
 
-static const char rcsid[] = "$Id";
-static const char compile_id[]="$Compile$";
 
 #ifndef MIN
 #define MIN(a, b) 	((a) <= (b) ? (a) : (b))
