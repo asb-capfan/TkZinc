@@ -168,31 +168,31 @@ static  int             ZnGLAttribs[] = {
 
 
 #if defined(GL) && defined(ROTATION)
-static void TransformEvent _ANSI_ARGS_((ZnWInfo *wi, XEvent  *event));
+static void TransformEvent(ZnWInfo *wi, XEvent  *event);
 #endif
-static  void PickCurrentItem _ANSI_ARGS_((ZnWInfo *wi, XEvent *event));
+static  void PickCurrentItem(ZnWInfo *wi, XEvent *event);
 #ifdef PTK_800
-static  int ZnReliefParse _ANSI_ARGS_((ClientData client_data, Tcl_Interp *interp,
+static  int ZnReliefParse(ClientData client_data, Tcl_Interp *interp,
                                        Tk_Window tkwin, Tcl_Obj *ovalue,
-                                       char *widget_rec, int offset));
-static  Tcl_Obj *ZnReliefPrint _ANSI_ARGS_((ClientData client_data, Tk_Window tkwin,
+                                       char *widget_rec, int offset);
+static  Tcl_Obj *ZnReliefPrint(ClientData client_data, Tk_Window tkwin,
                                             char *widget_rec, int offset,
-                                            Tcl_FreeProc **free_proc));
-static  int ZnGradientParse _ANSI_ARGS_((ClientData client_data, Tcl_Interp *interp,
+                                            Tcl_FreeProc **free_proc);
+static  int ZnGradientParse(ClientData client_data, Tcl_Interp *interp,
                                          Tk_Window tkwin, Tcl_Obj *ovalue,
-                                         char *widget_rec, int offset));
-static  Tcl_Obj *ZnGradientPrint _ANSI_ARGS_((ClientData client_data, Tk_Window tkwin,
+                                         char *widget_rec, int offset);
+static  Tcl_Obj *ZnGradientPrint(ClientData client_data, Tk_Window tkwin,
                                               char *widget_rec, int offset,
-                                              Tcl_FreeProc **free_proc));
-static  int ZnImageParse _ANSI_ARGS_((ClientData client_data, Tcl_Interp *interp,
+                                              Tcl_FreeProc **free_proc);
+static  int ZnImageParse(ClientData client_data, Tcl_Interp *interp,
                                       Tk_Window tkwin, Tcl_Obj *ovalue,
-                                      char *widget_rec, int offset));
-static  int ZnBitmapParse _ANSI_ARGS_((ClientData client_data, Tcl_Interp *interp,
+                                      char *widget_rec, int offset);
+static  int ZnBitmapParse(ClientData client_data, Tcl_Interp *interp,
                                        Tk_Window tkwin, Tcl_Obj *ovalue,
-                                       char *widget_rec, int offset));
-static  Tcl_Obj *ZnImagePrint _ANSI_ARGS_((ClientData client_data, Tk_Window tkwin,
+                                       char *widget_rec, int offset);
+static  Tcl_Obj *ZnImagePrint(ClientData client_data, Tk_Window tkwin,
                                            char *widget_rec, int offset,
-                                           Tcl_FreeProc **free_proc));
+                                           Tcl_FreeProc **free_proc);
 static  Tk_CustomOption reliefOption = {
   (Tk_OptionParseProc *) ZnReliefParse,
   (Tk_OptionPrintProc *) ZnReliefPrint,
@@ -214,21 +214,21 @@ static  Tk_CustomOption bitmapOption = {
   NULL
 };
 #else
-static  int ZnSetReliefOpt _ANSI_ARGS_((ClientData client_data, Tcl_Interp *interp,
+static  int ZnSetReliefOpt(ClientData client_data, Tcl_Interp *interp,
                                         Tk_Window tkwin, Tcl_Obj **ovalue,
-                                        char *widget_rec, int offset, char *old_val_ptr, int flags));
-static  Tcl_Obj *ZnGetReliefOpt _ANSI_ARGS_((ClientData client_data, Tk_Window tkwin,
-                                             char *widget_rec, int offset));
-static void ZnRestoreReliefOpt _ANSI_ARGS_((ClientData client_data, Tk_Window tkwin,
-                                            char *val_ptr, char *old_val_ptr));
-static  int ZnSetGradientOpt _ANSI_ARGS_((ClientData client_data, Tcl_Interp *interp,
+                                        char *widget_rec, int offset, char *old_val_ptr, int flags);
+static  Tcl_Obj *ZnGetReliefOpt(ClientData client_data, Tk_Window tkwin,
+                                             char *widget_rec, int offset);
+static void ZnRestoreReliefOpt(ClientData client_data, Tk_Window tkwin,
+                                            char *val_ptr, char *old_val_ptr);
+static  int ZnSetGradientOpt(ClientData client_data, Tcl_Interp *interp,
                                           Tk_Window tkwin, Tcl_Obj **ovalue,
-                                          char *widget_rec, int offset, char *old_val_ptr, int flags));
-static  Tcl_Obj *ZnGetGradientOpt _ANSI_ARGS_((ClientData client_data, Tk_Window tkwin,
-                                               char *widget_rec, int offset));
-static  void ZnRestoreGradientOpt _ANSI_ARGS_((ClientData client_data, Tk_Window tkwin,
-                                               char *val_ptr, char *old_val_ptr));
-static  void ZnFreeGradientOpt _ANSI_ARGS_((ClientData client_data, Tk_Window tkwin, char *val_ptr));
+                                          char *widget_rec, int offset, char *old_val_ptr, int flags);
+static  Tcl_Obj *ZnGetGradientOpt(ClientData client_data, Tk_Window tkwin,
+                                               char *widget_rec, int offset);
+static  void ZnRestoreGradientOpt(ClientData client_data, Tk_Window tkwin,
+                                               char *val_ptr, char *old_val_ptr);
+static  void ZnFreeGradientOpt(ClientData client_data, Tk_Window tkwin, char *val_ptr);
 
 static  Tk_ObjCustomOption reliefOption = {
   "znrelief",
@@ -545,27 +545,27 @@ static Tk_OptionSpec option_specs[] = {
 };
 #endif
 
-static void     CmdDeleted _ANSI_ARGS_((ClientData client_data));
-static void     Event _ANSI_ARGS_((ClientData client_data, XEvent *eventPtr));
-static void     Bind _ANSI_ARGS_((ClientData client_data, XEvent *eventPtr));
-static int      FetchSelection _ANSI_ARGS_((ClientData clientData, int offset,
-                                            char *buffer, int maxBytes));
-static void     SelectTo _ANSI_ARGS_((ZnItem item, int field, int index));
-static int      WidgetObjCmd _ANSI_ARGS_((ClientData client_data,
-                                          Tcl_Interp *, int argc, Tcl_Obj *const args[]));
+static void     CmdDeleted(ClientData client_data);
+static void     Event(ClientData client_data, XEvent *eventPtr);
+static void     Bind(ClientData client_data, XEvent *eventPtr);
+static int      FetchSelection(ClientData clientData, int offset,
+                                            char *buffer, int maxBytes);
+static void     SelectTo(ZnItem item, int field, int index);
+static int      WidgetObjCmd(ClientData client_data,
+                                          Tcl_Interp *, int argc, Tcl_Obj *const args[]);
 #ifdef PTK_800
-static int      Configure _ANSI_ARGS_((Tcl_Interp *interp, ZnWInfo *wi,
-                                       int argc, Tcl_Obj *const args[], int flags));
+static int      Configure(Tcl_Interp *interp, ZnWInfo *wi,
+                                       int argc, Tcl_Obj *const args[], int flags);
 #else
-static int      Configure _ANSI_ARGS_((Tcl_Interp *interp, ZnWInfo *wi,
-                                       int argc, Tcl_Obj *const args[]));
+static int      Configure(Tcl_Interp *interp, ZnWInfo *wi,
+                                       int argc, Tcl_Obj *const args[]);
 #endif
-static void     Redisplay _ANSI_ARGS_((ClientData client_data));
-static void     Destroy _ANSI_ARGS_((ZnWInfo *wi));
-static void     InitZinc _ANSI_ARGS_((Tcl_Interp *interp));
-static void     Focus _ANSI_ARGS_((ZnWInfo *wi, ZnBool got_focus));
-static void     Update _ANSI_ARGS_((ZnWInfo     *wi));
-static void     Repair _ANSI_ARGS_((ZnWInfo     *wi));
+static void     Redisplay(ClientData client_data);
+static void     Destroy(ZnWInfo *wi);
+static void     InitZinc(Tcl_Interp *interp);
+static void     Focus(ZnWInfo *wi, ZnBool got_focus);
+static void     Update(ZnWInfo     *wi);
+static void     Repair(ZnWInfo     *wi);
 
 
 #ifdef PTK_800

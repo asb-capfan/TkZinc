@@ -94,7 +94,7 @@ static char *attribute_type_strings[] = {
 
 
 #ifndef PTK
-static int SetAttrFromAny _ANSI_ARGS_((Tcl_Interp *interp, Tcl_Obj *obj));
+static int SetAttrFromAny(Tcl_Interp *interp, Tcl_Obj *obj);
 
 /*
  * The structure below defines an object type that is used to cache the
