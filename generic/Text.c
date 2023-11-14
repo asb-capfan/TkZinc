@@ -37,8 +37,6 @@
 #include "Image.h"
 
 
-static const char rcsid[] = "$Imagine: Text.c,v 1.13 1997/05/15 11:35:46 lecoanet Exp $";
-static const char compile_id[] = "$Compile: " __FILE__ " " __DATE__ " " __TIME__ " $";
 
 
 /*

@@ -39,8 +39,6 @@
 #include <stdlib.h>
 
 
-static const char rcsid[] = "$Imagine: Transfo.c,v 1.7 1997/01/24 14:33:37 lecoanet Exp $";
-static const char compile_id[]="$Compile: " __FILE__ " " __DATE__ " " __TIME__ " $";
 
 
 

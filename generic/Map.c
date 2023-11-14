@@ -29,8 +29,6 @@
 #include <stdio.h>
 
 
-static const char rcsid[] = "$Id$";
-static const char compile_id[]="$Compile: " __FILE__ " " __DATE__ " " __TIME__ " $";
 
 
 /*
