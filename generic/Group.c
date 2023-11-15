@@ -111,7 +111,7 @@ static ZnAttrConfig     group_attrs[] = {
 static int
 Init(ZnItem             item,
      int                *argc,
-     Tcl_Obj *CONST     *args[])
+     Tcl_Obj *const     *args[])
 {
   GroupItem     group = (GroupItem) item;
   
@@ -419,7 +419,7 @@ SetXShape(ZnItem        grp)
 static int
 Configure(ZnItem        item,
           int           argc,
-          Tcl_Obj *CONST argv[],
+          Tcl_Obj *const argv[],
           int           *flags)
 {
   GroupItem     group = (GroupItem) item;
@@ -460,7 +460,7 @@ Configure(ZnItem        item,
 static int
 Query(ZnItem            item,
       int               argc,
-      Tcl_Obj *CONST    argv[])
+      Tcl_Obj *const    argv[])
 {
   if (ZnQueryAttribute(item->wi->interp, item, group_attrs, argv[0]) == TCL_ERROR) {
     return TCL_ERROR;

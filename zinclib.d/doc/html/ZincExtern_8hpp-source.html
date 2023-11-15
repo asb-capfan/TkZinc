@@ -23,14 +23,14 @@
 00029   <span class="keywordtype">int</span> <a class="code" href="ZincExtern_8hpp.html#a2">ZincObjCmd</a>(ClientData client_data,    <span class="comment">// Main window associated with interpreter.</span>
 00030                  Tcl_Interp *interp,        <span class="comment">// Current interpreter. </span>
 00031                  <span class="keywordtype">int</span>        argc,           <span class="comment">// Number of arguments.</span>
-00032                  Tcl_Obj   *CONST  args[]); <span class="comment">// Argument objects.</span>
+00032                  Tcl_Obj   *const  args[]); <span class="comment">// Argument objects.</span>
 00033 
 00034   <span class="comment">//The TkZinc function that is called by tcl when calling ".zinc fct ..."</span>
 00035   <span class="keyword">typedef</span> int (*WidgetObjCmd)
 <a name="l00036"></a><a class="code" href="ZincExtern_8hpp.html#a0">00036</a>                    (ClientData client_data,   <span class="comment">// Information about the widget.</span>
 00037                     Tcl_Interp *interp,       <span class="comment">// Current interpreter.</span>
 00038                     <span class="keywordtype">int</span>        argc,          <span class="comment">// Number of arguments.</span>
-00039                     Tcl_Obj    *CONST args[]) <span class="comment">// Argument objects.</span>
+00039                     Tcl_Obj    *const args[]) <span class="comment">// Argument objects.</span>
 00040           __attribute__((cdecl));
 00041 
 00042 }

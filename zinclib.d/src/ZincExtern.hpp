@@ -51,7 +51,7 @@ extern "C"
   int ZincObjCmd(ClientData client_data,    // Main window associated with interpreter.
                  Tcl_Interp *interp,        // Current interpreter. 
                  int        argc,           // Number of arguments.
-                 Tcl_Obj   *CONST  args[]); // Argument objects.
+                 Tcl_Obj   *const  args[]); // Argument objects.
 
   //The TkZinc function that is called by tcl when calling ".zinc fct ..."
 #ifdef _WIN32
@@ -59,13 +59,13 @@ extern "C"
                            (ClientData client_data,   // Information about the widget.
                             Tcl_Interp *interp,       // Current interpreter.
                             int        argc,          // Number of arguments.
-                            Tcl_Obj    *CONST args[]); // Argument objects.
+                            Tcl_Obj    *const args[]); // Argument objects.
 #else
   typedef int (*WidgetObjCmd)
                    (ClientData client_data,   // Information about the widget.
                     Tcl_Interp *interp,       // Current interpreter.
                     int        argc,          // Number of arguments.
-                    Tcl_Obj    *CONST args[]) // Argument objects.
+                    Tcl_Obj    *const args[]) // Argument objects.
           __attribute__((cdecl));
 #endif
 }

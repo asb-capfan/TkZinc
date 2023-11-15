@@ -363,7 +363,7 @@ WindowReleaseExternalWindow(ZnItem item)
 static int
 Init(ZnItem             item,
      int                *argc,
-     Tcl_Obj *CONST     *args[])
+     Tcl_Obj *const     *args[])
 {
   WindowItem    wind = (WindowItem) item;
 
@@ -458,7 +458,7 @@ Destroy(ZnItem  item)
 static int
 Configure(ZnItem        item,
           int           argc,
-          Tcl_Obj *CONST argv[],
+          Tcl_Obj *const argv[],
           int           *flags)
 {
   WindowItem    wind = (WindowItem) item;
@@ -543,7 +543,7 @@ Configure(ZnItem        item,
 static int
 Query(ZnItem            item,
       int               argc,
-      Tcl_Obj *CONST    argv[])
+      Tcl_Obj *const    argv[])
 {
   if (ZnQueryAttribute(item->wi->interp, item, wind_attrs, argv[0]) == TCL_ERROR) {
     return TCL_ERROR;

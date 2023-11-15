@@ -180,8 +180,8 @@ static int tkpWinRopModes[] = {
  * The followng typedef is used to pass Windows GDI drawing functions.
  */
 
-typedef BOOL (CALLBACK *WinDrawFunc) _ANSI_ARGS_((HDC dc,
-			    CONST POINT* points, int npoints));
+typedef BOOL (CALLBACK *WinDrawFunc)(HDC dc,
+			    const POINT* points, int npoints);
 
 typedef struct ThreadSpecificData {
     POINT *winPoints;    /* Array of points that is reused. */

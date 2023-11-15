@@ -922,7 +922,7 @@ static int
 ConfigureField(ZnFieldSet       fs,
                int              field,
                int              argc,
-               Tcl_Obj *CONST   argv[],
+               Tcl_Obj *const   argv[],
                int              *flags)
 {
   unsigned int  i;
@@ -1043,7 +1043,7 @@ static int
 QueryField(ZnFieldSet           fs,
            int                  field,
            int                  argc,
-           Tcl_Obj *CONST       argv[])
+           Tcl_Obj *const       argv[])
 {
   if ((field < 0) || ((unsigned int) field >= fs->num_fields)) {
     Tcl_AppendResult(fs->item->wi->interp, "invalid field index \"", NULL);

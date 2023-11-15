@@ -242,14 +242,14 @@ GetPostscriptPoints(Tcl_Interp *interp,
 int
 ZnPostScriptCmd(ZnWInfo        *wi,
                 int            argc,
-                Tcl_Obj *CONST argv[])
+                Tcl_Obj *const argv[])
 {
   TkPostscriptInfo  ps_info;
   Tk_PostscriptInfo old_info;
   int               result;
 #define STRING_LENGTH 400
   char              string[STRING_LENGTH+1];
-  CONST char        *p;
+  const char        *p;
   time_t            now;
   size_t            length;
   Tk_Window         tkwin = wi->win;
@@ -303,7 +303,7 @@ ZnPostScriptCmd(ZnWInfo        *wi,
   ps_info.prolog = 1;
   Tcl_InitHashTable(&ps_info.fontTable, TCL_STRING_KEYS);
   result = Tk_ConfigureWidget(wi->interp, wi->win, config_specs,
-                              argc-2, (CONST char **) argv+2,
+                              argc-2, (const char **) argv+2,
                               (char *) &ps_info,
                               TK_CONFIG_ARGV_ONLY|TK_CONFIG_OBJS);
   if (result != TCL_OK) {
@@ -798,7 +798,7 @@ ZnPostscriptString(Tcl_Interp   *interp,
 
   int         used, len, clen;
   int         c, bytecount = 0;
-  CONST char  *p, *last_p, *glyphname;
+  const char  *p, *last_p, *glyphname;
   Tcl_UniChar ch;
   char        charbuf[5];
 #define MAXUSE 500
