@@ -26,7 +26,7 @@ extern "C" {
 
 
 #define ZnListHead      0
-#define ZnListTail      (~(1 << ((8*sizeof(int)) - 1)))
+#define ZnListTail      (~(1u << ((8*sizeof(int)) - 1)))
 
 
 typedef void    *ZnList;
