@@ -210,7 +210,7 @@ ZnGetImage(ZnWInfo      *wi,
   ImageBits     *bits;
   ZnBool        for_gl = wi->render>0;
   Image         image;
-  Tk_ImageType  *type;
+  CONST86 Tk_ImageType  *type;
   ClientStruct  cs, *cs_ptr;
 
   /*printf("ZnGetImage: %s\n", image_name);*/
