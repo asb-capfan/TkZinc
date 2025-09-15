@@ -1615,7 +1615,15 @@ ComputeFieldImageLocation(Field         fptr,
  */
 static void
 FieldsEngine(ZnFieldSet field_set,
-             void       (*cb)())
+             void       (*cb)(ZnWInfo     *wi,
+                              Field       fptr,
+                              ZnBBox      *bbox,
+                              ZnBBox      *pm_bbox,
+                              ZnPoint     *text_pos,
+                              ZnBBox      *text_bbox,
+                              int         cursor,
+                              int         sel_start,
+                              int         sel_stop))
 {
   ZnWInfo       *wi = field_set->item->wi;
   /*int         i;      This one *NEED* to be an int */
