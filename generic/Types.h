@@ -67,6 +67,10 @@
 #include <stdio.h>
 
 
+#ifndef CONST86
+#define CONST86
+#endif
+
 /* This EXTERN declaration is needed for Tcl < 8.0.3 */
 #ifndef EXTERN
 # ifdef __cplusplus
