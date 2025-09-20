@@ -96,8 +96,13 @@ typedef struct _INFOS {
 
 typedef struct _ZINCS {
   void  *rw;
-  void  *(*_next_track)();
-  void  (*_set_label_angle)();
+  void  *(*_next_track)(void *, void *,
+                        int *, int *,
+                        int *, int *,
+                        int *, int *,
+                        int *, int *,
+                        int *, int *);
+  void  (*_set_label_angle)(void *, void *, int, int, char *);
   INFOS *infos;
   int   NBinfos;
   int   NBalloc_infos;
