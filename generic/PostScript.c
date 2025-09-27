@@ -303,7 +303,7 @@ ZnPostScriptCmd(ZnWInfo        *wi,
   ps_info.prolog = 1;
   Tcl_InitHashTable(&ps_info.fontTable, TCL_STRING_KEYS);
   result = Tk_ConfigureWidget(wi->interp, wi->win, config_specs,
-                              argc-2, (const char **) argv+2,
+                              argc-2, (void *) argv+2,
                               (char *) &ps_info,
                               TK_CONFIG_ARGV_ONLY|TK_CONFIG_OBJS);
   if (result != TCL_OK) {
