@@ -71,6 +71,10 @@
 #define CONST86
 #endif
 
+#ifndef Tk_Offset
+#define Tk_Offset offsetof
+#endif
+
 /* This EXTERN declaration is needed for Tcl < 8.0.3 */
 #ifndef EXTERN
 # ifdef __cplusplus
