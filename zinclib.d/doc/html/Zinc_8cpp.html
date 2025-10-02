@@ -417,7 +417,7 @@ All arguments of the function are Tcl_Obj. To accelerate their call, there is a 
     <span class="keywordtype">int</span> result = (fct);      \
     <span class="keywordflow">if</span> (result != TCL_OK)    \
     {                        \
-      Tcl_AppendResult (Zinc::interp, msg, NULL); \
+      Tcl_AppendResult (Zinc::interp, msg, (char *) NULL); \
       <span class="keywordflow">return</span> TCL_ERROR;      \
     }                        \
   }

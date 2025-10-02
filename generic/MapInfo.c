@@ -1359,7 +1359,7 @@ ZnDuplicateZnMapInfo(Tcl_Interp *interp,
   
   entry = Tcl_CreateHashEntry(&mapInfoTable, uid, &new);
   if (!new) {
-    Tcl_AppendResult(interp, "duplicate mapinfo \"", name, "\" already exists", NULL);
+    Tcl_AppendResult(interp, "duplicate mapinfo \"", name, "\" already exists", (char *) NULL);
     return TCL_ERROR;
   }
   master = (ZnMapInfoMaster *) ZnMalloc(sizeof(ZnMapInfoMaster));
@@ -1386,7 +1386,7 @@ LookupMapInfoMaster(Tcl_Interp  *interp,
   entry = Tcl_FindHashEntry(&mapInfoTable, uid);
   if (entry == NULL) {
   mp_error:
-    Tcl_AppendResult(interp, "mapinfo \"", name, "\" doesn't exist", NULL);
+    Tcl_AppendResult(interp, "mapinfo \"", name, "\" doesn't exist", (char *) NULL);
     return NULL;
   }
   master = (ZnMapInfoMaster *) Tcl_GetHashValue(entry);
@@ -1537,7 +1537,7 @@ ZnMapInfoLineStyleFromString(Tcl_Interp         *interp,
     }
   }
   Tcl_AppendResult(interp, " incorrect mapinfo line style \"",
-                   str,"\"", NULL);
+                   str,"\"", (char *) NULL);
   return TCL_ERROR;
 }
 
@@ -1561,7 +1561,7 @@ ZnMapInfoTextStyleFromString(Tcl_Interp         *interp,
     }
   }
   Tcl_AppendResult(interp, " incorrect mapinfo text style \"",
-                   str,"\"", NULL);
+                   str,"\"", (char *) NULL);
   return TCL_ERROR;
 }
 
@@ -2090,7 +2090,7 @@ ZnVideomapObjCmd(ClientData     client_data,
       ids = ZnMapInfoVideomapIds(Tcl_GetString(args[2]));
       if (ids == NULL) {
         Tcl_AppendResult(interp, "unable to look at videomap file \"",
-                         Tcl_GetString(args[2]), "\"", NULL);
+                         Tcl_GetString(args[2]), "\"", (char *) NULL);
         return TCL_ERROR;
       }
       id_array = ZnListArray(ids);
@@ -2126,7 +2126,7 @@ ZnVideomapObjCmd(ClientData     client_data,
       if (ZnMapInfoGetVideomap(map_info, Tcl_GetString(args[2]), insert) == TCL_ERROR) {
         Tcl_AppendResult(interp, "unable to load videomap file \"",
                          Tcl_GetString(args[2]), ":",
-                         Tcl_GetString(args[3]), "\"", NULL);
+                         Tcl_GetString(args[3]), "\"", (char *) NULL);
         return TCL_ERROR;
       }
       ZnUpdateMapInfoClients(map_info);

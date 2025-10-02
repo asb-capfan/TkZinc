@@ -790,7 +790,7 @@ PostScript(ZnItem item,
           wi->current_transfo->_[1][0], wi->current_transfo->_[1][1], 
           wi->current_transfo->_[2][0], wi->current_transfo->_[2][1],
           origin.x, origin.y - h);
-  Tcl_AppendResult(wi->interp, path, NULL);
+  Tcl_AppendResult(wi->interp, path, (char *) NULL);
   
   if (ZnImageIsBitmap(icon->image)) {
     if (Tk_PostscriptColor(wi->interp, wi->ps_info,
@@ -888,13 +888,13 @@ Coords(ZnItem           item,
   
   if ((cmd == ZN_COORDS_ADD) || (cmd == ZN_COORDS_ADD_LAST) || (cmd == ZN_COORDS_REMOVE)) {
     Tcl_AppendResult(item->wi->interp,
-                     " icons can't add or remove vertices", NULL);
+                     " icons can't add or remove vertices", (char *) NULL);
     return TCL_ERROR;
   }
   else if ((cmd == ZN_COORDS_REPLACE) || (cmd == ZN_COORDS_REPLACE_ALL)) {
     if (*num_pts == 0) {
       Tcl_AppendResult(item->wi->interp,
-                       " coords command need 1 point on icons", NULL);
+                       " coords command need 1 point on icons", (char *) NULL);
       return TCL_ERROR;
     }
     icon->pos = (*pts)[0];

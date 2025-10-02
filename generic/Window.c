@@ -828,7 +828,7 @@ PostScript(ZnItem item,
   sprintf(path, "\n%%%% %s item (%s, %d x %d)\n%.15g %.15g translate\n",
           Tk_Class(wind->win), Tk_PathName(wind->win), wind->real_width, wind->real_height,
           wind->pos_dev.x, wind->pos_dev.y);
-  Tcl_AppendResult(wi->interp, path, NULL);
+  Tcl_AppendResult(wi->interp, path, (char *) NULL);
 
   ComputeTransfoAndOrigin(item, &origin);
   
@@ -836,7 +836,7 @@ PostScript(ZnItem item,
           "%.15g %.15g translate\n"
           "1 -1 scale\n",
           wind->pos_dev.x, wind->pos_dev.y + wind->real_height);
-  Tcl_AppendResult(wi->interp, path, NULL);
+  Tcl_AppendResult(wi->interp, path, (char *) NULL);
 
   /* first try if the widget has its own "postscript" command. If it
    * exists, this will produce much better postscript than
@@ -853,13 +853,13 @@ PostScript(ZnItem item,
   Tcl_DStringFree(&buffer2);
 
   if (result == TCL_OK) {
-    Tcl_AppendResult(wi->interp, "50 dict begin\nsave\ngsave\n", NULL);
+    Tcl_AppendResult(wi->interp, "50 dict begin\nsave\ngsave\n", (char *) NULL);
     sprintf (path, "0 %d moveto %d 0 rlineto 0 -%d rlineto -%d",
              wind->real_height, wind->real_width, wind->real_height, wind->real_width);
-    Tcl_AppendResult(wi->interp, path, NULL);
+    Tcl_AppendResult(wi->interp, path, (char *) NULL);
     Tcl_AppendResult(wi->interp, " 0 rlineto closepath\n",
                      "1.000 1.000 1.000 setrgbcolor AdjustColor\nfill\ngrestore\n",
-                     Tcl_DStringValue(&buffer1), "\nrestore\nend\n\n\n", NULL);
+                     Tcl_DStringValue(&buffer1), "\nrestore\nend\n\n\n", (char *) NULL);
     Tcl_DStringFree(&buffer1);
 
     return result;
@@ -977,13 +977,13 @@ Coords(ZnItem           item,
   
   if ((cmd == ZN_COORDS_ADD) || (cmd == ZN_COORDS_ADD_LAST) || (cmd == ZN_COORDS_REMOVE)) {
     Tcl_AppendResult(item->wi->interp,
-                     " windows can't add or remove vertices", NULL);
+                     " windows can't add or remove vertices", (char *) NULL);
     return TCL_ERROR;
   }
   else if ((cmd == ZN_COORDS_REPLACE) || (cmd == ZN_COORDS_REPLACE_ALL)) {
     if (*num_pts == 0) {
       Tcl_AppendResult(item->wi->interp,
-                       " coords command need 1 point on windows", NULL);
+                       " coords command need 1 point on windows", (char *) NULL);
       return TCL_ERROR;
     }
     wind->pos = (*pts)[0];

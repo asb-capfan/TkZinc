@@ -573,7 +573,7 @@ ZnPostScriptCmd(ZnWInfo        *wi,
     /*
      * Save the base matrix for further reference.
      */
-    Tcl_AppendResult(wi->interp, "/InitialTransform matrix currentmatrix def\n", NULL);
+    Tcl_AppendResult(wi->interp, "/InitialTransform matrix currentmatrix def\n", (char *) NULL);
 
     sprintf(string, "%d %.15g moveto %d %.15g lineto %d %.15g lineto %d %.15g",
             ps_info.x, Tk_PostscriptY((double) ps_info.y, (Tk_PostscriptInfo) &ps_info),
@@ -679,7 +679,7 @@ ZnPostscriptOutline(Tcl_Interp        *interp,
   int patlen = 0;
 
   sprintf(string, "%.15g setlinewidth\n", (double) line_width);
-  Tcl_AppendResult(interp, string, NULL);
+  Tcl_AppendResult(interp, string, (char *) NULL);
   /*
    * Setup the line style. It is dependent on the line
    * width.
@@ -703,23 +703,23 @@ ZnPostscriptOutline(Tcl_Interp        *interp,
     while (--patlen) {
       sprintf(string+strlen(string), " %d", ((*pattern++) * (int) line_width) & 0xff);
     }
-    Tcl_AppendResult(interp, string, NULL);
+    Tcl_AppendResult(interp, string, (char *) NULL);
     sprintf(string, "] %d setdash\n", 0 /* dash offset */);
-    Tcl_AppendResult(interp, string, NULL);
+    Tcl_AppendResult(interp, string, (char *) NULL);
   }
   if (Tk_PostscriptColor(interp, ps_info,
                          ZnGetGradientColor(line_color, 0.0, NULL)) != TCL_OK) {
     return TCL_ERROR;
   }
   if (line_pattern != ZnUnspecifiedImage) {
-    Tcl_AppendResult(interp, "StrokeClip ", NULL);
+    Tcl_AppendResult(interp, "StrokeClip ", (char *) NULL);
     if (Tk_PostscriptStipple(interp, tkwin, ps_info,
                              ZnImagePixmap(line_pattern, tkwin)) != TCL_OK) {
       return TCL_ERROR;
     }
   }
   else {
-    Tcl_AppendResult(interp, "stroke\n", NULL);
+    Tcl_AppendResult(interp, "stroke\n", (char *) NULL);
   }
   
   return TCL_OK;
@@ -762,7 +762,7 @@ ZnPostscriptBitmap(Tcl_Interp        *interp,
   if (width > 60000) {
     Tcl_ResetResult(interp);
     Tcl_AppendResult(interp, "can't generate Postscript",
-                     " for bitmaps more than 60000 pixels wide", NULL);
+                     " for bitmaps more than 60000 pixels wide", (char *) NULL);
     return TCL_ERROR;
   }
   rows_at_once = 60000/width;
@@ -770,7 +770,7 @@ ZnPostscriptBitmap(Tcl_Interp        *interp,
     rows_at_once = 1;
   }
   sprintf(buffer, "%.15g %.15g translate\n", x, y + height);
-  Tcl_AppendResult(interp, buffer, NULL);
+  Tcl_AppendResult(interp, buffer, (char *) NULL);
   for (cur_row = 0; cur_row < height; cur_row += rows_at_once) {
     rows_this_time = rows_at_once;
     if (rows_this_time > (height - cur_row)) {
@@ -778,7 +778,7 @@ ZnPostscriptBitmap(Tcl_Interp        *interp,
     }
     sprintf(buffer, "0 -%.15g translate\n%d %d true matrix {\n",
             (double) rows_this_time, width, rows_this_time);
-    Tcl_AppendResult(interp, buffer, NULL);
+    Tcl_AppendResult(interp, buffer, (char *) NULL);
     if (Tk_PostscriptBitmap(interp, tkwin, ps_info,  ZnImagePixmap(bitmap, tkwin),
                             0, cur_row, width, rows_this_time) != TCL_OK) {
       return TCL_ERROR;
@@ -852,7 +852,7 @@ ZnPostscriptString(Tcl_Interp   *interp,
         }
         if ((used + strlen(glyphname)) >= MAXUSE) {
           buf[used] = '\0';
-          Tcl_AppendResult(interp, buf, NULL);
+          Tcl_AppendResult(interp, buf, (char *) NULL);
           used = 0;
         }
         buf[used++] = '/';
@@ -864,7 +864,7 @@ ZnPostscriptString(Tcl_Interp   *interp,
     }
     if (used >= MAXUSE) {
       buf[used] = '\0';
-      Tcl_AppendResult(interp, buf, NULL);
+      Tcl_AppendResult(interp, buf, (char *) NULL);
       used = 0;
     }
   }
@@ -872,7 +872,7 @@ ZnPostscriptString(Tcl_Interp   *interp,
   buf[used++] = ']';
   buf[used++] = '\n';
   buf[used] = '\0';
-  Tcl_AppendResult(interp, buf, NULL);
+  Tcl_AppendResult(interp, buf, (char *) NULL);
 
 #endif
 }
@@ -887,10 +887,10 @@ ZnPostscriptTile(Tcl_Interp        *interp,
   int  w, h;
 
   ZnSizeOfImage(image, &w, &h);
-  Tcl_AppendResult(interp, "<< /PatternType 1 /PaintType 1 /TilingType 1\n", NULL);
+  Tcl_AppendResult(interp, "<< /PatternType 1 /PaintType 1 /TilingType 1\n", (char *) NULL);
   sprintf(path, "  /BBox [%.15g %.15g %.15g %.15g] /XStep %.15g /YStep %.15g\n",
           0.0, (double) h, (double) w, 0.0, (double) w, (double) h);
-  Tcl_AppendResult(interp, path, "  /PaintProc { begin\n", NULL);
+  Tcl_AppendResult(interp, path, "  /PaintProc { begin\n", (char *) NULL);
 
   /*
    * On ne peut pas reprendre le code de Tk_PostscriptImage,
@@ -902,7 +902,7 @@ ZnPostscriptTile(Tcl_Interp        *interp,
     return TCL_ERROR;
   }
 
-  Tcl_AppendResult(interp, "end } bind >> matrix makepattern setpattern fill\n", NULL);
+  Tcl_AppendResult(interp, "end } bind >> matrix makepattern setpattern fill\n", (char *) NULL);
 
   return TCL_OK;
 }
@@ -917,7 +917,7 @@ ZnPostscriptTrace(ZnItem item,
   if (wi->debug) {
     sprintf(buf, "%%%%%%%% %s for %s %d %%%%%%%%\n",
             enter ? "Code" : "End of code", item->class->name, item->id);
-    Tcl_AppendResult(wi->interp, buf, NULL);
+    Tcl_AppendResult(wi->interp, buf, (char *) NULL);
   }
 }
 
@@ -937,7 +937,7 @@ ZnPostscriptGradient(Tcl_Interp        *interp,
     return TCL_OK;
   }
 
-  Tcl_AppendResult(interp, "<< /PatternType 2 /Shading\n", NULL);
+  Tcl_AppendResult(interp, "<< /PatternType 2 /Shading\n", (char *) NULL);
 
   switch (gradient->type) {
     case ZN_AXIAL_GRADIENT:
@@ -964,10 +964,10 @@ ZnPostscriptGradient(Tcl_Interp        *interp,
       }
       Tcl_AppendResult(interp,
                        "  << /ShadingType 2 /ColorSpace /DeviceRGB /Extend [true true] ",
-                       NULL); 
+                       (char *) NULL);
       sprintf(path, "/Coords [%.15g %.15g %.15g %.15g]\n",
               quad[0].x, quad[0].y, quad[1].x, quad[1].y);
-      Tcl_AppendResult(interp, path, NULL);
+      Tcl_AppendResult(interp, path, (char *) NULL);
       break;
     case ZN_RADIAL_GRADIENT:
       /*
@@ -984,11 +984,11 @@ ZnPostscriptGradient(Tcl_Interp        *interp,
       ZnTransformPoint((ZnTransfo *) quad, &p, &extent);
       Tcl_AppendResult(interp,
                        "  << /ShadingType 3 /ColorSpace /DeviceRGB /Extend [true true] ",
-                       NULL); 
+                       (char *) NULL);
       sprintf(path, "/Coords [%.15g %.15g %.15g %.15g %.15g %.15g]\n",
               center.x, center.y, 0.0, center.x, center.y, ABS(center.x-extent.x));
       printf("center %g %g, radius %g\n", center.x, center.y, ABS(center.x-extent.x));
-      Tcl_AppendResult(interp, path, NULL);
+      Tcl_AppendResult(interp, path, (char *) NULL);
       break;
     case ZN_CONICAL_GRADIENT:
       break;
@@ -996,30 +996,30 @@ ZnPostscriptGradient(Tcl_Interp        *interp,
       break;
   }
 
-  Tcl_AppendResult(interp, "    /Function << ", NULL);
-  Tcl_AppendResult(interp, "/FunctionType 3\n", NULL);
-  Tcl_AppendResult(interp, "      /Domain [0 1] /Bounds [", NULL);
+  Tcl_AppendResult(interp, "    /Function << ", (char *) NULL);
+  Tcl_AppendResult(interp, "/FunctionType 3\n", (char *) NULL);
+  Tcl_AppendResult(interp, "      /Domain [0 1] /Bounds [", (char *) NULL);
   for (i = 1; i < gradient->num_actual_colors-1; i++) {
     sprintf(path, "%.4g ", gradient->actual_colors[i].position/100.0);
-    Tcl_AppendResult(interp, path, NULL);
+    Tcl_AppendResult(interp, path, (char *) NULL);
   }
-  Tcl_AppendResult(interp, "] /Encode [", NULL);
+  Tcl_AppendResult(interp, "] /Encode [", (char *) NULL);
   for (i = 0; i < gradient->num_actual_colors-1; i++) {
-    Tcl_AppendResult(interp, "0 1 ", NULL);
+    Tcl_AppendResult(interp, "0 1 ", (char *) NULL);
   }
-  Tcl_AppendResult(interp, "]\n      /Functions [\n", NULL);
+  Tcl_AppendResult(interp, "]\n      /Functions [\n", (char *) NULL);
   for (i = 0, gc1 = gradient->actual_colors; i < gradient->num_actual_colors-1; i++) {
     gc2 = gc1 + 1;
-    Tcl_AppendResult(interp, "      << /FunctionType 2 /Domain [0 1] /N 1 ", NULL);
+    Tcl_AppendResult(interp, "      << /FunctionType 2 /Domain [0 1] /N 1 ", (char *) NULL);
     sprintf(path, "/C0 [%.8g %.8g %.8g] /C1 [%.8g %.8g %.8g] >>\n",
             gc1->rgb->red/65535.0, gc1->rgb->green/65535.0, gc1->rgb->blue/65535.0,
             gc2->rgb->red/65535.0, gc2->rgb->green/65535.0, gc2->rgb->blue/65535.0);
-    Tcl_AppendResult(interp, path, NULL);
+    Tcl_AppendResult(interp, path, (char *) NULL);
     gc1 = gc2;
   }
-  Tcl_AppendResult(interp, "      ] >>\n", NULL);
-  Tcl_AppendResult(interp, "  >> >>\n", NULL);
-  Tcl_AppendResult(interp, "matrix makepattern setpattern fill\n", NULL);
+  Tcl_AppendResult(interp, "      ] >>\n", (char *) NULL);
+  Tcl_AppendResult(interp, "  >> >>\n", (char *) NULL);
+  Tcl_AppendResult(interp, "matrix makepattern setpattern fill\n", (char *) NULL);
 
   return TCL_OK;
 }
@@ -1168,7 +1168,7 @@ ZnPostscriptXImage(Tcl_Interp        *interp,
     return TCL_OK;
   }
 
-  Tcl_AppendResult(interp, "%%%%%% Start of ZnPostscriptXImage\n", NULL);
+  Tcl_AppendResult(interp, "%%%%%% Start of ZnPostscriptXImage\n", (char *) NULL);
 
   cmap = Tk_Colormap(tkwin);
   visual = Tk_Visual(tkwin);
@@ -1363,7 +1363,7 @@ ZnPostscriptXImage(Tcl_Interp        *interp,
   }
   ckfree((char *) cdata.colors);
 
-  Tcl_AppendResult(interp, "%%%%%% End of ZnPostscriptXImage\n", NULL);
+  Tcl_AppendResult(interp, "%%%%%% End of ZnPostscriptXImage\n", (char *) NULL);
 
   return TCL_OK;
 }
