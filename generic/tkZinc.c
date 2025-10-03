@@ -1387,14 +1387,14 @@ ZincObjCmd(ClientData           client_data,    /* Main window associated with
 #endif
 
   if (argc == 1) {
-    Tcl_AppendResult(interp, PACKAGE_VERSION, NULL);
-    Tcl_AppendResult(interp, " X11", NULL);
+    Tcl_AppendResult(interp, PACKAGE_VERSION, (char *) NULL);
+    Tcl_AppendResult(interp, " X11", (char *) NULL);
 #ifdef GL
 #  ifdef _WIN32
-    Tcl_AppendResult(interp, " GL", NULL);
+    Tcl_AppendResult(interp, " GL", (char *) NULL);
 #  else
     if (has_gl) {
-      Tcl_AppendResult(interp, " GL", NULL);
+      Tcl_AppendResult(interp, " GL", (char *) NULL);
     }
 #  endif
 #endif
@@ -2218,19 +2218,19 @@ ZnTagSearchScan(ZnWInfo   *wi,
             }
             else {
               Tcl_AppendResult(wi->interp, "unknown group in path \"",
-                               tag, "\"", NULL);
+                               tag, "\"", (char *) NULL);
               return TCL_ERROR;
             }
           }
           if (group->class != ZnGroup) {
             Tcl_AppendResult(wi->interp, "item is not a group in path \"",
-                             tag, "\"", NULL);
+                             tag, "\"", (char *) NULL);
             return TCL_ERROR;
           }
         }
         else {
           Tcl_AppendResult(wi->interp, "misplaced group id in path \"",
-                           tag, "\"", NULL);
+                           tag, "\"", (char *) NULL);
           return TCL_ERROR;
         }
       }
@@ -2253,7 +2253,7 @@ ZnTagSearchScan(ZnWInfo   *wi,
                                 ZnListSize(ZnWorkStrings));
     if (group == ZN_NO_ITEM) {
       Tcl_AppendResult(wi->interp, "path does not lead to a valid group\"",
-                       tag, "\"", NULL);
+                       tag, "\"", (char *) NULL);
       return TCL_ERROR;
     }
 
@@ -3379,7 +3379,7 @@ FindItems(ZnWInfo       *wi,
           if (strcmp(str, "override") != 0) { 
             Tcl_AppendResult(wi->interp,
                              "recursive should be a boolean value or ",
-                             "override \"", str, "\"", NULL);
+                             "override \"", str, "\"", (char *) NULL);
             return TCL_ERROR;
           }
           ps.recursive = True;
@@ -3429,7 +3429,7 @@ FindItems(ZnWInfo       *wi,
           if (strcmp(str, "override") != 0) { 
             Tcl_AppendResult(wi->interp,
                              "recursive should be a boolean value or ",
-                             "override \"", str, "\"", NULL);
+                             "override \"", str, "\"", (char *) NULL);
             return TCL_ERROR;
           }
           ps.recursive = True;
@@ -3467,7 +3467,7 @@ FindItems(ZnWInfo       *wi,
           if (strcmp(str, "override") != 0) { 
             Tcl_AppendResult(wi->interp,
                              "recursive should be a boolean value or ",
-                             "override \"", str, "\"", NULL);
+                             "override \"", str, "\"", (char *) NULL);
             return TCL_ERROR;
           }
           ps.recursive = True;
@@ -3511,7 +3511,7 @@ FindItems(ZnWInfo       *wi,
       cls = ZnLookupItemClass(Tcl_GetString(args[first+1]));
       if (!cls) {
         Tcl_AppendResult(wi->interp, "unknown item type \"",
-                         Tcl_GetString(args[first+1]), "\"", NULL);
+                         Tcl_GetString(args[first+1]), "\"", (char *) NULL);
         return TCL_ERROR;
       }
       
@@ -3568,7 +3568,7 @@ ZnParseCoordList(ZnWInfo        *wi,
   result = Tcl_ListObjGetElements(wi->interp, arg, &num_elems, &elems);
   if (result == TCL_ERROR) {
   coord_error:
-    Tcl_AppendResult(wi->interp, " malformed coord list", NULL);
+    Tcl_AppendResult(wi->interp, " malformed coord list", (char *) NULL);
     return TCL_ERROR;
   }
   if (num_elems == 0) {
@@ -3710,7 +3710,7 @@ Contour(ZnWInfo *wi,
   result = ZnItemWithTagOrId(wi, args[2], &item, search_var);
   if ((result == TCL_ERROR) || (item == ZN_NO_ITEM)){
     Tcl_AppendResult(wi->interp, "unknown item \"", Tcl_GetString(args[2]),
-                     "\"", NULL);
+                     "\"", (char *) NULL);
     return TCL_ERROR;
   }
   if (!item->class->Contour) {
@@ -3743,7 +3743,7 @@ Contour(ZnWInfo *wi,
   if ((Tcl_GetIntFromObj(wi->interp, args[4], &winding_flag) != TCL_OK) ||
       (winding_flag < -1) || (winding_flag > 1)) {
     Tcl_AppendResult(wi->interp, " incorrect winding flag, should be -1, 0, 1, \"",
-                     Tcl_GetString(args[4]), "\"", NULL);
+                     Tcl_GetString(args[4]), "\"", (char *) NULL);
     return TCL_ERROR;
   }
   index = ZnListTail;
@@ -3751,7 +3751,7 @@ Contour(ZnWInfo *wi,
     /* Look for an index value. */
     if (Tcl_GetLongFromObj(wi->interp, args[5], &index) != TCL_OK) {
       Tcl_AppendResult(wi->interp, " incorrect contour index \"",
-                       Tcl_GetString(args[5]), "\"", NULL);
+                       Tcl_GetString(args[5]), "\"", (char *) NULL);
       return TCL_ERROR;
     }
     argc--;
@@ -3808,7 +3808,7 @@ Contour(ZnWInfo *wi,
       if (winding_flag == 0) {
         Tcl_AppendResult(wi->interp,
                          "Must supply an explicit winding direction (-1, 1)\nwhen adding a contour from an item",
-                         NULL);
+                         (char *) NULL);
         return TCL_ERROR;
       }
       /*
@@ -3819,7 +3819,7 @@ Contour(ZnWInfo *wi,
       if (!shape->class->GetContours &&
           !shape->class->GetClipVertices) {
         Tcl_AppendResult(wi->interp, "class: \"", shape->class->name,
-                         "\" can't give a polygonal shape", NULL);
+                         "\" can't give a polygonal shape", (char *) NULL);
         return TCL_ERROR;
       }
       if (!shape->class->GetContours) {
@@ -3981,12 +3981,12 @@ Coords(ZnWInfo          *wi,
   result = ZnItemWithTagOrId(wi, args[2], &item, search_var);
   if ((result == TCL_ERROR) || (item == ZN_NO_ITEM)) {
     Tcl_AppendResult(wi->interp, " unknown item \"",
-                     Tcl_GetString(args[2]), "\"", NULL);
+                     Tcl_GetString(args[2]), "\"", (char *) NULL);
     return TCL_ERROR;
   }
   if (!item->class->Coords) {
     Tcl_AppendResult(wi->interp, " ", item->class->name,
-                     " does not support the coords command", NULL);
+                     " does not support the coords command", (char *) NULL);
     return TCL_ERROR;
   }
   num_points = 0;
@@ -4059,12 +4059,12 @@ Coords(ZnWInfo          *wi,
     if (((argc == 5) && (cmd != ZN_COORDS_ADD) && (cmd != ZN_COORDS_REMOVE)) ||
         (argc == 6) || (argc == 7)) {
       Tcl_AppendResult(wi->interp, " incorrect contour index \"",
-                       Tcl_GetString(args[i]), "\"", NULL);
+                       Tcl_GetString(args[i]), "\"", (char *) NULL);
       return TCL_ERROR;
     }
     else if ((argc == 5) && (cmd != ZN_COORDS_ADD)) {
       Tcl_AppendResult(wi->interp, " incorrect coord index \"",
-                       Tcl_GetString(args[i]), "\"", NULL);
+                       Tcl_GetString(args[i]), "\"", (char *) NULL);
       return TCL_ERROR;
     }
     else if (ZnParseCoordList(wi, args[argc-1], &points,
@@ -4117,7 +4117,7 @@ Coords(ZnWInfo          *wi,
     Tcl_ResetResult(wi->interp);
     if ((argc == 7) || ((argc == 6) && (cmd != ZN_COORDS_ADD))) {
       Tcl_AppendResult(wi->interp, " incorrect coord index \"",
-                       Tcl_GetString(args[i]), "\"", NULL);
+                       Tcl_GetString(args[i]), "\"", (char *) NULL);
       return TCL_ERROR;
     }
     else if (ZnParseCoordList(wi, args[argc-1], &points,
@@ -4321,14 +4321,14 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       cls = ZnLookupItemClass(str);
       if (!cls) {
-        Tcl_AppendResult(interp, "unknown item type \"", str, "\"", NULL);
+        Tcl_AppendResult(interp, "unknown item type \"", str, "\"", (char *) NULL);
         goto error;
       }
       result = ZnItemWithTagOrId(wi, args[3], &group, &search_var);
       if ((result == TCL_ERROR) || (group == ZN_NO_ITEM) ||
           (group->class != ZnGroup)) {
         Tcl_AppendResult(interp, ", group item expected, got \"",
-                         Tcl_GetString(args[3]), "\"", NULL);
+                         Tcl_GetString(args[3]), "\"", (char *) NULL);
         goto error;
       }
       
@@ -4375,7 +4375,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       if ((result == TCL_ERROR) || (item == ZN_NO_ITEM) ||
           ISCLEAR(item->class->flags, ZN_CLASS_HAS_ANCHORS)) {
         Tcl_AppendResult(interp, "unknown item or doesn't support anchors \"",
-                         Tcl_GetString(args[2]), NULL);
+                         Tcl_GetString(args[2]), (char *) NULL);
         goto error;
       }
       if (Tk_GetAnchor(interp, Tcl_GetString(args[3]), &anchor)) {
@@ -4397,7 +4397,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
      */
   case ZN_W_BECOMES:
     {
-      Tcl_AppendResult(interp, "Command not yet implemented", NULL);
+      Tcl_AppendResult(interp, "Command not yet implemented", (char *) NULL);
       goto error;
     }
     break;
@@ -4436,20 +4436,20 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
         }
         else {
           Tcl_AppendResult(interp, "bbox option should be -field numField or -label",
-                           NULL);
+                           (char *) NULL);
           goto error;
         }
         result = ZnItemWithTagOrId(wi, args[0], &item, &search_var);
         if ((result == TCL_ERROR) || (item == ZN_NO_ITEM) ||
             ! item->class->GetFieldSet) {
           Tcl_AppendResult(interp, "unknown item or doesn't support fields \"",
-                           Tcl_GetString(args[0]), "\"", NULL);
+                           Tcl_GetString(args[0]), "\"", (char *) NULL);
           goto error;
         }
         fs = item->class->GetFieldSet(item);
         if (field >= 0) {
           if ((unsigned int) field >= fs->num_fields) {
-            Tcl_AppendResult(interp, "field index is out of bounds", NULL);
+            Tcl_AppendResult(interp, "field index is out of bounds", (char *) NULL);
             goto error;   
           }
           ZnFIELD.GetFieldBBox(fs, field, &bbox);
@@ -4473,7 +4473,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
            */
           str = Tcl_GetString(args[i]);
           if (*str == '-') {
-            Tcl_AppendResult(interp, "bbox options should be specified before any tag", NULL);
+            Tcl_AppendResult(interp, "bbox options should be specified before any tag", (char *) NULL);
             goto error;
           }
           if (ZnTagSearchScan(wi, args[i], &search_var) == TCL_ERROR) {
@@ -4526,7 +4526,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
         }
         entry = Tcl_FindHashEntry(wi->id_table, (char *) id);
         if (entry == NULL) {
-          Tcl_AppendResult(interp, "item \"", str, "\" doesn't exist", NULL);
+          Tcl_AppendResult(interp, "item \"", str, "\" doesn't exist", (char *) NULL);
           goto error;
         }
         item = elem = Tcl_GetHashValue(entry);
@@ -4548,7 +4548,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
             elem = EncodeItemPart(item, part);
           }
           else {
-            Tcl_AppendResult(interp, "item \"", str, "\" doesn't have parts", NULL);
+            Tcl_AppendResult(interp, "item \"", str, "\" doesn't have parts", (char *) NULL);
             goto error;
           }
         }
@@ -4617,7 +4617,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           Tcl_ResetResult(interp);
           Tcl_AppendResult(interp, "requested illegal events; ",
                            "only key, button, motion, enter, leave ",
-                           "mousewheel and virtual events may be used", NULL);
+                           "mousewheel and virtual events may be used", (char *) NULL);
           goto error;
         }
       }
@@ -4716,7 +4716,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       if (scan == item) {
         Tcl_AppendResult(interp, "\"", Tcl_GetString(args[3]),
                          "\" is a descendant of \"", Tcl_GetString(args[2]),
-                         "\" and can't be used as its parent", NULL);
+                         "\" and can't be used as its parent", (char *) NULL);
         goto error;
       }
       if (argc == 5) {
@@ -4908,7 +4908,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           if (Tcl_GetString(args[3])[0] != 0) { 
             Tcl_AppendResult(interp, "invalid field index \"",
                              Tcl_GetString(args[3]),
-                             "\", should be a positive integer", NULL);
+                             "\", should be a positive integer", (char *) NULL);
             goto error;
           }
         }
@@ -4955,7 +4955,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           if (Tcl_GetString(args[3])[0] != 0) { 
             Tcl_AppendResult(interp, "invalid field index \"",
                              Tcl_GetString(args[3]),
-                             "\", should be a positive integer", NULL);
+                             "\", should be a positive integer", (char *) NULL);
             goto error;
           }
         }
@@ -5131,7 +5131,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           if (Tcl_GetString(args[3])[0] != 0) { 
             Tcl_AppendResult(interp, "invalid field index \"",
                              Tcl_GetString(args[3]),
-                             "\", should be a positive integer", NULL);
+                             "\", should be a positive integer", (char *) NULL);
             goto error;
           }
         }
@@ -5303,7 +5303,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           if (Tcl_GetString(args[3])[0] != 0) {
             Tcl_AppendResult(interp, "invalid field index \"",
                              Tcl_GetString(args[3]),
-                             "\", should be a positive integer", NULL);
+                             "\", should be a positive integer", (char *) NULL);
             goto error;
           }
         }
@@ -5323,7 +5323,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
         }
       }
       Tcl_AppendResult(interp, "can't find an indexable item \"",
-                       Tcl_GetString(args[2]), "\"", NULL);
+                       Tcl_GetString(args[2]), "\"", (char *) NULL);
       goto error;
     }
     break;
@@ -5348,7 +5348,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           if (Tcl_GetString(args[3])[0] != 0) { 
             Tcl_AppendResult(interp, "invalid field index \"",
                              Tcl_GetString(args[3]),
-                             "\", should be a positive integer", NULL);
+                             "\", should be a positive integer", (char *) NULL);
             goto error;
           }
         }
@@ -5406,7 +5406,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           if (Tcl_GetString(args[3])[0] != 0) {
             Tcl_AppendResult(interp, "invalid field index \"",
                              Tcl_GetString(args[3]),
-                             "\", should be a positive integer", NULL);
+                             "\", should be a positive integer", (char *) NULL);
             goto error;
           }
         }
@@ -5440,7 +5440,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
           if (Tcl_GetString(args[3])[0] != 0) { 
             Tcl_AppendResult(interp, "invalid field index \"",
                              Tcl_GetString(args[3]),
-                             "\", should be a positive integer", NULL);
+                             "\", should be a positive integer", (char *) NULL);
             goto error;
           }
         }
@@ -5462,12 +5462,12 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
                                         ZnFIELD.attr_desc, argc, args);
             }
             else {
-              Tcl_AppendResult(interp, "field index out of bound", NULL);
+              Tcl_AppendResult(interp, "field index out of bound", (char *) NULL);
               goto error;
             }
           }
           else {
-            Tcl_AppendResult(interp, "the item does not support fields", NULL);
+            Tcl_AppendResult(interp, "the item does not support fields", (char *) NULL);
             goto error;
           }
           goto done;
@@ -5517,7 +5517,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
         }
         if (mark == ZN_NO_ITEM) {
           Tcl_AppendResult(interp, "unknown tag or item \"",
-                           Tcl_GetString(args[3]), "\"", NULL);
+                           Tcl_GetString(args[3]), "\"", (char *) NULL);
           goto error;
         }
       }
@@ -5629,7 +5629,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
         mark = ZnTagSearchFirst(search_var);
         if (mark == ZN_NO_ITEM) {
           Tcl_AppendResult(interp, "unknown tag or item \"",
-                           Tcl_GetString(args[3]), "\"", NULL);
+                           Tcl_GetString(args[3]), "\"", (char *) NULL);
           goto error;
         }
       }
@@ -5725,7 +5725,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       str = Tcl_GetString(args[2]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -5777,7 +5777,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       str = Tcl_GetString(args[2]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -5849,7 +5849,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
         }
         if (item == ZN_NO_ITEM) {
           Tcl_AppendResult(interp, "can't find an indexable item \"",
-                           Tcl_GetString(args[3]), "\"", NULL);
+                           Tcl_GetString(args[3]), "\"", (char *) NULL);
           goto error;
         }
       }
@@ -5864,7 +5864,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
             if (Tcl_GetString(args[4])[0] != 0) {
               Tcl_AppendResult(interp, "invalid field index \"",
                                Tcl_GetString(args[4]),
-                               "\", should be a positive integer", NULL);
+                               "\", should be a positive integer", (char *) NULL);
               goto error;
             }
           }
@@ -5951,7 +5951,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       str = Tcl_GetString(args[2]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -6012,7 +6012,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
      */
   case ZN_W_TAPPLY:
     {
-      Tcl_AppendResult(interp, "Command not yet implemented", NULL);
+      Tcl_AppendResult(interp, "Command not yet implemented", (char *) NULL);
       goto error;
     }
     break;
@@ -6038,7 +6038,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       
       str = Tcl_GetString(args[3]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -6060,7 +6060,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
 
       str = Tcl_GetString(args[2]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -6159,7 +6159,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       str = Tcl_GetString(args[2]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -6229,7 +6229,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
          */
         tag = Tcl_GetString(args[2]);
         if (strlen(tag) == 0) {
-          Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+          Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
           goto error;
         }
         if (strcmp(tag, "device") == 0) {
@@ -6261,7 +6261,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
        */
       tag = Tcl_GetString(args[argc-2]);
       if (strlen(tag) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       if (strcmp(tag, "device") == 0) {
@@ -6301,7 +6301,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       if (ZnParseCoordList(wi, args[argc-1], &p,
                            &controls, &num_points, &old_format) == TCL_ERROR) {
         Tcl_AppendResult(interp, " invalid coord list \"",
-                         Tcl_GetString(args[argc-1]), "\"", NULL);
+                         Tcl_GetString(args[argc-1]), "\"", (char *) NULL);
         goto error;
       }
       l = Tcl_GetObjResult(interp);
@@ -6351,7 +6351,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       str = Tcl_GetString(args[2]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -6399,7 +6399,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       str = Tcl_GetString(args[2]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -6527,7 +6527,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       str = Tcl_GetString(args[2]);
       if (strlen(str) == 0) {
-        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", NULL);
+        Tcl_AppendResult(interp, " must provide a valid tagOrIdOrTransform", (char *) NULL);
         goto error;
       }
       entry = Tcl_FindHashEntry(wi->t_table, str);
@@ -6592,7 +6592,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
       }
       if (item == ZN_NO_ITEM) {
         Tcl_AppendResult(interp, "can't find a suitable item \"",
-                         Tcl_GetString(args[2]), "\"", NULL);
+                         Tcl_GetString(args[2]), "\"", (char *) NULL);
         goto error;
       }
       if (Tcl_GetDoubleFromObj(interp, args[3], &d) == TCL_ERROR) {

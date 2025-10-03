@@ -135,7 +135,7 @@ Init(ZnItem             item,
     ZnFIELD.InitFields(field_set);
   }
   else {
-    Tcl_AppendResult(wi->interp, " number of fields expected", NULL);
+    Tcl_AppendResult(wi->interp, " number of fields expected", (char *) NULL);
     return TCL_ERROR;
   }    
   
@@ -504,13 +504,13 @@ Coords(ZnItem           item,
   
   if ((cmd == ZN_COORDS_ADD) || (cmd == ZN_COORDS_ADD_LAST) || (cmd == ZN_COORDS_REMOVE)) {
     Tcl_AppendResult(item->wi->interp,
-                     " tabulars can't add or remove vertices", NULL);
+                     " tabulars can't add or remove vertices", (char *) NULL);
     return TCL_ERROR;
   }
   else if ((cmd == ZN_COORDS_REPLACE) || (cmd == ZN_COORDS_REPLACE_ALL)) {
     if (*num_pts == 0) {
       Tcl_AppendResult(item->wi->interp,
-                       " coords command need 1 point on tabulars", NULL);
+                       " coords command need 1 point on tabulars", (char *) NULL);
       return TCL_ERROR;
     }
     tabular->pos = (*pts)[0];
@@ -554,7 +554,7 @@ Part(ZnItem     item,
     }
     else {
     part_error:
-      Tcl_AppendResult(item->wi->interp, " invalid item part specification", NULL);
+      Tcl_AppendResult(item->wi->interp, " invalid item part specification", (char *) NULL);
       return TCL_ERROR; 
     }
   }

@@ -121,7 +121,7 @@ Init(ZnItem             item,
   tr->points = NULL;
 
   if (*argc < 1) {
-    Tcl_AppendResult(wi->interp, " triangles coords expected", NULL);
+    Tcl_AppendResult(wi->interp, " triangles coords expected", (char *) NULL);
     return TCL_ERROR;
   }
   if (ZnParseCoordList(wi, (*args)[0], &points,
@@ -129,7 +129,7 @@ Init(ZnItem             item,
     return TCL_ERROR;
   }
   if (num_points < 3) {
-    Tcl_AppendResult(wi->interp, " malformed triangles coords, need at least 3 points", NULL);
+    Tcl_AppendResult(wi->interp, " malformed triangles coords, need at least 3 points", (char *) NULL);
     return TCL_ERROR;
   }
 
@@ -601,7 +601,7 @@ PostScript(ZnItem item,
 
   Tcl_AppendResult(wi->interp,
                    "/ShadingDict <<\n  /ShadingType 4\n  /ColorSpace /DeviceRGB\n",
-                   "  /DataSource [", NULL);
+                   "  /DataSource [", (char *) NULL);
   for (i = 0; i < num_points; i++) {
     if (i <= last_color_index) {
       color = ZnGetGradientColor(grads[i], 0.0, NULL);
@@ -621,14 +621,14 @@ PostScript(ZnItem item,
 
     sprintf(path, "%d %.15g %.15g %.4g %.4g %.4g ",
             edge, points[i].x, points[i].y, red, green, blue);
-    Tcl_AppendResult(wi->interp, path, NULL);
+    Tcl_AppendResult(wi->interp, path, (char *) NULL);
   }
-  Tcl_AppendResult(wi->interp, "]\n>> def\n", NULL);
-  Tcl_AppendResult(wi->interp, "<<\n  /PatternType 2\n  /Shading ShadingDict\n>>\n", NULL);
-  Tcl_AppendResult(wi->interp, "matrix identmatrix makepattern setpattern\n", NULL);
+  Tcl_AppendResult(wi->interp, "]\n>> def\n", (char *) NULL);
+  Tcl_AppendResult(wi->interp, "<<\n  /PatternType 2\n  /Shading ShadingDict\n>>\n", (char *) NULL);
+  Tcl_AppendResult(wi->interp, "matrix identmatrix makepattern setpattern\n", (char *) NULL);
   sprintf(path, "%.15g %.15g %.15g %.15g rectfill\n", bbox.orig.x, bbox.orig.y,
           bbox.corner.x - bbox.orig.x, bbox.corner.y - bbox.orig.y);
-  Tcl_AppendResult(wi->interp, path, NULL);
+  Tcl_AppendResult(wi->interp, path, (char *) NULL);
 
   return TCL_OK;
 }
@@ -737,7 +737,7 @@ Coords(ZnItem           item,
       ZnList    tmp;
       if (*num_pts == 0) {
         Tcl_AppendResult(item->wi->interp,
-                         " coords command need at least 3 points on triangles", NULL);
+                         " coords command need at least 3 points on triangles", (char *) NULL);
         return TCL_ERROR;
       }
       tmp = ZnListFromArray(*pts, *num_pts, sizeof(ZnPoint));
@@ -748,7 +748,7 @@ Coords(ZnItem           item,
     else {
       if (*num_pts == 0) {
         Tcl_AppendResult(item->wi->interp,
-                         " coords command need at least 1 point on triangles", NULL);
+                         " coords command need at least 1 point on triangles", (char *) NULL);
         return TCL_ERROR;
       }
       points = ZnListArray(tr->points);
@@ -758,7 +758,7 @@ Coords(ZnItem           item,
       }
       if ((index < 0) || ((unsigned int) index >= num_points)) {
       range_err:
-        Tcl_AppendResult(item->wi->interp, " coord index out of range", NULL);
+        Tcl_AppendResult(item->wi->interp, " coord index out of range", (char *) NULL);
         return TCL_ERROR;
       }
       points[index] = (*pts)[0];
@@ -807,7 +807,7 @@ Coords(ZnItem           item,
   else if (cmd == ZN_COORDS_REMOVE) {
     if (ZnListSize(tr->points) < 4) {
       Tcl_AppendResult(item->wi->interp,
-                       " triangles should keep at least 3 points", NULL);
+                       " triangles should keep at least 3 points", (char *) NULL);
       return TCL_ERROR;
     }
     points = ZnListArray(tr->points);

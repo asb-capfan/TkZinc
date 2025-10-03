@@ -191,7 +191,7 @@ Init(ZnItem             item,
   item->priority = 1;
 
   if (*argc < 1) {
-    Tcl_AppendResult(wi->interp, " curve coords expected", NULL);
+    Tcl_AppendResult(wi->interp, " curve coords expected", (char *) NULL);
     return TCL_ERROR;
   }
   if (ZnParseCoordList(wi, (*args)[0], &points,
@@ -226,7 +226,7 @@ Init(ZnItem             item,
         default:
         contr_err:
           ZnFree(controls);
-          Tcl_AppendResult(wi->interp, " curve coords expected", NULL);
+          Tcl_AppendResult(wi->interp, " curve coords expected", (char *) NULL);
           return TCL_ERROR;
         }
       }
@@ -1605,17 +1605,17 @@ PostScript(ZnItem item,
    * Put all contours in an array on the stack
    */
   if (ISSET(cv->flags, FILLED_BIT) || cv->line_width) {
-    Tcl_AppendResult(wi->interp, "newpath ", NULL);
+    Tcl_AppendResult(wi->interp, "newpath ", (char *) NULL);
     for (i = 0; i < num_contours; i++, contours++) {
       num_points = contours->num_points;
       points = contours->points;
       sprintf(path, "%.15g %.15g moveto\n", points[0].x, points[0].y);
-      Tcl_AppendResult(wi->interp, path, NULL);
+      Tcl_AppendResult(wi->interp, path, (char *) NULL);
       for (j = 1; j < num_points; j++) {
         sprintf(path, "%.15g %.15g lineto ", points[j].x, points[j].y);
-        Tcl_AppendResult(wi->interp, path, NULL);
+        Tcl_AppendResult(wi->interp, path, (char *) NULL);
         if (((j+1) % 5) == 0) {
-          Tcl_AppendResult(wi->interp, "\n", NULL);
+          Tcl_AppendResult(wi->interp, "\n", (char *) NULL);
         }
       }
     }
@@ -1626,7 +1626,7 @@ PostScript(ZnItem item,
    */
   if (ISSET(cv->flags, FILLED_BIT)) {
     if (cv->line_width) {
-      Tcl_AppendResult(wi->interp, "gsave\n", NULL);
+      Tcl_AppendResult(wi->interp, "gsave\n", (char *) NULL);
     }
     if (!ZnGradientFlat(cv->fill_color)) {
       if (ZnPostscriptGradient(wi->interp, wi->ps_info, cv->fill_color,
@@ -1643,7 +1643,7 @@ PostScript(ZnItem item,
                                ZnGetGradientColor(cv->fill_color, 0.0, NULL)) != TCL_OK) {
           return TCL_ERROR;
         }
-        Tcl_AppendResult(wi->interp, "clip ", NULL);
+        Tcl_AppendResult(wi->interp, "clip ", (char *) NULL);
         if (Tk_PostscriptStipple(wi->interp, wi->win, wi->ps_info,
                                  ZnImagePixmap(cv->tile, wi->win)) != TCL_OK) {
           return TCL_ERROR;
@@ -1655,10 +1655,10 @@ PostScript(ZnItem item,
                              ZnGetGradientColor(cv->fill_color, 0.0, NULL)) != TCL_OK) {
         return TCL_ERROR;
       }
-      Tcl_AppendResult(wi->interp, "fill\n", NULL);
+      Tcl_AppendResult(wi->interp, "fill\n", (char *) NULL);
     }
     if (cv->line_width) {
-      Tcl_AppendResult(wi->interp, "grestore\n", NULL);
+      Tcl_AppendResult(wi->interp, "grestore\n", (char *) NULL);
     }
   }
 
@@ -1670,7 +1670,7 @@ PostScript(ZnItem item,
       /* TODO No support yet */
     }
     else {
-      Tcl_AppendResult(wi->interp, "0 setlinejoin 2 setlinecap\n", NULL);
+      Tcl_AppendResult(wi->interp, "0 setlinejoin 2 setlinecap\n", (char *) NULL);
       if (ZnPostscriptOutline(wi->interp, wi->ps_info, wi->win,
                               cv->line_width, cv->line_style,
                               cv->line_color, cv->line_pattern) != TCL_OK) {
@@ -1783,7 +1783,7 @@ Coords(ZnItem           item,
   }
   if ((contour < 0) || ((unsigned int) contour >= cv->shape.num_contours)) {
     Tcl_AppendResult(item->wi->interp,
-                     " curve contour index out of range", NULL);
+                     " curve contour index out of range", (char *) NULL);
     return TCL_ERROR;
   }
   if (cv->shape.num_contours != 0) {
@@ -1818,7 +1818,7 @@ Coords(ZnItem           item,
     else {
       if (*num_pts == 0) {
         Tcl_AppendResult(item->wi->interp,
-                         " coords replace command need at least 1 point on curves", NULL);
+                         " coords replace command need at least 1 point on curves", (char *) NULL);
         return TCL_ERROR;
       }
       if (index < 0) {
@@ -1826,7 +1826,7 @@ Coords(ZnItem           item,
       }
       if ((index < 0) || ((unsigned int) index >= c->num_points)) {
       range_err:
-        Tcl_AppendResult(item->wi->interp, " coord index out of range", NULL);
+        Tcl_AppendResult(item->wi->interp, " coord index out of range", (char *) NULL);
         return TCL_ERROR;
       }
       /*printf("--->%g@%g\n", (*pts)[0].x, (*pts)[0].y);*/
@@ -1849,14 +1849,14 @@ Coords(ZnItem           item,
             num_controls = 0;
             if (!index) {
             control_first:
-              Tcl_AppendResult(item->wi->interp, " the first point must not be a control", NULL);
+              Tcl_AppendResult(item->wi->interp, " the first point must not be a control", (char *) NULL);
               return TCL_ERROR;       
             }
             else if ((unsigned int) index == c->num_points-1) {
               if (ISCLEAR(cv->flags, CLOSED_BIT) &&
                   (cv->shape.num_contours == 1)) {
               control_last:
-                Tcl_AppendResult(item->wi->interp, " the last point must not be a control", NULL);
+                Tcl_AppendResult(item->wi->interp, " the last point must not be a control", (char *) NULL);
                 return TCL_ERROR;             
               }
             }
@@ -1866,7 +1866,7 @@ Coords(ZnItem           item,
             for (j = index+1; c->controls[j] && (j < c->num_points); j++, num_controls++);
             if (num_controls > 1) {
             control_err:
-              Tcl_AppendResult(item->wi->interp, " too many consecutive control points in a curve", NULL);
+              Tcl_AppendResult(item->wi->interp, " too many consecutive control points in a curve", (char *) NULL);
               return TCL_ERROR;
             }
           }
@@ -2063,7 +2063,7 @@ Contour(ZnItem  item,
     }
     if (index < 0) {
     contour_err:
-      Tcl_AppendResult(item->wi->interp, " contour index out of range", NULL);
+      Tcl_AppendResult(item->wi->interp, " contour index out of range", (char *) NULL);
       return TCL_ERROR;
     }
     num_contours = cv->shape.num_contours + poly->num_contours;

@@ -185,7 +185,7 @@ Init(ZnItem             item,
   item->priority = 1;
   
   if (*argc < 1) {
-    Tcl_AppendResult(wi->interp, " viewport coords expected", NULL);
+    Tcl_AppendResult(wi->interp, " viewport coords expected", (char *) NULL);
     return TCL_ERROR;
   }
   if (ZnParseCoordList(wi, (*args)[0], &points,
@@ -193,7 +193,7 @@ Init(ZnItem             item,
     return TCL_ERROR;
   }
   if (num_points != 2) {
-    Tcl_AppendResult(wi->interp, " malformed viewport coords", NULL);
+    Tcl_AppendResult(wi->interp, " malformed viewport coords", (char *) NULL);
     return TCL_ERROR;
   };
   rect->coords[0] = points[0];
@@ -914,13 +914,13 @@ PostScript(ZnItem item,
   sprintf(path, "%.15g %.15g moveto %.15g %.15g lineto %.15g %.15g lineto %.15g %.15g lineto closepath\n",
           rect->dev[0].x, rect->dev[0].y, rect->dev[1].x, rect->dev[1].y,
           rect->dev[2].x, rect->dev[2].y, rect->dev[3].x, rect->dev[3].y);
-  Tcl_AppendResult(wi->interp, path, NULL);
+  Tcl_AppendResult(wi->interp, path, (char *) NULL);
 
   /*
    * And emit code code to stroke the outline... Viewport content won't be displayed, only the rectangle area
    */
   /*
-  Tcl_AppendResult(wi->interp, "0 setlinejoin 2 setlinecap\n", NULL);
+  Tcl_AppendResult(wi->interp, "0 setlinejoin 2 setlinecap\n", (char *) NULL);
   if (ZnPostscriptOutline(wi->interp, wi->ps_info, wi->win,
                           rect->line_width, rect->line_style,
                           rect->line_color, rect->line_pattern) != TCL_OK) {
@@ -1005,12 +1005,12 @@ Coords(ZnItem           item,
   ViewportItem rect = (ViewportItem) item;
 
   if ((cmd == ZN_COORDS_ADD) || (cmd == ZN_COORDS_ADD_LAST) || (cmd == ZN_COORDS_REMOVE)) {
-    Tcl_AppendResult(item->wi->interp, " viewports can't add or remove vertices", NULL);
+    Tcl_AppendResult(item->wi->interp, " viewports can't add or remove vertices", (char *) NULL);
     return TCL_ERROR;
   }
   else if (cmd == ZN_COORDS_REPLACE_ALL) {
     if (*num_pts != 2) {
-      Tcl_AppendResult(item->wi->interp, " coords command need 2 points on viewports", NULL);
+      Tcl_AppendResult(item->wi->interp, " coords command need 2 points on viewports", (char *) NULL);
       return TCL_ERROR;
     }
     rect->coords[0] = (*pts)[0];
@@ -1019,7 +1019,7 @@ Coords(ZnItem           item,
   }
   else if (cmd == ZN_COORDS_REPLACE) {
     if (*num_pts < 1) {
-      Tcl_AppendResult(item->wi->interp, " coords command need at least 1 point", NULL);
+      Tcl_AppendResult(item->wi->interp, " coords command need at least 1 point", (char *) NULL);
       return TCL_ERROR;
     }
     if (index < 0) {
@@ -1027,7 +1027,7 @@ Coords(ZnItem           item,
     }
     if ((index < 0) || (index > 1)) {
     range_err:
-      Tcl_AppendResult(item->wi->interp," incorrect coord index, should be between -2 and 1", NULL);
+      Tcl_AppendResult(item->wi->interp," incorrect coord index, should be between -2 and 1", (char *) NULL);
       return TCL_ERROR;
     }
     rect->coords[index] = (*pts)[0];

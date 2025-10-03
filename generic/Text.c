@@ -1379,10 +1379,10 @@ PostScript(ZnItem item,
     return TCL_ERROR;
   }
   if (text->fill_pattern != ZnUnspecifiedImage) {
-    Tcl_AppendResult(wi->interp, "/StippleText {\n    ", NULL);
+    Tcl_AppendResult(wi->interp, "/StippleText {\n    ", (char *) NULL);
     Tk_PostscriptStipple(wi->interp, wi->win, wi->ps_info,
                          ZnImagePixmap(text->fill_pattern, wi->win));
-    Tcl_AppendResult(wi->interp, "} bind def\n", NULL);
+    Tcl_AppendResult(wi->interp, "} bind def\n", (char *) NULL);
   }
 
   ComputeTransfoAndOrigin(item, &origin);
@@ -1393,10 +1393,10 @@ PostScript(ZnItem item,
           wi->current_transfo->_[0][0], wi->current_transfo->_[0][1], 
           wi->current_transfo->_[1][0], wi->current_transfo->_[1][1], 
           wi->current_transfo->_[2][0], wi->current_transfo->_[2][1]);
-  Tcl_AppendResult(wi->interp, path, NULL);
+  Tcl_AppendResult(wi->interp, path, (char *) NULL);
 
   sprintf(path, "%.15g %.15g [\n", origin.x, origin.y);
-  Tcl_AppendResult(wi->interp, path, NULL);
+  Tcl_AppendResult(wi->interp, path, (char *) NULL);
 
   /*
    * Emit code to draw the lines.
@@ -1421,7 +1421,7 @@ PostScript(ZnItem item,
   /* DrawText should not mess with anchors, they are already accounted for */
   sprintf(path, "] %d %g %g %g %s DrawText\n", fm.linespace, 0.0, 0.0, 
           alignment, (text->fill_pattern == ZnUnspecifiedImage) ? "false" : "true");
-  Tcl_AppendResult(wi->interp, path, NULL);
+  Tcl_AppendResult(wi->interp, path, (char *) NULL);
 
   return TCL_OK;
 }
@@ -1494,13 +1494,13 @@ Coords(ZnItem           item,
   
   if ((cmd == ZN_COORDS_ADD) || (cmd == ZN_COORDS_ADD_LAST) || (cmd == ZN_COORDS_REMOVE)) {
     Tcl_AppendResult(item->wi->interp,
-                     " texts can't add or remove vertices", NULL);
+                     " texts can't add or remove vertices", (char *) NULL);
     return TCL_ERROR;
   }
   else if ((cmd == ZN_COORDS_REPLACE) || (cmd == ZN_COORDS_REPLACE_ALL)) {
     if (*num_pts == 0) {
       Tcl_AppendResult(item->wi->interp,
-                       " coords command need 1 point on texts", NULL);
+                       " coords command need 1 point on texts", (char *) NULL);
       return TCL_ERROR;
     }
     text->pos = (*pts)[0];

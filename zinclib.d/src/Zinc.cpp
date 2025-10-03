@@ -1858,7 +1858,7 @@ void Zinc::itemMatrix (ZincItem * item,
     int result = (fct);      \
     if (result != TCL_OK)    \
     {                        \
-      Tcl_AppendResult (Zinc::interp, msg, NULL); \
+      Tcl_AppendResult (Zinc::interp, msg, (char *) NULL); \
       return TCL_ERROR;      \
     }                        \
   }

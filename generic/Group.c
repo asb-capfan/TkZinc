@@ -438,7 +438,7 @@ Configure(ZnItem        item,
         (!group->clip->class->GetClipVertices || (group->clip->parent != item))) {
       group->clip = ZN_NO_ITEM;
       Tcl_AppendResult(wi->interp,
-                       " clip item must be a child of the group", NULL);
+                       " clip item must be a child of the group", (char *) NULL);
       return TCL_ERROR;
     }
     if (!group->clip && (item == wi->top_group)) {
@@ -1413,13 +1413,13 @@ Coords(ZnItem           item,
 {
   if ((cmd == ZN_COORDS_ADD) || (cmd == ZN_COORDS_ADD_LAST) || (cmd == ZN_COORDS_REMOVE)) {
     Tcl_AppendResult(item->wi->interp,
-                     " can't add or remove vertices in groups", NULL);
+                     " can't add or remove vertices in groups", (char *) NULL);
     return TCL_ERROR;
   }
   else if ((cmd == ZN_COORDS_REPLACE) || (cmd == ZN_COORDS_REPLACE_ALL)) {
     if (*num_pts == 0) {
       Tcl_AppendResult(item->wi->interp,
-                       " coords command need 1 point on groups", NULL);
+                       " coords command need 1 point on groups", (char *) NULL);
       return TCL_ERROR;
     }
     if (!item->transfo && ((*pts)[0].x == 0.0) && ((*pts)[0].y == 0.0)) {
@@ -1484,7 +1484,7 @@ PostScript(ZnItem item,
     if (current_item->class != ZnGroup) {
       PushTransform(current_item);
       if (!prepass) {
-        Tcl_AppendResult(wi->interp, "gsave\n", NULL);
+        Tcl_AppendResult(wi->interp, "gsave\n", (char *) NULL);
       }
       ZnPostscriptTrace(current_item, 1);
     }
@@ -1492,7 +1492,7 @@ PostScript(ZnItem item,
     if (current_item->class != ZnGroup) {
       ZnPostscriptTrace(current_item, 0);
       if (!prepass && (result == TCL_OK)) {
-        Tcl_AppendResult(wi->interp, "grestore\n", NULL);
+        Tcl_AppendResult(wi->interp, "grestore\n", (char *) NULL);
       }
       PopTransform(current_item);
     }
