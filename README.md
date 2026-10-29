@@ -207,7 +207,7 @@ On a Linux system, you need `perl`, `perl-tk` and `perl-tk-devel` packages
 
     tar zxf Tkzinc<version>.tgz
     cd Tkzinc<version>/Perl
-    ./export2cpan
+    perl export2cpan.pl
     cd ../export2cpan/tk-zinc<version>
 
 ## 2. Make and install
