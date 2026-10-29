@@ -92,7 +92,7 @@ WriteMakefile(
     'INC'             => $INC,
     'C'               => [@C],
     'VERSION'         => $VERSION,
-    'XS_VERSION'      => $VERSION,
+    'XS_VERSION'      => $Tk::Config::VERSION,
     'XS'              => {'Zinc.xs' => 'Zinc.c'},
     'linkext'         => {LINKTYPE => 'dynamic'},
     'depend'          => {$ZincObj => '$(O_FILES) Zinc.c'},
