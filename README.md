@@ -208,7 +208,18 @@ On a Linux system, you need `perl`, `perl-tk` and `perl-tk-devel` packages
     tar zxf Tkzinc<version>.tgz
     cd Tkzinc<version>/Perl
     perl export2cpan.pl
-    cd ../export2cpan/tk-zinc<version>
+    cd ../export2cpan/tk-zinc-<perl-version>
+
+The export script uses only core Perl modules and works on Windows and Unix.
+It exports the current working tree without running `configure` or requiring
+CVS, Unix shell commands, or symbolic links. It can also be called from the
+repository root with `perl Perl/export2cpan.pl`.
+
+The Perl version is derived from `configure.in`: for example, `3.3.7` becomes
+`3.307`, producing `export2cpan/tk-zinc-3.307`. An existing export is never
+overwritten; move or remove it before running the script again. To export an
+older release, first check out the desired Git revision. The script accepts
+no arguments and does not create a release archive.
 
 ## 2. Make and install
 
