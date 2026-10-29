@@ -9277,6 +9277,11 @@ Redisplay(ClientData client_data)       /* Information about the widget. */
 #define CALLBACK
 #endif
 
+/* GLU headers do not consistently provide the _GLUfuncptr typedef.
+ * Keep the Windows callback calling convention in our own generic type.
+ */
+typedef void (CALLBACK *ZnGLUCallback)(void);
+
 static void CALLBACK
 ZnTessBegin(GLenum      type,
             void        *data)
@@ -9458,11 +9463,11 @@ InitZinc(Tcl_Interp *interp) {
   ZnTesselator.tess = gluNewTess();
   ZnTesselator.combine_list = NULL;
         ZnTesselator.combine_length = 0;
-  gluTessCallback(ZnTesselator.tess, GLU_TESS_BEGIN_DATA, (_GLUfuncptr)ZnTessBegin);
-  gluTessCallback(ZnTesselator.tess, GLU_TESS_VERTEX_DATA, (_GLUfuncptr)ZnTessVertex);
-  gluTessCallback(ZnTesselator.tess, GLU_TESS_END_DATA, (_GLUfuncptr)ZnTessEnd);
-  gluTessCallback(ZnTesselator.tess, GLU_TESS_COMBINE_DATA, (_GLUfuncptr)ZnTessCombine);
-  gluTessCallback(ZnTesselator.tess, GLU_TESS_ERROR_DATA, (_GLUfuncptr)ZnTessError);
+  gluTessCallback(ZnTesselator.tess, GLU_TESS_BEGIN_DATA, (ZnGLUCallback)ZnTessBegin);
+  gluTessCallback(ZnTesselator.tess, GLU_TESS_VERTEX_DATA, (ZnGLUCallback)ZnTessVertex);
+  gluTessCallback(ZnTesselator.tess, GLU_TESS_END_DATA, (ZnGLUCallback)ZnTessEnd);
+  gluTessCallback(ZnTesselator.tess, GLU_TESS_COMBINE_DATA, (ZnGLUCallback)ZnTessCombine);
+  gluTessCallback(ZnTesselator.tess, GLU_TESS_ERROR_DATA, (ZnGLUCallback)ZnTessError);
   gluTessNormal(ZnTesselator.tess, 0.0, 0.0, -1.0);
 
   /*
