@@ -2212,7 +2212,7 @@ ZnTagSearchScan(ZnWInfo   *wi,
           *next = c;
           group = wi->hot_item;
           if ((group == ZN_NO_ITEM) || (group->id != id)) {
-            entry = Tcl_FindHashEntry(wi->id_table, (char *) id);
+            entry = Tcl_FindHashEntry(wi->id_table, ZnIdToHashKey(id));
             if (entry != NULL) {
               group = (ZnItem) Tcl_GetHashValue(entry);
             }
@@ -2414,7 +2414,7 @@ ZnTagSearchFirst(ZnTagSearch    *search)        /* Record describing tag search 
     previous = search->wi->hot_prev;
     if ((item == ZN_NO_ITEM) || (item->id != search->id) ||
         (previous == ZN_NO_ITEM) || (previous->next != item)) {
-      entry = Tcl_FindHashEntry(search->wi->id_table, (char *) search->id);
+      entry = Tcl_FindHashEntry(search->wi->id_table, ZnIdToHashKey(search->id));
       if (entry != NULL) {
         item = (ZnItem) Tcl_GetHashValue(entry);
         previous = item->previous;
@@ -4524,7 +4524,7 @@ WidgetObjCmd(ClientData         client_data,    /* Information about the widget.
         if ((*end != 0) && (*end != ':')) {
           goto bind_a_tag;
         }
-        entry = Tcl_FindHashEntry(wi->id_table, (char *) id);
+        entry = Tcl_FindHashEntry(wi->id_table, ZnIdToHashKey(id));
         if (entry == NULL) {
           Tcl_AppendResult(interp, "item \"", str, "\" doesn't exist", (char *) NULL);
           goto error;
@@ -6876,7 +6876,7 @@ Configure(Tcl_Interp            *interp,/* Used for error reporting. */
       wi->om_group = ZN_NO_ITEM;
     }
     if (wi->om_group_id != 0) {
-      entry = Tcl_FindHashEntry(wi->id_table, (char *) wi->om_group_id);
+      entry = Tcl_FindHashEntry(wi->id_table, ZnIdToHashKey(wi->om_group_id));
       if (entry != NULL) {
         grp = (ZnItem) Tcl_GetHashValue(entry);
         if (grp->class == ZnGroup) {
@@ -7203,7 +7203,7 @@ Configure(Tcl_Interp            *interp,/* Used for error reporting. */
         wi->om_group = ZN_NO_ITEM;
       }
       if (wi->om_group_id != 0) {
-        entry = Tcl_FindHashEntry(wi->id_table, (char *) wi->om_group_id);
+        entry = Tcl_FindHashEntry(wi->id_table, ZnIdToHashKey(wi->om_group_id));
         if (entry != NULL) {
           grp = (ZnItem) Tcl_GetHashValue(entry);
           if (grp->class == ZnGroup) {

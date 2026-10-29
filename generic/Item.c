@@ -1512,7 +1512,7 @@ SetId(ZnItem    item)
 
   item->id = wi->obj_id;
   wi->obj_id++;
-  entry = Tcl_CreateHashEntry(wi->id_table, (char *) item->id, &dummy);
+  entry = Tcl_CreateHashEntry(wi->id_table, ZnIdToHashKey(item->id), &dummy);
   Tcl_SetHashValue(entry, item);  
 }
 
@@ -1522,7 +1522,7 @@ FreeId(ZnItem   item)
   Tcl_HashEntry *entry;
   
   if (item->id) {
-    entry = Tcl_FindHashEntry(item->wi->id_table, (char *) item->id);
+    entry = Tcl_FindHashEntry(item->wi->id_table, ZnIdToHashKey(item->id));
     if (entry) {
       Tcl_DeleteHashEntry(entry);
       item->id = 0;

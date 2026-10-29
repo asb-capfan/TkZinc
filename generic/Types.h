@@ -65,6 +65,7 @@
 #  include <tkIntDecls.h>
 #endif
 #include <stdio.h>
+#include <stdint.h>
 
 
 #ifndef CONST86
@@ -102,6 +103,11 @@ typedef void    *ZnPtr;
 #define ZnFree(ptr)             (ckfree((char *)(ptr)))
 #define ZnRealloc(ptr, size)    ((void *)ckrealloc((void *)(ptr), size))
 #define ZnWarning(msg)          (fprintf(stderr, "%s", (msg)))
+
+/* TCL_ONE_WORD_KEYS stores the numeric item ID as a pointer-sized value;
+ * it never dereferences this key. Widen before casting on 64-bit systems.
+ */
+#define ZnIdToHashKey(id)        ((char *) (uintptr_t) (id))
   
 #define ZnUnspecifiedImage      None
 #define ZnUnspecifiedColor      NULL
