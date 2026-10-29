@@ -156,8 +156,10 @@ sub get_flags {
         # No shape extension on Windows (planned later).
         $DEF_FLAGS{'SHAPE'} = 0;
         #
-        # Visual C++ does not define __STDC__ by default
-        $defines .= ' -D__STDC__';
+        # Visual C++ does not define __STDC__ by default. GCC already does.
+        if ($Config{'cc'} =~ /(?:^|[\\\/\s"])cl(?:\.exe)?(?=["\s]|$)/i) {
+            $defines .= ' -D__STDC__';
+        }
     }
 
     print "Configuring with:\n    ";
