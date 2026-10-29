@@ -35,6 +35,10 @@ See third_party/glew/README.tkzinc.md and third_party/glew/LICENSE.txt.
   make
   make test
 
+The animated gradient test runs with fewer redraws by default, while keeping
+all transformations. For the full visual animation, set the environment
+variable TKZINC_TEST_FULL_ANIMATION=1 before running the test.
+
   # to run demos before installing:
   perl -Iblib/arch -Iblib/lib demos/zinc-demos
 
