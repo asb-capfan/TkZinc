@@ -27,7 +27,8 @@ print "Using $TkLibDir as Tk library...\n";
 my @GENERIC_C = ('Tabular.c', 'Rectangle.c', 'Arc.c', 'Curve.c',
          'Item.c', 'PostScript.c', 'Attrs.c', 'Draw.c', 'Geo.c', 'List.c',
          'perfos.c', 'Transfo.c', 'Group.c', 'Icon.c', 'Text.c', 'Image.c', 'Color.c',
-         'Field.c', 'Triangles.c', 'Viewport.c', 'WindowUtils.c', 'Window.c', 'tkZinc.c');
+         'Field.c', 'Triangles.c', 'Viewport.c', 'WindowUtils.c', 'Window.c', 'tkZinc.c',
+         'ZincGlew.c');
 
 my @ATC_C = ('OverlapMan.c', 'Track.c', 'Reticle.c', 'Map.c', 'MapInfo.c');
 
@@ -39,15 +40,15 @@ my $WIN = ($platform =~ /win/i);
 
 push @C, @GENERIC_C;
 
-my $NeededLibs = ['-L/usr/X11R6/lib -lGLEW -lXext -lX11 -lGLU -lGL -L.'];
+my $NeededLibs = ['-L/usr/X11R6/lib -lXext -lX11 -lGLU -lGL -L.'];
 
 if ($WIN) {
     push @C, @WIN_C;
-    $NeededLibs = ['../glew/lib/glew32.lib -lglu32 -lopengl32'];
+    $NeededLibs = ['-lglu32 -lopengl32'];
 }
 my $ZincObj = "Zinc" . $Config{"_o"};
 
-my $INC = "-I. -I$TkLibDir -I$TkLibDir/pTk -I$TkLibDir/X11";
+my $INC = "-I. -Ithird_party/glew/include -I$TkLibDir -I$TkLibDir/pTk -I$TkLibDir/X11";
 
 unless ($WIN) {
     $INC .= " -I/usr/X11R6/include";
@@ -95,7 +96,11 @@ WriteMakefile(
     'XS_VERSION'      => $Tk::Config::VERSION,
     'XS'              => {'Zinc.xs' => 'Zinc.c'},
     'linkext'         => {LINKTYPE => 'dynamic'},
-    'depend'          => {$ZincObj => '$(O_FILES) Zinc.c'},
+    'depend'          => {
+        $ZincObj => '$(O_FILES) Zinc.c',
+        'ZincGlew$(OBJ_EXT)' => 'third_party/glew/src/glew.c third_party/glew/include/GL/glew.h third_party/glew/include/GL/wglew.h third_party/glew/include/GL/glxew.h',
+        'tkZinc$(OBJ_EXT)' => 'third_party/glew/include/GL/glew.h',
+    },
     'LDFROM'          => "\$(O_FILES) $ZincObj",
     'MIN_PERL_VERSION'  => 5.006,
     'META_MERGE'      => {
@@ -144,7 +149,7 @@ sub get_flags {
         }
     }
     
-    my $defines = "-DPTK -DPACKAGE_VERSION=\\\"$VERSION\\\"";
+    my $defines = "-DPTK -DTKZINC_PRIVATE_GLEW -DPACKAGE_VERSION=\\\"$VERSION\\\"";
 
     if ($WIN) {
         #

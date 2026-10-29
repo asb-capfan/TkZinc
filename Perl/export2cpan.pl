@@ -25,10 +25,13 @@ die "Export already exists: $export\nMove or remove it before exporting again.\n
     if -e $export || -l $export;
 make_path($export);
 
-for my $entry ('t', 'Zinc.xs', 'demos', 'README', 'Zinc') {
+for my $entry ('t', 'Zinc.xs', 'ZincGlew.c', 'demos', 'README', 'Zinc') {
     copy_tree(File::Spec->catfile($RealBin, $entry),
               File::Spec->catfile($export, $entry));
 }
+
+copy_tree(File::Spec->catdir($source, 'third_party', 'glew'),
+          File::Spec->catdir($export, 'third_party', 'glew'));
 
 for my $entry ('Zinc.pm', 'Makefile.PL') {
     substitute_version(File::Spec->catfile($RealBin, $entry),

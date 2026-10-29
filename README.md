@@ -221,6 +221,12 @@ overwritten; move or remove it before running the script again. To export an
 older release, first check out the desired Git revision. The script accepts
 no arguments and does not create a release archive.
 
+The Perl export includes GLEW 2.3.1 source and its license under
+`third_party/glew`. GLEW is compiled into the Perl extension with private
+symbols, so no separate GLEW installation or GLEW DLL is required. The
+system OpenGL and GLU development libraries are still needed. This does
+not change the external GLEW configuration of the Tcl/Tk build.
+
 ## 2. Make and install
 
 This done is the usual way:

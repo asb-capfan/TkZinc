@@ -23,6 +23,11 @@ To build it you need:
 
 Install:
 
+The Perl distribution bundles GLEW 2.3.1 as source. It is compiled into the
+extension with private symbols; no separate GLEW installation or glew32.dll
+is needed. System OpenGL and GLU development libraries are still required.
+See third_party/glew/README.tkzinc.md and third_party/glew/LICENSE.txt.
+
   perl Makefile.PL
   # you can use the following options: --with-gl=yes|no --with-atc=yes|no --with-shape=yes|no
   # current defaults are  --with-gl=yes --with-atc=yes --with-shape=yes
