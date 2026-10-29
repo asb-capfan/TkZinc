@@ -149,7 +149,7 @@ ZnPolygonRegion(XPoint	*points,
  * Translation table between X gc functions and Win32 raster op modes.
  */
 
-static int tkpWinRopModes[] = {
+static int znWinRopModes[] = {
     R2_BLACK,			/* GXclear */
     R2_MASKPEN,			/* GXand */
     R2_MASKPENNOT,		/* GXandReverse */
@@ -382,7 +382,7 @@ ZnXFillRectangles(display, d, gc, rectangles, nrectangles)
     }
 
     dc = TkWinGetDrawableDC(display, d, &state);
-    SetROP2(dc, tkpWinRopModes[gc->function]);
+    SetROP2(dc, znWinRopModes[gc->function]);
     brush = CreateSolidBrush(gc->foreground);
 
     if (clipPtr && clipPtr->type == TKP_CLIP_REGION) {
@@ -611,7 +611,7 @@ RenderObject(dc, gc, points, npoints, mode, pen, func)
     } else {
 	oldPen = SelectObject(dc, pen);
 	oldBrush = SelectObject(dc, CreateSolidBrush(gc->foreground));
-	SetROP2(dc, tkpWinRopModes[gc->function]);
+	SetROP2(dc, znWinRopModes[gc->function]);
 
 	SetPolyFillMode(dc, (gc->fill_rule == EvenOddRule) ? ALTERNATE
 		: WINDING);
@@ -791,7 +791,7 @@ ZnXDrawRectangle(display, d, gc, x, y, width, height)
     SetBkMode(dc, TRANSPARENT);
     oldPen = SelectObject(dc, pen);
     oldBrush = SelectObject(dc, GetStockObject(NULL_BRUSH));
-    SetROP2(dc, tkpWinRopModes[gc->function]);
+    SetROP2(dc, znWinRopModes[gc->function]);
 
     Rectangle(dc, x, y, x+width+1, y+height+1);
 
@@ -847,7 +847,7 @@ DrawOrFillArc(display, d, gc, x, y, width, height, start, extent, fill)
 	SelectClipRgn(dc, (HRGN) clipPtr->value.region);
 	OffsetClipRgn(dc, gc->clip_x_origin, gc->clip_y_origin);
     }
-    SetROP2(dc, tkpWinRopModes[gc->function]);
+    SetROP2(dc, znWinRopModes[gc->function]);
 
     /*
      * Compute the absolute starting and ending angles in normalized radians.
