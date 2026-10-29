@@ -27,7 +27,7 @@
 package Tk::Zinc::Trace;
 
 use vars qw( $VERSION );
-($VERSION) = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = '1.13';
 
 use vars qw( $ForReplay );
 

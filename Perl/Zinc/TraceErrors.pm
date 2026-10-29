@@ -30,7 +30,7 @@
 package Tk::Zinc::TraceErrors;
 
 use vars qw( $VERSION );
-($VERSION) = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = '1.08';
 
 use Tk;
 use strict;

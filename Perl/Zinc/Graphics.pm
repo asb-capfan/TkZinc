@@ -72,7 +72,7 @@
 package Tk::Zinc::Graphics;
 
 use vars qw( $VERSION );
-($VERSION) = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = '1.12';
 
 require Exporter;
 @ISA = qw(Exporter);

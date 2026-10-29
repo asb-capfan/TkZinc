@@ -12,7 +12,7 @@ package Tk::Zinc::Logo;
 #---------------------------------------------------------------
 
 use vars qw( $VERSION );
-($VERSION) = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = '1.06';
 
 use strict;
 use Carp;

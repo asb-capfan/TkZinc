@@ -9,7 +9,7 @@
 package Tk::Zinc::Debug;
 
 use vars qw( $VERSION );
-($VERSION) = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = '1.58';
 
 use strict 'vars';
 use vars qw(@ISA @EXPORT @EXPORT_OK $WARNING $endoptions);

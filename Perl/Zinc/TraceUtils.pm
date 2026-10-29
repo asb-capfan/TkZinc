@@ -1,7 +1,7 @@
 package Tk::Zinc::TraceUtils;
 
 use vars qw( $VERSION );
-($VERSION) = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = '1.07';
 
 use Tk;
 use Tk::Font;
