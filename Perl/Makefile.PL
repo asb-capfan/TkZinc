@@ -1,4 +1,4 @@
-use 5.006;
+use 5.008;
 use Tk;
 use Config;
 use Tk::Config;
@@ -102,7 +102,7 @@ WriteMakefile(
         'tkZinc$(OBJ_EXT)' => 'third_party/glew/include/GL/glew.h',
     },
     'LDFROM'          => "\$(O_FILES) $ZincObj",
-    'MIN_PERL_VERSION'  => 5.006,
+    'MIN_PERL_VERSION'  => 5.008,
     'META_MERGE'      => {
         'resources'     => {
             'repository' => 'https://github.com/asb-capfan/TkZinc',
