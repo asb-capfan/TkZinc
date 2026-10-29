@@ -358,13 +358,14 @@ Configure(ZnItem        item,
 
 #ifdef _WIN32
       // There's a module name, let's load the librairie and recover function name
-      char *  pchLibraryName [ 1024 ];
+      char *pchLibraryName = ZnMalloc(strlen(rect->module_name) + sizeof(".dll"));
       HMODULE handle = NULL;
 
       strcpy ( pchLibraryName, rect->module_name );
       strcat ( pchLibraryName, ".dll" );
 
-      handle = LoadLibrary (pchLibraryName);
+      handle = LoadLibraryA(pchLibraryName);
+      ZnFree(pchLibraryName);
 
       if (handle != NULL)
       {
