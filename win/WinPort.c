@@ -375,7 +375,7 @@ ZnXFillRectangles(display, d, gc, rectangles, nrectangles)
     RECT rect;
     TkWinDCState state;
     HBRUSH brush;
-    TkpClipMask *clipPtr = (TkpClipMask*)gc->clip_mask;
+    TkpClipMask *clipPtr = (TkpClipMask *)(uintptr_t)gc->clip_mask;
 
     if (d == None) {
 	return;
@@ -392,7 +392,7 @@ ZnXFillRectangles(display, d, gc, rectangles, nrectangles)
     if ((gc->fill_style == FillStippled
 	    || gc->fill_style == FillOpaqueStippled)
 	    && gc->stipple != None) {
-	TkWinDrawable *twdPtr = (TkWinDrawable *)gc->stipple;
+	TkWinDrawable *twdPtr = (TkWinDrawable *)(uintptr_t)gc->stipple;
 	HBRUSH oldBrush, stipple;
 	HBITMAP oldBitmap, bitmap;
 	HDC dcMem;
@@ -518,7 +518,7 @@ RenderObject(dc, gc, points, npoints, mode, pen, func)
     HPEN oldPen;
     HBRUSH oldBrush;
     POINT *winPoints = ConvertPoints(points, npoints, mode, &rect);
-    TkpClipMask *clipPtr = (TkpClipMask*)gc->clip_mask;
+    TkpClipMask *clipPtr = (TkpClipMask *)(uintptr_t)gc->clip_mask;
     
     if (clipPtr && clipPtr->type == TKP_CLIP_REGION) {
 	SelectClipRgn(dc, (HRGN) clipPtr->value.region);
@@ -528,7 +528,7 @@ RenderObject(dc, gc, points, npoints, mode, pen, func)
 	    || gc->fill_style == FillOpaqueStippled)
 	    && gc->stipple != None) {
 
-	TkWinDrawable *twdPtr = (TkWinDrawable *)gc->stipple;
+	TkWinDrawable *twdPtr = (TkWinDrawable *)(uintptr_t)gc->stipple;
 	HDC dcMem;
 	LONG width, height;
 	HBITMAP oldBitmap;
@@ -651,7 +651,7 @@ ZnXDrawLines(display, d, gc, points, npoints, mode)
     HPEN pen;
     TkWinDCState state;
     HDC dc;
-    TkpClipMask *clipPtr = (TkpClipMask*)gc->clip_mask;
+    TkpClipMask *clipPtr = (TkpClipMask *)(uintptr_t)gc->clip_mask;
     
     if (d == None) {
 	return;
@@ -775,7 +775,7 @@ ZnXDrawRectangle(display, d, gc, x, y, width, height)
     TkWinDCState state;
     HBRUSH oldBrush;
     HDC dc;
-    TkpClipMask *clipPtr = (TkpClipMask*)gc->clip_mask;
+    TkpClipMask *clipPtr = (TkpClipMask *)(uintptr_t)gc->clip_mask;
 
     if (d == None) {
 	return;
@@ -835,7 +835,7 @@ DrawOrFillArc(display, d, gc, x, y, width, height, start, extent, fill)
     int clockwise = (extent < 0); /* non-zero if clockwise */
     int xstart, ystart, xend, yend;
     double radian_start, radian_end, xr, yr;
-    TkpClipMask *clipPtr = (TkpClipMask*)gc->clip_mask;
+    TkpClipMask *clipPtr = (TkpClipMask *)(uintptr_t)gc->clip_mask;
 
     if (d == None) {
 	return;
@@ -910,7 +910,7 @@ DrawOrFillArc(display, d, gc, x, y, width, height, start, extent, fill)
       brush = CreateSolidBrush(gc->foreground);
 
       if (gc->fill_style == FillStippled && gc->stipple != None) {
-	TkWinDrawable *twdPtr = (TkWinDrawable *)gc->stipple;
+	TkWinDrawable *twdPtr = (TkWinDrawable *)(uintptr_t)gc->stipple;
 	HBITMAP oldBitmap;
 	HDC dcMem;
 	HBRUSH oldMemBrush;
