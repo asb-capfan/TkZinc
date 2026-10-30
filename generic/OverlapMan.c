@@ -441,7 +441,7 @@ FindPosId(int   iw,
  ***************************************************************************
  */
 static void
-SetTrackInitValues()
+SetTrackInitValues(void)
 {
   info1.alpha       = ProjToAngle(info1.vv_dx, info1.vv_dy) - 3.0 * M_PI_4;
   info1.dx          = (int) (info1.rho * cos(info1.alpha));
@@ -503,13 +503,13 @@ PutTrackLoaded(int      iw)
     }
     
     info1.New_Track = TRUE;
-    SetTrackInitValues(iw, pos);
+    SetTrackInitValues();
 
     wr[iw].NBinfos++;
   }
   else {
     if (info1.visibility == FALSE) {  
-      SetTrackInitValues( iw, pos);
+      SetTrackInitValues();
     }
     else {
       SetTrackCurrentValues(iw, pos);
