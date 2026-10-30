@@ -376,7 +376,7 @@ OmUnregister(void       *w)
 
   if (FindPosW(w, &i) == TRUE) { 
     free(wr[i].infos);
-    memcpy((char *) &wr[i], (char *) &wr[i+1], (NBzincs-i-1)*sizeof(ZINCS));
+    memmove((char *) &wr[i], (char *) &wr[i+1], (NBzincs-i-1)*sizeof(ZINCS));
     NBzincs--;
   }
 }
@@ -567,7 +567,7 @@ ReadTracks(int  iw)
      * Delete non refreshed tracks from database.
      */
     if (wr[iw].infos[i].Refresh == FALSE) {
-      memcpy((char *) &(wr[iw].infos[i]), (char *) &(wr[iw].infos[i+1]),
+      memmove((char *) &(wr[iw].infos[i]), (char *) &(wr[iw].infos[i+1]),
              (wr[iw].NBinfos-i-1)*sizeof(INFOS));
       wr[iw].NBinfos--;
     }
