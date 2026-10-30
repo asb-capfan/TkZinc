@@ -48,9 +48,14 @@ For GL support, you will need the following packages in addition:
 
 **On Windows:**
 
-From sources or on Windows, get, build and _install_ the Tcl/Tk distribution.
-On Windows there is currently an incompatibility when using a TkZinc compiled under mingw32 with a core Tcl/Tk compiled with Visual C++. 
-You need to grab a Tcl/Tk compiled with the same environment as TkZinc.
+For Python/Tkinter with Tcl/Tk 8.6, use the native Windows build described in
+[Python/README.md](Python/README.md). It uses matching headers and Tcl/Tk stub
+libraries, and has been tested with MinGW GCC and Python's bundled Tcl/Tk.
+It does not require rebuilding Tcl/Tk with the extension's compiler.
+
+For other Tcl/Tk installations, obtain the matching development headers and
+libraries. The older MSYS/MinGW and Visual C++ instructions below describe
+historical build routes.
 
 
 ## 1. Unpack the distribution
@@ -131,7 +136,7 @@ If the form `--enable-symbols=mem` is used, turn on memory debugging as well.
 For use with Tcl on Unix/Linux and Windows using mingw32:
 
     make
-    make install-tcl
+    make install
 
 It is recommended to do a make distclean before actual building if you have done a previous build.
 
@@ -252,6 +257,19 @@ You can choose in the 35 available demos with the following Perl script:
 
     zinc-demos
 
+
+# BUILDING AND INSTALLATION FOR PYTHON 3
+
+The Python interface supports Python 3.8 and later. Python 2 is no longer
+supported. Build and install the Tcl/Tk TkZinc extension first; the Python
+interface loads it through Tkinter and does not use the Perl extension.
+
+From the repository root, install the Python package with:
+
+    python3 -m pip install ./Python
+
+See [Python/README.md](Python/README.md) for dependencies, local library
+paths, Windows instructions, the graphics demo and tests.
 
 # MAKE AND READ THE DOCUMENTATION
 

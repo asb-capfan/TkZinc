@@ -142,7 +142,9 @@ ZnPolygonRegion(XPoint	*points,
   return (TkRegion) reg;
 }
 
+#ifndef PI
 #define PI 3.14159265358979
+#endif
 #define XAngleToRadians(a) ((double)(a) / 64 * PI / 180);
 
 /*

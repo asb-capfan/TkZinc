@@ -20,6 +20,9 @@ Perl/Zinc.c
 Perl/pm_to_blib
 Perl/blib
 export2cpan
+Python/**/__pycache__/
+Python/*.egg-info/
+win/__pycache__/
 doc/*.log
 doc/*.idx
 doc/*.ilg

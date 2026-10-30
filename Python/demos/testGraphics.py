@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: iso-8859-1 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------------------
 #
 #      testGraphics.py
@@ -10,18 +10,11 @@
 # $Id$
 #-----------------------------------------------------------------------------------
 import sys
-
-try :
-    import IPython.ultraTB
-    sys.excepthook = IPython.ultraTB.FormattedTB(mode = 'Verbose',
-                                                 color_scheme = 'Linux',
-                                                 call_pdb = 1)
-except ImportError:
-    pass
+from pathlib import Path
 
 VERSION = "1.13"
 
-import Tkinter
+import tkinter
 import Zinc
 import Zinc.pictorial as pictorial 
 from Zinc.geometry import *
@@ -89,7 +82,7 @@ pagesconf = {'Rectangle' : {'consigne' : {'itemtype' : 'text',
                                                  'tags' : ('move'),
                                                  },
                                      },
-                            # roudedrectangle 'carré' (radius automatique)
+                            # roudedrectangle 'carrÃ©' (radius automatique)
                             'rr2' : {'itemtype' : 'roundedrectangle',
                                      'coords' : ((-250, -100), (-90, 60)),
                                      'params' : {'closed' : 1,
@@ -624,7 +617,7 @@ pagesconf = {'Rectangle' : {'consigne' : {'itemtype' : 'text',
                                                     },
                                          },
                            
-				 'carre' : {'itemtype' : 'group',
+     'carre' : {'itemtype' : 'group',
                                             'coords' : (-80, -75),
                                             'items' : {'form' : {'itemtype' : 'polygone',
                                                                  'coords' : (0, 0),
@@ -644,15 +637,15 @@ pagesconf = {'Rectangle' : {'consigne' : {'itemtype' : 'text',
                                                        'text' : {'itemtype' : 'text',
                                                                  'coords' : (0, -6),
                                                                  'params' : {'font' : font_9b,
-                                                                             'text' : "Carré",
+                                                                             'text' : "CarrÃ©",
                                                                              'anchor' : 'n',
                                                                              'alignment' : 'center',
                                                                              'color' : '#660000',
                                                                              'priority' : 50,
                                                                              },
                                                                  },
-						       },
-					    },
+             },
+         },
                            
                            'pentagone' : {'itemtype' : 'group',
                                           'coords' : (65, -75),
@@ -791,7 +784,7 @@ pagesconf = {'Rectangle' : {'consigne' : {'itemtype' : 'text',
                                                     'text' : {'itemtype' : 'text',
                                                               'coords' : (0, -6),
                                                               'params' : {'font' : font_9b,
-                                                                          'text' : "32 cotés...",
+                                                                          'text' : "32 cotÃ©s...",
                                                                           'anchor' : 'n',
                                                                           'alignment' : 'center',
                                                                           'color' : '#660000',
@@ -959,7 +952,7 @@ pagesconf = {'Rectangle' : {'consigne' : {'itemtype' : 'text',
                                                           'text' : "Mouse button 1 drag objects,\nEscape key reset transfos.",
                                                           'color' : '#2222cc',
                                                           },
-					      },
+           },
                                 'mc1' : {'itemtype' : 'roundedcurve',
                                          'coords' : ((-30, -170), (-130, 0), (70, 0)),
                                          'radius' : 14,
@@ -1147,7 +1140,7 @@ pagesconf = {'Rectangle' : {'consigne' : {'itemtype' : 'text',
                                                   'linecolor' : '#000000',
                                                   'priority' : 20,
                                                   'tags' : ('sel1', 'e', 'btn', 'selector'),
-							},
+       },
                                       'trunc' : 'both',
                                     },
                          'txtanE' : {'itemtype' : 'text',
@@ -1413,7 +1406,7 @@ tabtables = { 'n' : {'numpages' : 8,
                                "This command fits a sequence of Bezier segments on the curve described by the vertices in coordList and returns a list of lists describing the points and control points for the generated segments. All the points on the fitted segments will be within error  distance from the given curve. coordList should be either a flat list of an even number of coordinates in x, y order or a list of lists of point coordinates X, Y. The returned list can be directly used to create or change a curve item contour.",
                                "Groups are very powerful items. They have no graphics of their own but are used to bundle items together so that they can be manipulated easily as a whole. Groups can modify in several way how items are displayed and how they react to events. They have many uses in TkZinc. The main usages are to bundle items, to interpose a new coordinate system in a hierarchy of items, to compose some specific attributes, to apply a clipping to their children items, to manage display",
                                "This command returns a boolean telling if the item specified by tagOrId has the specified tag. If more than one item is named by tagOrId, then the topmost in display list order is used to return the result. If no items are named by tagOrId, an error is raised.",
-				  ),
+      ),
                     },
              'e' : {'numpages' : 5,
                     'titles' : ('I', 'J', 'K', 'L', 'M'),
@@ -1448,7 +1441,7 @@ tabtables = { 'n' : {'numpages' : 8,
                                "No TkZinc KeyWord with Y initial letter...",
                                "TkZinc widgets are very similar to Tk Canvases in that they support structured graphics. But unlike the Canvas, TkZinc can structure the items in a hierarchy, has support for affine 2D transforms, clipping can be set for sub-trees of the item hierarchy, the item set is quite more powerful including field specific items for Air Traffic systems and new rendering techniques such as transparency and gradients. If needed, it is also possible to extend the item set in an additionnal dynamic library through the use of a C api.",
                                ),
-		       },
+         },
              }
 
 #----------------------------------------------------------------------- fin de MAIN
@@ -1460,7 +1453,7 @@ def resetTransfo():
     
     
 #-----------------------------------------------------------------------------------
-# Callback sur evt CLICK des items tagés 'divider'
+# Callback sur evt CLICK des items tagÃ©s 'divider'
 #-----------------------------------------------------------------------------------
 def selectDivider (divname = None , numpage = None):
     global curview
@@ -1490,7 +1483,7 @@ def selectDivider (divname = None , numpage = None):
 
 
 #-----------------------------------------------------------------------------------
-# Callback sur evt CLICK des items tagés 'selector'
+# Callback sur evt CLICK des items tagÃ©s 'selector'
 #-----------------------------------------------------------------------------------
 def clickSelector(btngroup = None , value = None):
     global tabalign
@@ -1524,7 +1517,7 @@ def clickSelector(btngroup = None , value = None):
 
     (shapes, tcoords, inverse) = tabbox_coords(((-240, -160), (240, 100)), **tabparams)
 
-    for index in xrange(7, -1, -1):
+    for index in range(7, -1, -1):
         divgroup = zinc.group("(div2 && %s && intercalaire)"%(index))
         zinc.itemconfigure(divgroup,
                            visible = (index < numpages))
@@ -1564,9 +1557,9 @@ def setBindings():
     
     def printMsg(*arg, **kw):
         for i in arg :
-            print "--> %s : %s"%(i, zinc)
-        for i,j in kw.items():
-            print "%s --> %s"%(i, j)
+            print("--> %s : %s"%(i, zinc))
+        for i,j in list(kw.items()):
+            print("%s --> %s"%(i, j))
             
     # Escape : reset transfos
     mw.bind('<Escape>', lambda ev, : resetTransfo())
@@ -1587,7 +1580,7 @@ def setBindings():
 
 
 #-----------------------------------------------------------------------------------
-# Callback sur evt CLICK des items tagés 'pushbtn'
+# Callback sur evt CLICK des items tagÃ©s 'pushbtn'
 #-----------------------------------------------------------------------------------
 def pushButton ():
   tag = zinc.itemcget('current', 'tags')[0]
@@ -1611,7 +1604,7 @@ def pushButton ():
                          fillcolor = newcolor)
   
 #-----------------------------------------------------------------------------------
-# Callback sur evt RELEASE des items tagés 'pushbtn'
+# Callback sur evt RELEASE des items tagÃ©s 'pushbtn'
 #-----------------------------------------------------------------------------------
 def pullButton ():
     tag = zinc.itemcget('current', 'tags')[0]
@@ -1619,7 +1612,7 @@ def pullButton ():
 
 
 #-----------------------------------------------------------------------------------
-# Callback sur evt CATCH des items tagés 'poly'
+# Callback sur evt CATCH des items tagÃ©s 'poly'
 # armement de rotation des polygones
 #-----------------------------------------------------------------------------------
 def startRotatePolygone (ev):
@@ -1628,7 +1621,7 @@ def startRotatePolygone (ev):
     previousangle = line_angle((ev.x, ev.y), (xref, yref))
 
 #-----------------------------------------------------------------------------------
-# Callback sur evt MOTION des items tagés 'poly'
+# Callback sur evt MOTION des items tagÃ©s 'poly'
 # rotation des polygones
 #-----------------------------------------------------------------------------------
 def rotatePolygone (ev):
@@ -1645,7 +1638,7 @@ def rotatePolygone (ev):
     previousangle = newangle
 
 #-----------------------------------------------------------------------------------
-# Callback CATCH de sélection (début de déplacement) des items tagés 'move'
+# Callback CATCH de sÃ©lection (dÃ©but de dÃ©placement) des items tagÃ©s 'move'
 #-----------------------------------------------------------------------------------
 def mobileStart (ev):
     global dx, dy
@@ -1655,7 +1648,7 @@ def mobileStart (ev):
 
 
 #-----------------------------------------------------------------------------------
-# Callback MOVE de déplacement des items tagés 'move'
+# Callback MOVE de dÃ©placement des items tagÃ©s 'move'
 #-----------------------------------------------------------------------------------
 def mobileMove (ev):
     global dx, dy
@@ -1666,14 +1659,14 @@ def mobileMove (ev):
 
 
 #-----------------------------------------------------------------------------------
-# Callback RELEASE de relaché (fin de déplacement) des items tagés 'move'
+# Callback RELEASE de relachÃ© (fin de dÃ©placement) des items tagÃ©s 'move'
 #-----------------------------------------------------------------------------------
 def mobileStop (ev):
     mobileMove(ev)
 
 
 #-----------------------------------------------------------------------------------
-# Callback sur evénément Tk <KeyPress> flèche gauche, haut, droite, bas
+# Callback sur evÃ©nÃ©ment Tk <KeyPress> flÃ¨che gauche, haut, droite, bas
 # pan (translation) du contenu de la page active (TabBox)
 #-----------------------------------------------------------------------------------
 def viewTranslate (way):
@@ -1693,7 +1686,7 @@ def viewTranslate (way):
     zinc.translate(curview, dx, dy);
 
 #-----------------------------------------------------------------------------------
-# Callback sur evénément Tk <KeyPress> "+" ou "-"
+# Callback sur evÃ©nÃ©ment Tk <KeyPress> "+" ou "-"
 # zoom du contenu de la page active (TabBox)
 #-----------------------------------------------------------------------------------
 def viewZoom (key) :
@@ -1708,7 +1701,7 @@ def viewZoom (key) :
 
 
 #-----------------------------------------------------------------------------------
-# Callback sur evénément Tk <KeyPress> ">" ou "<"
+# Callback sur evÃ©nÃ©ment Tk <KeyPress> ">" ou "<"
 # rotation du contenu de la page active (TabBox)
 #-----------------------------------------------------------------------------------
 def viewRotate (way) :
@@ -1720,7 +1713,7 @@ def viewRotate (way) :
 
 
 # creation de la fenetre principale
-mw = Tkinter.Tk()
+mw = tkinter.Tk()
 mw.geometry("700x560+0+0")
 mw.title('Test Graphics Module')
 
@@ -1735,10 +1728,10 @@ zinc = Zinc.Zinc(render = 1,
 zinc.pack(fill = 'both', expand = 1)
 
 
-# initialise les gradients nommés
+# initialise les gradients nommÃ©s
 pictorial.set_gradients(zinc, **gradset)
 
-# création de la vue principale
+# crÃ©ation de la vue principale
 tgroup = zinc.add('group', 1)
 zinc.coords(tgroup, (350, 240))
 
@@ -1751,7 +1744,7 @@ zinc.add('text', 1,
          spacing = 2,
         )
 
-# Création des pages d'exemples
+# CrÃ©ation des pages d'exemples
 (shapes, tcoords, inverse) = tabbox_coords(((-315, -210), (315, 210)),
                                           numpages = 7,
                                           overlap = 2,
@@ -1761,8 +1754,8 @@ zinc.add('text', 1,
                                           )
 
 # to find some images (used as textures) needed by this demo
-texture = pictorial.get_image(zinc, 'paper.gif')
-# création des items zinc correspondants
+texture = pictorial.get_image(zinc, str(Path(__file__).resolve().with_name('paper.gif')))
+# crÃ©ation des items zinc correspondants
 i = len(shapes) - 1
 pagenames = ['Rectangle', 'Hippodrome', 'Polygone', 'Polyline', 'PathLine', 'MultiContours', 'TabBox']
 pagegroups=[]
@@ -1773,7 +1766,7 @@ currentcoords=coords2lpts(tcoords)
 for shape in  lshapes:
     divgroup = zinc.add('group', tgroup)
 
-    # création de l'intercalaire
+    # crÃ©ation de l'intercalaire
     divider = zinc.add('curve',
                        divgroup,
                        lpts2coords(shape),
@@ -1786,7 +1779,7 @@ for shape in  lshapes:
                        tags = ('div1', 'divider', i, 'intercalaire'),
                      )
 
-    # groupe page clippé
+    # groupe page clippÃ©
     page = zinc.add('group',
                     divgroup,
                     priority = 100,
@@ -1816,24 +1809,24 @@ for shape in  lshapes:
              divgroup,
              position = tuple(currentcoords[i]),
              text = pagenames[i],
-	     font = font_9b,
-	     alignment = 'center',
-	     anchor = 'n',
-	     color = '#000099',
-	     priority = 200,
-	     tags = ('div1', 'divider', i, 'titre'),
+      font = font_9b,
+      alignment = 'center',
+      anchor = 'n',
+      color = '#000099',
+      priority = 200,
+      tags = ('div1', 'divider', i, 'titre'),
              )
     i-= 1
 
 
-# création du contenu des pages
+# crÃ©ation du contenu des pages
 i = 0
 pagenames.reverse()
 for pagename  in pagenames:
-    if ( pagesconf.has_key(pagename)) :
+    if ( pagename in pagesconf) :
         pagestyle = pagesconf[pagename]
         pgroup = pagegroups[i]
-        for ( itemname, itemstyle) in  pagestyle.items() :
+        for ( itemname, itemstyle) in  list(pagestyle.items()) :
             if (itemname == 'consigne') :
                 group = zinc.group(pgroup)
             else:

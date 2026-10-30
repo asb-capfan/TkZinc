@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #  Pictorial Functions  :
 #  ----------------------
 #      set_gradients
@@ -38,17 +38,17 @@ def set_gradients(zinc, **grads):
     """
     #---------------------------------------------------------------------------
     # Graphics::set_gradients
-    # création de gradient nommés Zinc
+    # crÃ©ation de gradient nommÃ©s Zinc
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #   widget : <widget> identifiant du widget zinc
-    #    **grads : <dictionnaire> de définition de couleurs zinc
+    #    **grads : <dictionnaire> de dÃ©finition de couleurs zinc
     #---------------------------------------------------------------------------
     """
     global _GRADIENTS
     if (not _GRADIENTS):
         _GRADIENTS = []
-        for (name, gradient) in grads.items():
+        for (name, gradient) in list(grads.items()):
             zinc.gname(gradient, name)
             _GRADIENTS.append(name)
 
@@ -58,7 +58,7 @@ def rgb_dec2hex(rgb):
     # Graphics::rgb_dec2hex
     # conversion d'une couleur RGB (255,255,255) au format Zinc '#ffffff'
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #  rgb : <rgbColorList> liste de couleurs au format RGB
     #---------------------------------------------------------------------------
     """
@@ -68,25 +68,25 @@ def path_graduate(zinc, numcolors, style):
     """
     #---------------------------------------------------------------------------
     # Graphics::path_graduate
-    # création d'un jeu de couleurs dégradées pour item pathline
+    # crÃ©ation d'un jeu de couleurs dÃ©gradÃ©es pour item pathline
     #---------------------------------------------------------------------------
     """
     typ = style['type']
     if (typ == 'linear'):
         return create_graduate(numcolors, style['colors'], 2)
     elif (typ == 'double'):
-        colors1 = create_graduate(numcolors/2+1,
+        colors1 = create_graduate(numcolors + 1,
                                  style['colors'][0])
-        colors2 = create_graduate(numcolors/2+1,
+        colors2 = create_graduate(numcolors + 1,
                                  style['colors'][1])
         colors = []
-        for i in xrange(numcolors+1):
+        for i in range(numcolors+1):
             colors.extend([colors1[i], colors2[i]])
         return colors
     elif (typ == 'transversal'):
         (c1, c2) = style['colors']
         colors = [c1, c2]
-        for i in xrange(numcolors):
+        for i in range(numcolors):
             colors.extend([c1, c2])
 
     return colors
@@ -95,31 +95,34 @@ def create_graduate(totalsteps, refcolors, repeat = 1):
     """
     #---------------------------------------------------------------------------
     # Graphics::create_graduate
-    # création d'un jeu de couleurs intermédiaires (dégradé) entre n couleurs
+    # crÃ©ation d'un jeu de couleurs intermÃ©diaires (dÃ©gradÃ©) entre n couleurs
     #---------------------------------------------------------------------------
     """
     colors = []
 
     numgraduates = len(refcolors) - 1
     if (numgraduates < 1):
-        raise ValueError("Le degradé necessite\
-        au moins 2 couleurs de référence...")
+        raise ValueError("Le degradÃ© necessite\
+        au moins 2 couleurs de rÃ©fÃ©rence...")
     steps = None
     if (numgraduates > 1):
-        steps = totalsteps/(numgraduates - 1)
+        steps = totalsteps//(numgraduates - 1)
     else:
         steps = totalsteps
 
-    for c in xrange(numgraduates):
+    if steps < 2:
+        raise ValueError("A gradient needs at least two steps per segment")
+
+    for c in range(numgraduates):
         (c1, c2) = (refcolors[c], refcolors[c + 1])
 
-        for i in xrange(steps):
+        for i in range(steps):
             color = mediancolor(c1, c2, i / (steps - 1))
-            for it in xrange(repeat):
+            for it in range(repeat):
                 colors.append(color)
 
         if (c < numgraduates - 1):
-            for k in xrange(repeat):
+            for k in range(repeat):
                 colors.pop()
 
     return colors
@@ -128,11 +131,11 @@ def lightingcolor (color, new_l) :
     """
     #---------------------------------------------------------------------------
     # Graphics::lightingcolor
-    # modification d'une couleur par sa composante luminosité
+    # modification d'une couleur par sa composante luminositÃ©
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #  color : <color> couleur au format zinc
-    #   new_l : <pourcent> (de 0 à 1) nouvelle valeur de luminosité
+    #   new_l : <pourcent> (de 0 Ã  1) nouvelle valeur de luminositÃ©
     #---------------------------------------------------------------------------
     """
     (h, l, s) = 0, 0, 0
@@ -149,23 +152,23 @@ def get_predominantcolor(colors):
     # Graphics::get_predominantcolor
     # donne la couleur dominante
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #  colors : <color>* liste de couleurs au format zinc
     #---------------------------------------------------------------------------
     """
-    (rs, gs, bs, as, numcolors) = (0, 0, 0, 0, 0)
+    (rs, gs, bs, alpha_sum, numcolors) = (0, 0, 0, 0, 0)
     for color in colors :
         (r, g, b, a) = zncolor_to_rgb(color)
         rs += r
         gs += g
         bs += b
-        as += a
+        alpha_sum += a
         numcolors += 1
 
     new_r = int(rs/numcolors)
     new_g = int(gs/numcolors)
     new_b = int(bs/numcolors)
-    new_a = int(as/numcolors)
+    new_a = int(alpha_sum/numcolors)
 
     newcolor = hexargbcolor(new_r, new_g, new_b, new_a)
     return newcolor
@@ -176,7 +179,7 @@ def zincitem_predominantcolor(widget, item):
     # Graphics::zincitem_predominantcolor
     # retourne la couleur dominante d'un item ('barycentre' gradiant fillcolor)
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #  widget : <widget> identifiant du widget zinc
     #    item : <tagOrId> identifiant de l'item zinc
     #---------------------------------------------------------------------------
@@ -199,7 +202,7 @@ def zincitem_predominantcolor(widget, item):
         else :
             grad =  widget.itemcget(item, 'fillcolor')
             regexp = re.compile(
-                "^=(?P<class>\w+)(?P<params>[^|]+)\|(?P<colorparts>.*)$")
+                r"^=(?P<class>\w+)(?P<params>[^|]+)\|(?P<colorparts>.*)$")
             res = regexp.match(grad)
             if (res is None):
                 #couleur simple
@@ -207,7 +210,7 @@ def zincitem_predominantcolor(widget, item):
             else:
                 #Gradient
                 colorspart = res.group('colorparts').split("|")
-                regexp_color = re.compile("^(?P<color>^\S+).*") 
+                regexp_color = re.compile(r"^(?P<color>^\S+).*")
                 for colorpart in colorspart:                  
                     res = regexp_color.match(colorpart)
                     if res:
@@ -222,13 +225,13 @@ def mediancolor (color1, color2, rate) :
     """
     #---------------------------------------------------------------------------
     # Graphics::mediancolor
-    # calcul d'une couleur intermédiaire défini par un ratio ($rate)
+    # calcul d'une couleur intermÃ©diaire dÃ©fini par un ratio ($rate)
     # entre 2 couleurs
     #---------------------------------------------------------------------------
-    # paramètres :
-    #  color1 : <color> première couleur zinc
+    # paramÃ¨tres :
+    #  color1 : <color> premiÃ¨re couleur zinc
     #  color2 : <color> seconde couleur zinc
-    #    rate : <pourcent> (de 0  à 1) position de la couleur intermédiaire
+    #    rate : <pourcent> (de 0  Ã  1) position de la couleur intermÃ©diaire
     #---------------------------------------------------------------------------
     """
     if (rate > 1):
@@ -253,34 +256,33 @@ def zncolor_to_rgb (zncolor):
     # Graphics::zncolor_to_rgb
     # conversion d'une couleur Zinc au format RGBA (255,255,255,100)
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #  zncolor : <color> couleur au format hexa zinc (#ffffff ou #ffffffffffff)
     #---------------------------------------------------------------------------
     """
-    #Recherche du format d'entrée
+    #Recherche du format d'entrÃ©e
     # ffffff ou ffffffffffff avec ou sans alpha
-    #test présence alpha
+    #test prÃ©sence alpha
     res = []
     res.append(
         re.match(
-        "^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2});(?P<alpha>\d{1,3})$"
+        r"^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2});(?P<alpha>\d{1,3})$"
         ,zncolor))
     res.append(
         re.match(
-        "^#([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4});(?P<alpha>\d{1,3})$"
+        r"^#([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4});(?P<alpha>\d{1,3})$"
         ,zncolor))
     #Pas de alpha
     res.append(re.match("^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$"
                         ,zncolor))
     res.append(re.match("^#([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})$"
                         ,zncolor))
-    res.sort()
-    resultat = res.pop()
-    if res is None:
+    resultat = next((match for match in res if match is not None), None)
+    if resultat is None:
         raise ValueError("Not a valid zinc color")
     alpha = 100
     res = resultat.groupdict()
-    if res.has_key('alpha'):
+    if 'alpha' in res:
         alpha = int(res['alpha'])
     else:
         alpha = 100
@@ -298,12 +300,12 @@ def rgb_to_lch(r, g, b) :
     #---------------------------------------------------------------------------
     #---------------------------------------------------------------------------
     # Graphics::rgb_to_lch
-    # Algorythme de conversion RGB -> CIE LCH°
+    # Algorythme de conversion RGB -> CIE LCHÂ°
     #---------------------------------------------------------------------------
-    # paramètres :
-    #  r : <pourcent> (de 0 à 1) valeur de la composante rouge de la couleur RGB
-    #  g : <pourcent> (de 0 à 1) valeur de la composante verte de la couleur RGB
-    #  b : <pourcent> (de 0 à 1) valeur de la composante bleue de la couleur RGB
+    # paramÃ¨tres :
+    #  r : <pourcent> (de 0 Ã  1) valeur de la composante rouge de la couleur RGB
+    #  g : <pourcent> (de 0 Ã  1) valeur de la composante verte de la couleur RGB
+    #  b : <pourcent> (de 0 Ã  1) valeur de la composante bleue de la couleur RGB
     #---------------------------------------------------------------------------
     """
     # Conversion RGBtoXYZ
@@ -391,12 +393,12 @@ def lch_to_rgb (L, C, H) :
     # Graphics::lch_to_rgb
     # Algorythme de conversion CIE L*CH -> RGB
     #---------------------------------------------------------------------------
-    # paramètres :
-    #  L : <pourcent> (de 0 à 1) valeur de la composante luminosité
+    # paramÃ¨tres :
+    #  L : <pourcent> (de 0 Ã  1) valeur de la composante luminositÃ©
     #  de la couleur CIE LCH
-    #  C : <pourcent> (de 0 à 1) valeur de la composante saturation
+    #  C : <pourcent> (de 0 Ã  1) valeur de la composante saturation
     #  de la couleur CIE LCH
-    #  H : <pourcent> (de 0 à 1) valeur de la composante teinte
+    #  H : <pourcent> (de 0 Ã  1) valeur de la composante teinte
     #  de la couleur CIE LCH
     #---------------------------------------------------------------------------
     """
@@ -491,9 +493,9 @@ def rgb_to_hls(r, g, b):
     # Graphics::rgb_to_hls
     # Algorythme de conversion RGB -> HLS
     #---------------------------------------------------------------------------
-    #  r : <pourcent> (de 0 à 1) valeur de la composante rouge de la couleur RGB
-    #  g : <pourcent> (de 0 à 1) valeur de la composante verte de la couleur RGB
-    #  b : <pourcent> (de 0 à 1) valeur de la composante bleue de la couleur RGB
+    #  r : <pourcent> (de 0 Ã  1) valeur de la composante rouge de la couleur RGB
+    #  g : <pourcent> (de 0 Ã  1) valeur de la composante verte de la couleur RGB
+    #  b : <pourcent> (de 0 Ã  1) valeur de la composante bleue de la couleur RGB
     #---------------------------------------------------------------------------
     """
     H, L, S = 0, 0, 0
@@ -501,7 +503,7 @@ def rgb_to_hls(r, g, b):
     maxv = max(r, g, b)
     minv = min(r, g, b)
 
-    # calcul de la luminosité
+    # calcul de la luminositÃ©
     L = (maxv + minv) / 2
 
     # calcul de la saturation
@@ -535,10 +537,10 @@ def rgb_to_hls(r, g, b):
         # couleur entre magenta et cyan
         H = 4 + (r - g) / diffv
 
-    # Conversion en degrés
+    # Conversion en degrÃ©s
     H *= 60
 
-    # pour éviter une valeur négative
+    # pour Ã©viter une valeur nÃ©gative
     if (H < 0) :
         H += 360
 
@@ -550,11 +552,11 @@ def hls_to_rgb (H, L, S):
     # Graphics::hls_to_rgb
     # Algorythme de conversion HLS -> RGB
     #---------------------------------------------------------------------------
-    # paramètres :
-    #  H : <pourcent>(de 0 à 1) valeur de la composante teinte de la couleur HLS
-    #  L : <pourcent>(de 0 à 1) valeur de la composante luminosité de la
+    # paramÃ¨tres :
+    #  H : <pourcent>(de 0 Ã  1) valeur de la composante teinte de la couleur HLS
+    #  L : <pourcent>(de 0 Ã  1) valeur de la composante luminositÃ© de la
     #      couleur HLS
-    #  S : <pourcent>(de 0 à 1) valeur de la composante saturation
+    #  S : <pourcent>(de 0 Ã  1) valeur de la composante saturation
     #      de la couleur HLS
     #---------------------------------------------------------------------------
     """
@@ -648,19 +650,19 @@ def get_pattern (filename, **options):
     #---------------------------------------------------------------------------
     #---------------------------------------------------------------------------
     # Graphics::get_pattern
-    # retourne la ressource bitmap en l'initialisant si première utilisation
+    # retourne la ressource bitmap en l'initialisant si premiÃ¨re utilisation
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     # filename : nom du fichier bitmap pattern
     # options
-    # -storage : <hastable> référence de la table de stockage de patterns
+    # -storage : <hastable> rÃ©fÃ©rence de la table de stockage de patterns
     #---------------------------------------------------------------------------
     """
-    if (options.has_key('storage')):
+    if ('storage' in options):
         table = options['storage']
     else :
         table = bitmaps
-    if (not table.has_key(filename)) :
+    if (filename not in table) :
         bitmap = "@%s"% (find_inc(filename))
         table[filename] = bitmap
     return table[filename]
@@ -669,16 +671,16 @@ def get_texture(widget, filename, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::get_texture
-    # retourne l'image de texture en l'initialisant si première utilisation
+    # retourne l'image de texture en l'initialisant si premiÃ¨re utilisation
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #   widget : <widget> identifiant du widget zinc
     # filename : nom du fichier texture
     # options
-    # -storage : <hastable> référence de la table de stockage de textures
+    # -storage : <hastable> rÃ©fÃ©rence de la table de stockage de textures
     #---------------------------------------------------------------------------
     """
-    if (options.has_key('storage')):
+    if ('storage' in options):
         table = options['storage']
     else :
         table = textures
@@ -688,8 +690,8 @@ class FileNotFound (Exception):
     """
     #---------------------------------------------------------------------------
     # Graphics::FileNotFound
-    # Classe d'exception levée lorsqu'un fichier n'est pas trouvé
-    # paramètres :
+    # Classe d'exception levÃ©e lorsqu'un fichier n'est pas trouvÃ©
+    # paramÃ¨tres :
     #   filename : nom du fichier
     #---------------------------------------------------------------------------    
     """
@@ -700,11 +702,13 @@ def find_inc(name):
     """
     #---------------------------------------------------------------------------
     # Graphics::find_inc
-    # recherche le fichier dans les répertoires de PYTHONPATH
+    # recherche le fichier dans les rÃ©pertoires de PYTHONPATH
     #---------------------------------------------------------------------------
     """
     import sys
     import os.path
+    if os.path.isfile(name):
+        return name
     for path in sys.path:
         tfile = os.path.join(path, name)
         if (os.path.isfile(tfile)):
@@ -716,19 +720,18 @@ def get_image(zinc, filename, storage = {}):
     """
     #---------------------------------------------------------------------------
     # Graphics::get_image
-    # retourne la ressource image en l'initialisant si première utilisation
+    # retourne la ressource image en l'initialisant si premiÃ¨re utilisation
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #   widget : <widget> identifiant du widget zinc
     # filename : nom du fichier image
     # options
-    # storage : <hastable> référence de la table de stockage d'images
+    # storage : <hastable> rÃ©fÃ©rence de la table de stockage d'images
     #---------------------------------------------------------------------------
     """
-    if (not storage.has_key(filename)):
-        im = PIL.Image.open(find_inc(filename))
-        #Cela marche uniquement si Tkinter.Tk a une instance
-        image = PIL.ImageTk.PhotoImage(im)
+    if (filename not in storage):
+        with PIL.Image.open(find_inc(filename)) as im:
+            image = PIL.ImageTk.PhotoImage(im, master=zinc)
         storage[filename] = image
     return storage[filename]
 
@@ -738,11 +741,11 @@ def init_pixmaps(widget, *pixfiles, **options):
     # Graphics::init_pixmaps
     # initialise une liste de fichier image
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #    widget : <widget> identifiant du widget zinc
     # filenames : <filenameList> list des noms des fichier image
     # options
-    #  storage : <hastable> référence de la table de stockage d'images
+    #  storage : <hastable> rÃ©fÃ©rence de la table de stockage d'images
     #---------------------------------------------------------------------------
     """
     imgs = []
@@ -754,11 +757,10 @@ def _trunc(f, n):
     """
     #---------------------------------------------------------------------------
     # Graphics::_trunc
-    # fonction interne de troncature des nombres: n = position décimale 
+    # fonction interne de troncature des nombres: n = position dÃ©cimale
     #---------------------------------------------------------------------------
     """
-    import fpformat
-    return fpformat.fix(f, n)
+    return format(f, ".%df" % n)
 
 #Local Variables:
 #mode : python

@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 """
 #  Geometrical basic Functions :
 #  -----------------------------
@@ -21,12 +21,12 @@ def perpendicular_point (point, line):
     """
     #---------------------------------------------------------------------------
     # Graphics::perpendicular_point
-    # retourne les coordonnées du point perpendiculaire abaissé d'un point
+    # retourne les coordonnÃ©es du point perpendiculaire abaissÃ© d'un point
     # sur une ligne
     #---------------------------------------------------------------------------
-    # paramètres :
-    # point : <coords> coordonnées du point de référence
-    #  line : <coordsList> coordonnées des 2 points de la ligne de référence
+    # paramÃ¨tres :
+    # point : <coords> coordonnÃ©es du point de rÃ©fÃ©rence
+    #  line : <coordsList> coordonnÃ©es des 2 points de la ligne de rÃ©fÃ©rence
     #---------------------------------------------------------------------------
     """
     (p1, p2) = line
@@ -34,11 +34,11 @@ def perpendicular_point (point, line):
     # cas partiuculier de lignes ortho.
     min_dist = .01
     if (abs(p2[1] - p1[1]) < min_dist) :
-        # la ligne de référence est horizontale
+        # la ligne de rÃ©fÃ©rence est horizontale
         return (point[0], p1[1])
 
     elif (abs(p2[0] - p1[0]) < min_dist) :
-        # la ligne de référence est verticale
+        # la ligne de rÃ©fÃ©rence est verticale
         return (p1[0], point[1])
 
     a1 = float(p2[1] - p1[1]) / float(p2[0] - p1[0])
@@ -56,11 +56,11 @@ def line_angle(startpoint, endpoint):
     """
     #---------------------------------------------------------------------------
     # Graphics::line_angle
-    # retourne l'angle d'un point par rapport à un centre de référence
+    # retourne l'angle d'un point par rapport Ã  un centre de rÃ©fÃ©rence
     #---------------------------------------------------------------------------
-    # paramètres :
-    # startpoint : <coords> coordonnées du point de départ du segment
-    #   endpoint : <coords> coordonnées du point d'extremité du segment
+    # paramÃ¨tres :
+    # startpoint : <coords> coordonnÃ©es du point de dÃ©part du segment
+    #   endpoint : <coords> coordonnÃ©es du point d'extremitÃ© du segment
     #---------------------------------------------------------------------------
     """
     angle = atan2(endpoint[1] - startpoint[1], endpoint[0] - startpoint[0])
@@ -76,11 +76,11 @@ def linenormal(startpoint, endpoint):
     """
     #---------------------------------------------------------------------------
     # Graphics::linenormal
-    # retourne la valeur d'angle perpendiculaire à une ligne
+    # retourne la valeur d'angle perpendiculaire Ã  une ligne
     #---------------------------------------------------------------------------
-    # paramètres :
-    # startpoint : <coords> coordonnées du point de départ du segment
-    #   endpoint : <coords> coordonnées du point d'extremité du segment
+    # paramÃ¨tres :
+    # startpoint : <coords> coordonnÃ©es du point de dÃ©part du segment
+    #   endpoint : <coords> coordonnÃ©es du point d'extremitÃ© du segment
     #---------------------------------------------------------------------------
     """
     angle = line_angle(startpoint, endpoint) + 90
@@ -93,13 +93,13 @@ def vertex_angle(pt0, pt1, pt2):
     """
     #---------------------------------------------------------------------------
     # Graphics::vertex_angle
-    # retourne la valeur de l'angle formée par 3 points
+    # retourne la valeur de l'angle formÃ©e par 3 points
     # ainsi que l'angle de la bisectrice
     #---------------------------------------------------------------------------
-    # paramètres :
-    # pt0 : <coords> coordonnées du premier point de définition de l'angle
-    # pt1 : <coords> coordonnées du deuxième point de définition de l'angle
-    # pt2 : <coords> coordonnées du troisième point de définition de l'angle
+    # paramÃ¨tres :
+    # pt0 : <coords> coordonnÃ©es du premier point de dÃ©finition de l'angle
+    # pt1 : <coords> coordonnÃ©es du deuxiÃ¨me point de dÃ©finition de l'angle
+    # pt2 : <coords> coordonnÃ©es du troisiÃ¨me point de dÃ©finition de l'angle
     #---------------------------------------------------------------------------
     """
     angle1 = line_angle(pt0, pt1)
@@ -119,26 +119,26 @@ def arc_pts(center, radius, **options):
     # Graphics::arc_pts
     # calcul des points constitutif d'un arc
     #---------------------------------------------------------------------------
-    # paramètres :
-    #  center : <coordonnées> centre de l'arc,
+    # paramÃ¨tres :
+    #  center : <coordonnÃ©es> centre de l'arc,
     #  radius : <dimension> rayon de l'arc,
     # options :
-    #  -angle : <angle> angle de départ en degré de l'arc (par défaut 0)
-    # -extent : <angle> delta angulaire en degré de l'arc (par défaut 360),
-    #   -step : <dimension> pas de progresion en degré (par défaut 10)
+    #  -angle : <angle> angle de dÃ©part en degrÃ© de l'arc (par dÃ©faut 0)
+    # -extent : <angle> delta angulaire en degrÃ© de l'arc (par dÃ©faut 360),
+    #   -step : <dimension> pas de progresion en degrÃ© (par dÃ©faut 10)
     #---------------------------------------------------------------------------
     """
     if center is None :
         center = [0, 0]
-    if (options.has_key('angle')) :
+    if ('angle' in options) :
         angle = options['angle']
     else:
         angle = 0
-    if (options.has_key('extent')) :
+    if ('extent' in options) :
         extent = options['extent']
     else:
         extent = 360
-    if (options.has_key('step')) :
+    if ('step' in options) :
         step = options['step']
     else:
         step = 10
@@ -150,11 +150,11 @@ def arc_pts(center, radius, **options):
         while(alpha <= angle+extent):
             (x_n, y_n) = rad_point(center, radius, alpha)
             pts.append((x_n, y_n))
-            angle += step
+            alpha += step
             
     elif (extent < 0 and step < 0) :
         #Ca me semble buggue !!
-        #Si extent négatif, il faut aussi que step le soit
+        #Si extent nÃ©gatif, il faut aussi que step le soit
         #Si ca boucle !
         alpha = angle
         while(alpha >= angle+extent):
@@ -168,12 +168,12 @@ def rad_point(center, radius, angle):
     """
     #---------------------------------------------------------------------------
     # Graphics::rad_point
-    # retourne le point circulaire défini par centre-rayon-angle
+    # retourne le point circulaire dÃ©fini par centre-rayon-angle
     #---------------------------------------------------------------------------
-    # paramètres :
-    # center : <coordonnée> coordonnée [x,y] du centre de l'arc,
+    # paramÃ¨tres :
+    # center : <coordonnÃ©e> coordonnÃ©e [x,y] du centre de l'arc,
     # radius : <dimension> rayon de l'arc,
-    #  angle : <angle> angle du point de circonférence avec le centre du cercle
+    #  angle : <angle> angle du point de circonfÃ©rence avec le centre du cercle
     #---------------------------------------------------------------------------
     """
     alpha = radians(angle)
@@ -189,24 +189,24 @@ def bezier_segment(coords, **options):
     # Graphics::bezier_segment
     # Calcul d'une approximation de segment (Quadratique ou Cubique) de bezier
     #---------------------------------------------------------------------------
-    # paramètres :
-    #    points : <[P1, C1, <C1>, P2]> liste des points définissant
+    # paramÃ¨tres :
+    #    points : <[P1, C1, <C1>, P2]> liste des points dÃ©finissant
     #             le segment de bezier
     #
     # options :
     #  -tunits : <integer> nombre pas de division des segments bezier
-    #            (par défaut 20)
+    #            (par dÃ©faut 20)
     # -skipend : <boolean> : ne pas retourner le dernier point du
     #            segment (chainage)
     #---------------------------------------------------------------------------
     """
-    if (options.has_key('tunits')) :
+    if ('tunits' in options) :
         tunits = options['tunits']
     else:
         tunits = 20
 
     
-    if options.has_key('skipend'):
+    if 'skipend' in options:
         skipendpt = options['skipend']
     else:
         skipendpt = None
@@ -217,7 +217,7 @@ def bezier_segment(coords, **options):
         lastpt = tunits-1
     else:
         lastpt = tunits 
-    for i in xrange(0, lastpt+1):
+    for i in range(0, lastpt+1):
         if (i) :
             t = (i/tunits)
         else:
@@ -233,16 +233,16 @@ def bezier_point(t, coords):
     # Graphics::bezier_point
     # calcul d'un point du segment (Quadratique ou Cubique) de bezier
     # params :
-    # t = <n> (représentation du temps : de 0 à 1)
-    # coords = (P1, C1, <C1>, P2) liste des points définissant le segment
-    # de bezier P1 et P2 : extémités du segment et pts situés sur la courbe
-    # C1 <C2> : point(s) de contrôle du segment
+    # t = <n> (reprÃ©sentation du temps : de 0 Ã  1)
+    # coords = (P1, C1, <C1>, P2) liste des points dÃ©finissant le segment
+    # de bezier P1 et P2 : extÃ©mitÃ©s du segment et pts situÃ©s sur la courbe
+    # C1 <C2> : point(s) de contrÃ´le du segment
     #---------------------------------------------------------------------------
     # courbe bezier niveau 2 sur (P1, P2, P3)
-    # P(t) = (1-t)²P1 + 2t(1-t)P2 + t²P3
+    # P(t) = (1-t)Â²P1 + 2t(1-t)P2 + tÂ²P3
     #
     # courbe bezier niveau 3 sur (P1, P2, P3, P4)
-    # P(t) = (1-t)³P1 + 3t(1-t)²P2 + 3t²(1-t)P3 + t³P4
+    # P(t) = (1-t)Â³P1 + 3t(1-t)Â²P2 + 3tÂ²(1-t)P3 + tÂ³P4
     #---------------------------------------------------------------------------
     """
     ncoords = len(coords)
@@ -252,7 +252,7 @@ def bezier_point(t, coords):
     elif ncoords == 4:
         (p1, c1, c2, p2) = coords
 
-    # extrémités : points sur la courbe
+    # extrÃ©mitÃ©s : points sur la courbe
     #A VERIFIER
     #Pas compris
     if (not t):
@@ -263,7 +263,7 @@ def bezier_point(t, coords):
 
     t2 = t * t
     t3 = t2 * t
-    pt = []
+    pt = [0, 0]
 
     # calcul pour x et y
     for i in (0, 1) :
@@ -289,19 +289,19 @@ def bezier_compute(coords, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::bezier_compute
-    # Retourne une liste de coordonnées décrivant un segment de bezier
+    # Retourne une liste de coordonnÃ©es dÃ©crivant un segment de bezier
     #---------------------------------------------------------------------------
-    # paramètres :
-    #     coords : <coordsList> liste des points définissant le segment
+    # paramÃ¨tres :
+    #     coords : <coordsList> liste des points dÃ©finissant le segment
     #              de bezier
     #
     # options :
     # -precision : <dimension> seuil limite du calcul d'approche de la courbe
     #   -skipend : <boolean> : ne pas retourner le dernier point du segment
-    #              (chaînage bezier)
+    #              (chaÃ®nage bezier)
     #---------------------------------------------------------------------------
     """
-    if (options.has_key('precision')) :
+    if ('precision' in options) :
         precision = options['precision']
     else:
         precision = bezierClosenessThreshold
@@ -309,7 +309,7 @@ def bezier_compute(coords, **options):
 
     subdivide_bezier(coords, lastit, precision)
 
-    if (not options.has_key('skipend') or not options['skipend']):
+    if ('skipend' not in options or not options['skipend']):
         lastit.append(coords[3]) 
 
     return lastit
@@ -318,8 +318,8 @@ def smallenough_bezier(bezier, precision):
     """
     #---------------------------------------------------------------------------
     # Graphics::smallEnought
-    # intégration code Stéphane Conversy : calcul points bezier
-    # (précision auto ajustée)
+    # intÃ©gration code StÃ©phane Conversy : calcul points bezier
+    # (prÃ©cision auto ajustÃ©e)
     #---------------------------------------------------------------------------
     # distance is something like num/den with den=sqrt(something)
     # what we want is to test that distance is smaller than precision,
@@ -351,7 +351,7 @@ def smallenough_bezier(bezier, precision):
     else:
         return 0
 
-def subdivide_bezier(bezier, it, precision, integeropt):
+def subdivide_bezier(bezier, it, precision, integeropt=False):
     """
     #---------------------------------------------------------------------------
     # Graphics::subdivide_bezier
@@ -364,7 +364,8 @@ def subdivide_bezier(bezier, it, precision, integeropt):
         it.append((b0[0], b0[1]))
 
     else :
-        (left, right) = (None, None)
+        left = [[0, 0] for _ in range(4)]
+        right = [[0, 0] for _ in range(4)]
 
         for i in (0, 1) :
 

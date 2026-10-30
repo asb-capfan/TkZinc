@@ -1,0 +1,4 @@
+include README.md
+recursive-include demos *.py *.gif
+recursive-include tests *.py
+global-exclude *.py[cod]

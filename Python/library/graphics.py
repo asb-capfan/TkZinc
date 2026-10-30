@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 """
 #-------------------------------------------------------------------------------
 #
@@ -50,10 +50,9 @@ VERSION = "1.0"
 __revision__ = "0.1"
 
 import logging
-import types
 import re
-from geometry import *
-from pictorial import *
+from .geometry import *
+from .pictorial import *
 from math import pi, radians, atan2, sqrt, sin, cos
 
 graphiclogger = logging.getLogger('Graphics')
@@ -67,56 +66,41 @@ const_ptd_factor = .5523
 
 def transdic(**dict):
     newdic={}
-    for key, val in dict.items():
-        if (type(val) is types.ListType):
+    for key, val in list(dict.items()):
+        if (type(val) is list):
             newdic[key] = tuple(val)
         else:
             newdic[key] = val
     return newdic
     
 def is_flat_list(apts):
-    if reduce(lambda x, y : x and (type(y) in ( types.FloatType, types.IntType)),
-              apts):
-        if len(apts) % 2:
-            raise ValueError("Not a valid Coords list")
-        else :
-            return True
-    else :
+    if not all(type(value) in (float, int) for value in apts):
         return False
+    if len(apts) % 2:
+        raise ValueError("Not a valid Coords list")
+    return True
+
 
 def is_point(apoint):
-    if (type(apoint) in ( types.TupleType, types.ListType)):
-        if len(apoint) == 2 :
-            if reduce(lambda x, y : x and (type(y) in ( types.FloatType, types.IntType)),
-                      apts):
-                return True
-            else :
-                return False
-        elif reduce(lambda x, y : x and (type(y) in ( types.FloatType, types.IntType)),
-                    apts[:-1])\
-                    and type(apts[-1]) in ('c', 'n'):
-            return True
-        else :
-            return False
-    else :
+    if not isinstance(apoint, (tuple, list)):
         return False
-                
-# def is_tuple_list(apts):
-#     if reduce(lambda x, y : x \
-#               and is_point(x)),
-#               apts):
-                  
-    
+    if len(apoint) == 2:
+        return all(type(value) in (float, int) for value in apoint)
+    if len(apoint) == 3 and apoint[-1] in ('c', 'n'):
+        return all(type(value) in (float, int) for value in apoint[:2])
+    return False
+
+
 def lpts2coords(lpts):
     coords = []
-    if (type(lpts) in ( types.TupleType, types.ListType )):
+    if (type(lpts) in ( tuple, list )):
         for point in lpts :
             coords.append(tuple(point))
     return tuple(coords)
             
 def coords2lpts(coords):
     lpts = []
-    if (type(coords) in ( types.TupleType, types.ListType )):
+    if (type(coords) in ( tuple, list )):
         for point in coords :
             lpts.append(list(point))
     else :
@@ -127,62 +111,62 @@ def build_zinc_item(widget, pgroup = 1, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::build_zinc_item
-    # Création d'un objet Zinc de représentation
+    # CrÃ©ation d'un objet Zinc de reprÃ©sentation
     #---------------------------------------------------------------------------
     # types d'items valides :
     # les items natifs zinc : group, rectangle, arc, curve, text, icon
-    # les items ci-après permettent de spécifier des curves 'particulières' :
-    # -roundedrectangle : rectangle à coin arrondi
+    # les items ci-aprÃ¨s permettent de spÃ©cifier des curves 'particuliÃ¨res' :
+    # -roundedrectangle : rectangle Ã  coin arrondi
     #       -hippodrome : hippodrome
     #          -ellipse : ellipse un centre 2 rayons
-    #         -polygone : polygone régulier à n cotés (convexe ou en étoile)
-    #     -roundedcurve : curve multicontours à coins arrondis (rayon unique)
-    #         -polyline : curve multicontours à coins arrondis (le rayon pouvant
-    #                     être défini 
-    #                     spécifiquement pour chaque sommet)
-    #         -pathline : création d'une ligne 'épaisse' avec l'item Zinc 
-    #                     triangles décalage par rapport à un chemin donné 
-    #                     (largeur et sens de décalage)
-    #                     dégradé de couleurs de la ligne (linéaire, transversal
+    #         -polygone : polygone rÃ©gulier Ã  n cotÃ©s (convexe ou en Ã©toile)
+    #     -roundedcurve : curve multicontours Ã  coins arrondis (rayon unique)
+    #         -polyline : curve multicontours Ã  coins arrondis (le rayon pouvant
+    #                     Ãªtre dÃ©fini
+    #                     spÃ©cifiquement pour chaque sommet)
+    #         -pathline : crÃ©ation d'une ligne 'Ã©paisse' avec l'item Zinc
+    #                     triangles dÃ©calage par rapport Ã  un chemin donnÃ©
+    #                     (largeur et sens de dÃ©calage)
+    #                     dÃ©gradÃ© de couleurs de la ligne (linÃ©aire, transversal
     #                     ou double)
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     # widget : <widget> identifiant du widget Zinc
     # parentgroup : <tagOrId> identifiant du group parent
     #
     # options :
-    #   -itemtype : type de l'item à construire (type zinc ou metatype)
-    #     -coords : <coords|coordsList> coordonnées de l'item
-    # -metacoords : <hastable> calcul de coordonnées par type 
-    #               d'item différent de itemtype
-    #   -contours : <contourList> paramètres multi-contours
-    #     -params : <hastable> arguments spécifiques de l'item à passer
+    #   -itemtype : type de l'item Ã  construire (type zinc ou metatype)
+    #     -coords : <coords|coordsList> coordonnÃ©es de l'item
+    # -metacoords : <hastable> calcul de coordonnÃ©es par type
+    #               d'item diffÃ©rent de itemtype
+    #   -contours : <contourList> paramÃ¨tres multi-contours
+    #     -params : <hastable> arguments spÃ©cifiques de l'item Ã  passer
     #               au widget
     #    -addtags : [list of specific tags] to add to params -tags
-    #    -texture : <imagefile> ajout d'une texture à l'item
-    #    -pattern : <imagefile> ajout d'un pattern à l'item
-    #     -relief : <hastable> création d'un relief à l'item invoque la fonction
+    #    -texture : <imagefile> ajout d'une texture Ã  l'item
+    #    -pattern : <imagefile> ajout d'un pattern Ã  l'item
+    #     -relief : <hastable> crÃ©ation d'un relief Ã  l'item invoque la fonction
     #               graphicitem_relief()
-    #     -shadow : <hastable> création d'une ombre portée à l'item invoque
+    #     -shadow : <hastable> crÃ©ation d'une ombre portÃ©e Ã  l'item invoque
     #               la fonction graphicitem_shadow()
     #      -scale : <scale_factor|[xscale_factor,yscale_factor]> application
-    #               d'une transformation zinc->scale à l'item
+    #               d'une transformation zinc->scale Ã  l'item
     #  -translate : <[delta_x,delta_y]> application d'un transformation zinc->translate
-    #               à l'item.
+    #               Ã  l'item.
     #     -rotate : <angle> application d'une transformation zinc->rotate
-    #               (en degré) à l'item
+    #               (en degrÃ©) Ã  l'item
     #       -name : <str> nom de l'item
-    #               spécifiques item group :
-    #       -clip : <coordList|hashtable> paramètres de clipping d'un item group
+    #               spÃ©cifiques item group :
+    #       -clip : <coordList|hashtable> paramÃ¨tres de clipping d'un item group
     #               (coords ou item)
-    #      -items : <hashtable> appel récursif de la fonction permettant
+    #      -items : <hashtable> appel rÃ©cursif de la fonction permettant
     #               d'inclure des items au groupe
     #---------------------------------------------------------------------------
     #
     #---------------------------------------------------------------------------
     """
 
-    if options.has_key('parentgroup'):
+    if 'parentgroup' in options:
         parentgroup = options['parentgroup']
     else :
         parentgroup = pgroup
@@ -198,7 +182,7 @@ def build_zinc_item(widget, pgroup = 1, **options):
         except KeyError :
             raise ValueError("Must have coords or metacoords option")
         
-    if options.has_key('params'):
+    if 'params' in options:
         params = options['params']
     else:
         params = {}
@@ -221,7 +205,7 @@ def build_zinc_item(widget, pgroup = 1, **options):
     #--------------------
     # GEOMETRIE DES ITEMS
 
-    # gestion des types d'items particuliers et à raccords circulaires
+    # gestion des types d'items particuliers et Ã  raccords circulaires
     if (itemtype in ( 'roundedrectangle',
                       'hippodrome',
                       'polygone',
@@ -230,52 +214,52 @@ def build_zinc_item(widget, pgroup = 1, **options):
                       'polyline',
                       'curveline')):
 
-        # par défaut la curve sera fermée -closed = 1
-        if not params.has_key('closed'):
+        # par dÃ©faut la curve sera fermÃ©e -closed = 1
+        if 'closed' not in params:
             params['closed'] = 1
         metatype = itemtype
         itemtype = 'curve'
 
-        # possibilité de définir les coordonnées initiales par metatype
-        if (options.has_key('metacoords')) :
+        # possibilitÃ© de dÃ©finir les coordonnÃ©es initiales par metatype
+        if ('metacoords' in options) :
             options['coords'] = meta_coords( **options['metacoords'])
 
-    # création d'une pathline à partir d'item zinc triangles
+    # crÃ©ation d'une pathline Ã  partir d'item zinc triangles
     elif (itemtype == 'pathline') :
         itemtype = 'triangles'
-        if (options.has_key('metacoords')) :
+        if ('metacoords' in options) :
             coords = meta_coords( **options['metacoords'])
           
-        if (options.has_key('graduate')) :
+        if ('graduate' in options) :
             numcolors = len(coords)
             lcolors = path_graduate(widget,
                                     numcolors,
                                     options['graduate'])
             params['colors'] = tuple(lcolors)
 
-        if options.has_key('coords'):
+        if 'coords' in options:
             coords = pathline_coords(**options)
         else:
             coords = pathline_coords(coords, **options)
 
-        # création d'une boite à onglet
+        # crÃ©ation d'une boite Ã  onglet
     elif (itemtype == 'tabbox') :
         return build_tabboxitem(widget, parentgroup, **options)
 
-    # calcul des coordonnées finales de la curve
+    # calcul des coordonnÃ©es finales de la curve
     if (metatype is not None):
         coords = meta_coords(type = metatype, **options)
 
 
     # gestion du multi-contours (accessible pour tous les types
-    # d'items géometriques)
-    if (options.has_key('contours') and (metatype is not None)) :
+    # d'items gÃ©ometriques)
+    if ('contours' in options and (metatype is not None)) :
         lcontours = options['contours']
         contours=[]
         numcontours = len(contours)
         for contour in lcontours:
-            # radius et corners peuvent être défini
-            # spécifiquement pour chaque contour
+            # radius et corners peuvent Ãªtre dÃ©fini
+            # spÃ©cifiquement pour chaque contour
             (atype, way, addcoords,) = contour[:3]
             if len(contour) >= 4:
                 radius = contour[3]
@@ -290,7 +274,7 @@ def build_zinc_item(widget, pgroup = 1, **options):
             else :
                 corners_radius = None
             if (radius is None):
-                if options.has_key('radius'):
+                if 'radius' in options:
                     radius = options['radius']
                 else :
                     raise ValueError("radius option requiered")
@@ -309,7 +293,7 @@ def build_zinc_item(widget, pgroup = 1, **options):
     # REALISATION DES ITEMS
 
     # ITEM GROUP
-    # gestion des coordonnées et du clipping
+    # gestion des coordonnÃ©es et du clipping
     if (itemtype == 'group') :
         item = widget.add(itemtype,
                           parentgroup,
@@ -318,28 +302,28 @@ def build_zinc_item(widget, pgroup = 1, **options):
         if coords:
             widget.coords(item, tuple(coords))
 
-        # clipping du groupe par item ou par géometrie
-        if (options.has_key('clip')) :
+        # clipping du groupe par item ou par gÃ©ometrie
+        if ('clip' in options) :
             clipbuilder = options['clip']
             clip = None
 
-            # création d'un item de clipping
-            if (type(clipbuilder) is types.DictType
-                and clipbuilder.has_key('itemtype')):
+            # crÃ©ation d'un item de clipping
+            if (type(clipbuilder) is dict
+                and 'itemtype' in clipbuilder):
                 clip = build_zinc_item(widget, item, **clipbuilder)
 
-            elif (type(clipbuilder) in (types.TupleType, types.ListType)
+            elif (type(clipbuilder) in (tuple, list)
                   or widget.type(clipbuilder)) :
                 clip = clipbuilder
 
             if (clip):
                 widget.itemconfigure(item, clip = clip)
 
-        # créations si besoin des items contenus dans le groupe
-        if (options.has_key('items')
-            and type(options['items']) is types.DictType) :
-            for (itemname, itemstyle) in options['items'].items() :
-                if not itemstyle.has_key('name'):
+        # crÃ©ations si besoin des items contenus dans le groupe
+        if ('items' in options
+            and type(options['items']) is dict) :
+            for (itemname, itemstyle) in list(options['items'].items()) :
+                if 'name' not in itemstyle:
                     itemstyle['name'] = itemname
                 build_zinc_item(widget, item, **itemstyle)
 
@@ -374,25 +358,25 @@ def build_zinc_item(widget, pgroup = 1, **options):
                           **params
                           )
 
-        if (itemtype == 'curve' and options.has_key('contours')) :
+        if (itemtype == 'curve' and 'contours' in options) :
             for contour in options['contours'] :
                 contour = list(contour)
                 contour[2] = tuple(contour[2])
                 widget.contour(item, *contour)
                              
         # gestion du mode norender
-        if (options.has_key('texture')) :
+        if ('texture' in options) :
             texture = get_texture(widget, options['texture'])
             if texture:
                 widget.itemconfigure(item, tile = texture)
 
-        if (options.has_key('pattern')) :
+        if ('pattern' in options) :
             bitmap = get_pattern(**options['pattern'])
             if bitmap:
                 widget.itemconfigure(item, fillpattern = bitmap)
 
-    # gestion des tags spécifiques
-    if (options.has_key('addtags')) :
+    # gestion des tags spÃ©cifiques
+    if ('addtags' in options) :
         tags = options['addtags']
 
         params_tags = params['tags']
@@ -404,25 +388,25 @@ def build_zinc_item(widget, pgroup = 1, **options):
     #-------------------------------
     # TRANSFORMATIONS ZINC DE L'ITEM
 
-    # transformation scale de l'item si nécessaire
-    if (options.has_key('scale')) :
+    # transformation scale de l'item si nÃ©cessaire
+    if ('scale' in options) :
         scale = options['scale']
-        if (type(scale) is not types.TupleType) :
+        if (type(scale) is not tuple) :
             scale = (scale, scale) 
         widget.scale(item, scale)
   
 
-    # transformation rotate de l'item si nécessaire
-    if (options.has_key('rotate')):
+    # transformation rotate de l'item si nÃ©cessaire
+    if ('rotate' in options):
         widget.rotate(item, radians(options['rotate'])) 
 
-    # transformation translate de l'item si nécessaire
-    if (options.has_key('translate')):
+    # transformation translate de l'item si nÃ©cessaire
+    if ('translate' in options):
         widget.translate(item, options['translate'])
 
 
-    # répétition de l'item
-    if (options.has_key('repeat')) :
+    # rÃ©pÃ©tition de l'item
+    if ('repeat' in options) :
         items.extend((item,
                       repeat_zinc_item(widget, item, **options['repeat'])))
 
@@ -430,7 +414,7 @@ def build_zinc_item(widget, pgroup = 1, **options):
     # RELIEF ET OMBRE PORTEE
 
     # gestion du relief
-    if (options.has_key('relief')) :
+    if ('relief' in options) :
         if (len(items)) :
             target = items
         else:
@@ -438,8 +422,8 @@ def build_zinc_item(widget, pgroup = 1, **options):
         reliefs.extend(graphicitem_relief(widget,
                                           target, **options['relief']))
 
-    # gestion de l'ombre portée
-    if (options.has_key('shadow')) :
+    # gestion de l'ombre portÃ©e
+    if ('shadow' in options) :
         if (len(items)) :
             target = items
         else:
@@ -468,24 +452,24 @@ def repeat_zinc_item(widget,
     """
     #---------------------------------------------------------------------------
     # Graphics::repeat_zinc_item
-    # Duplication (clonage) d'un objet Zinc de représentation
+    # Duplication (clonage) d'un objet Zinc de reprÃ©sentation
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     # widget : <widget> identifiant du widget zinc
     #   item : <tagOrId> identifiant de l'item source
     # options :
     #     -num : <n> nombre d'item total (par defaut 2)
     #     -dxy : <[delta_x, delta_y]> translation entre 2 duplications (par defaut [0,0])
     #   -angle : <angle> rotation entre 2 duplications
-    # -copytag : <sting> ajout d'un tag indexé pour chaque copie
-    #  -params : <hashtable> {clef => [value list]}> valeur de paramètre
+    # -copytag : <sting> ajout d'un tag indexÃ© pour chaque copie
+    #  -params : <hashtable> {clef => [value list]}> valeur de paramÃ¨tre
     #            de chaque copie
     #---------------------------------------------------------------------------
     """
     clones = []
     delta_x, delta_y = dxy
-    # duplication d'une liste d'items -> appel récursif
-    if (type(item) in (types.TupleType, types.ListType)) :
+    # duplication d'une liste d'items -> appel rÃ©cursif
+    if (type(item) in (tuple, list)) :
         for part in item :
             clones.append(repeat_zinc_item(widget,
                                            part,
@@ -502,7 +486,7 @@ def repeat_zinc_item(widget,
         tags = widget.itemcget(item, 'tags')
         widget.itemconfigure(item, tags = tags + ("%s0"%copytag,))
 
-    for i in xrange(1, num) :
+    for i in range(1, num) :
         clone = None
 
         if (copytag) :
@@ -531,15 +515,15 @@ def meta_coords( type,
     
     #---------------------------------------------------------------------------
     # Graphics::meta_coords
-    # retourne une liste de coordonnées en utilisant la fonction du type
-    # d'item spécifié
+    # retourne une liste de coordonnÃ©es en utilisant la fonction du type
+    # d'item spÃ©cifiÃ©
     #---------------------------------------------------------------------------
-    # paramètres : (passés par %options)
-    #   -type : <string> type de primitive utilisée
-    # -coords : <coordsList> coordonnées nécessitée par la fonction [type]_coords
+    # paramÃ¨tres : (passÃ©s par %options)
+    #   -type : <string> type de primitive utilisÃ©e
+    # -coords : <coordsList> coordonnÃ©es nÃ©cessitÃ©e par la fonction [type]_coords
     #
-    # les autres options spécialisées au type seront passés
-    # à la fonction [type]coords
+    # les autres options spÃ©cialisÃ©es au type seront passÃ©s
+    # Ã  la fonction [type]coords
     #---------------------------------------------------------------------------
     """
     pts = None
@@ -583,18 +567,18 @@ def zincitem_2_curvecoords( widget, item,
     """
     #--------------------------------------------------------------------------
     # Graphics::zincitem_2_curvecoords
-    # retourne une liste des coordonnées 'Curve' d'un l'item Zinc
+    # retourne une liste des coordonnÃ©es 'Curve' d'un l'item Zinc
     # rectangle, arc ou curve
     #--------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     # widget : <widget> identifiant du widget zinc
     #   item : <tagOrId> identifiant de l'item source
     # options :
-    #     -linear : <boolean> réduction à des segments non curviligne
-    #               (par défaut 0)
-    # -realcoords : <boolean> coordonnées à transformer dans le groupe père
-    #               (par défaut 0)
-    #     -adjust : <boolean> ajustement de la courbe de bezier (par défaut 1)
+    #     -linear : <boolean> rÃ©duction Ã  des segments non curviligne
+    #               (par dÃ©faut 0)
+    # -realcoords : <boolean> coordonnÃ©es Ã  transformer dans le groupe pÃ¨re
+    #               (par dÃ©faut 0)
+    #     -adjust : <boolean> ajustement de la courbe de bezier (par dÃ©faut 1)
     #--------------------------------------------------------------------------
     """
     itemtype = widget.type(item)
@@ -625,7 +609,7 @@ def zincitem_2_curvecoords( widget, item,
                 multi = curveitem2polyline_coords(widget, item)
 
             else :
-                for contour in xrange(0, numcontours):
+                for contour in range(0, numcontours):
                     points = widget.coords(item, contour)
                     multi.extend(points)
             coords = multi
@@ -648,31 +632,31 @@ def rounded_rectangle_coords( coords, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::rounded_rectangle_coords
-    # calcul des coords du rectangle à coins arrondis
+    # calcul des coords du rectangle Ã  coins arrondis
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordsList> coordonnées bbox (haut-gauche et bas-droite)
+    # paramÃ¨tres :
+    # coords : <coordsList> coordonnÃ©es bbox (haut-gauche et bas-droite)
     #          du rectangle
     # options :
     #  -radius : <dimension> rayon de raccord d'angle
     # -corners : <booleanList> liste des raccords de sommets
-    #            [0 (aucun raccord)|1] par défaut [1,1,1,1]
+    #            [0 (aucun raccord)|1] par dÃ©faut [1,1,1,1]
     #---------------------------------------------------------------------------
     """
     (x_0, y_0, x_n, y_n) = (coords[0][0], coords[0][1],
                         coords[1][0], coords[1][1])
 
-    if (options.has_key('radius')):
+    if ('radius' in options):
         radius = options['radius']
     else:
         radius = None
   
-    if (options.has_key('corners')):
+    if ('corners' in options):
         corners = options['corners']
     else:
         corners = [1, 1, 1, 1]
 
-    # attention aux formes 'négatives'
+    # attention aux formes 'nÃ©gatives'
     if (x_n < x_0) :
         (x_0, x_n) = (x_n, x_0)
       
@@ -692,7 +676,7 @@ def rounded_rectangle_coords( coords, **options):
     # correction de radius si necessaire
     max_rad = height
     #CODE BIZARRE
-    #Comment corners ne peut être non défini
+    #Comment corners ne peut Ãªtre non dÃ©fini
     #a ce niveau ?
     #  max_rad /= 2 if (!defined corners)
     if (corners is None):
@@ -717,7 +701,7 @@ def rounded_rectangle_coords( coords, **options):
 
     pts = []
     previous = None
-    for i  in xrange(0, 4):
+    for i  in range(0, 4):
         #BUGS ??
         if (corners[i]):
             if (previous is not None) :
@@ -738,22 +722,22 @@ def ellipse_coords(coords, **options):
     # Graphics::ellipse_coords
     # calcul des coords d'une ellipse
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordsList> coordonnées bbox du rectangle exinscrit
+    # paramÃ¨tres :
+    # coords : <coordsList> coordonnÃ©es bbox du rectangle exinscrit
     # options :
     # -corners : <booleanList> liste des raccords de sommets
-    # [0 (aucun raccord)|1] par défaut [1,1,1,1]
+    # [0 (aucun raccord)|1] par dÃ©faut [1,1,1,1]
     #---------------------------------------------------------------------------
     """
     (x_0, y_0, x_n, y_n) = (coords[0][0], coords[0][1],
                         coords[1][0], coords[1][1])
 
-    if options.has_key('corners') :
-        corners = options.has_key('corners')
+    if 'corners' in options :
+        corners = 'corners' in options
     else:
         corners = [1, 1, 1, 1]
 
-    # attention aux formes 'négatives'
+    # attention aux formes 'nÃ©gatives'
     if (x_n < x_0) :
         xs = x_0
         (x_0, x_n) = (x_n, xs)
@@ -779,7 +763,7 @@ def ellipse_coords(coords, **options):
 
     pts = []
     previous = None
-    for i in xrange(0, 4):
+    for i in range(0, 4):
         if (corners[i]) :
             if (previous) :
                 # on teste si non duplication de point
@@ -803,11 +787,11 @@ def hippodrome_coords(coords, **options) :
     # Graphics::hippodrome_coords
     # calcul des coords d'un hippodrome
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordsList> coordonnées bbox du rectangle exinscrit
+    # paramÃ¨tres :
+    # coords : <coordsList> coordonnÃ©es bbox du rectangle exinscrit
     # options :
-    # -orientation : orientation forcée de l'hippodrome [horizontal|vertical]
-    #     -corners : liste des raccords de sommets [0|1] par défaut [1,1,1,1]
+    # -orientation : orientation forcÃ©e de l'hippodrome [horizontal|vertical]
+    #     -corners : liste des raccords de sommets [0|1] par dÃ©faut [1,1,1,1]
     #       -trunc : troncatures [left|right|top|bottom|both]
     #---------------------------------------------------------------------------
     """
@@ -816,13 +800,13 @@ def hippodrome_coords(coords, **options) :
                             coords[1][0],
                             coords[1][1])
 
-    if (options.has_key('orientation')) :
+    if ('orientation' in options) :
         orientation = options['orientation']
     else:
         orientation = 'none'
 
-    # orientation forcée de l'hippodrome
-    # (sinon hippodrome sur le plus petit coté)
+    # orientation forcÃ©e de l'hippodrome
+    # (sinon hippodrome sur le plus petit cotÃ©)
     if (orientation == 'horizontal') :
         height = abs(y_n - y_0)
     elif (orientation == 'vertical') :
@@ -832,10 +816,10 @@ def hippodrome_coords(coords, **options) :
     radius = height/2
     corners = (1, 1, 1, 1)
 
-    if  (options.has_key('corners')) :
+    if  ('corners' in options) :
         corners = options['corners']
 
-    elif (options.has_key('trunc')) :
+    elif ('trunc' in options) :
         trunc = options['trunc']
         if (trunc == 'both') :
             return ((x_0, y_0), (x_0, y_n), (x_n, y_n), (x_n, y_0))
@@ -852,8 +836,8 @@ def hippodrome_coords(coords, **options) :
                 corners = (1, 1, 1, 1)
 
     # l'hippodrome est un cas particulier de roundedRectangle
-    # on retourne en passant la 'configuration' à la fonction
-    # générique rounded_rectangle_coords
+    # on retourne en passant la 'configuration' Ã  la fonction
+    # gÃ©nÃ©rique rounded_rectangle_coords
     return rounded_rectangle_coords(coords,
                                   radius = radius,
                                   corners = corners)
@@ -862,52 +846,52 @@ def polygon_coords(coords, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::polygon_coords
-    # calcul des coords d'un polygone régulier
+    # calcul des coords d'un polygone rÃ©gulier
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     # coords : <coords> point centre du polygone
     # options :
-    #      -numsides : <integer> nombre de cotés
-    #        -radius : <dimension> rayon de définition du polygone
+    #      -numsides : <integer> nombre de cotÃ©s
+    #        -radius : <dimension> rayon de dÃ©finition du polygone
     #                  (distance centre-sommets)
-    #  -inner_radius : <dimension> rayon interne (polygone type étoile)
+    #  -inner_radius : <dimension> rayon interne (polygone type Ã©toile)
     #       -corners : <booleanList> liste des raccords de sommets [0|1]
-    #                  par défaut [1,1,1,1]
-    # -corner_radius : <dimension> rayon de raccord des cotés
-    #    -startangle : <angle> angle de départ en degré du polygone
+    #                  par dÃ©faut [1,1,1,1]
+    # -corner_radius : <dimension> rayon de raccord des cotÃ©s
+    #    -startangle : <angle> angle de dÃ©part en degrÃ© du polygone
     #---------------------------------------------------------------------------
     """
-    if options.has_key('numsides'):
+    if 'numsides' in options:
         numsides = options['numsides']
     else :
         numsides = 0
-    if options.has_key('radius'):
+    if 'radius' in options:
         radius = options['radius']
     else:
         radius = None
     if (numsides < 3 or not radius) :
-        raise ValueError("Vous devez au moins spécifier "
-                         +"un nombre de cotés >= 3 et un rayon...\n")
+        raise ValueError("Vous devez au moins spÃ©cifier "
+                         +"un nombre de cotÃ©s >= 3 et un rayon...\n")
 
     if (coords is None):
         coords = (0, 0)
-    if (options.has_key('startangle')) :
+    if ('startangle' in options) :
         startangle = options['startangle']
     else:
         startangle = 0
     anglestep = 360/numsides
-    if options.has_key('inner_radius'):
+    if 'inner_radius' in options:
         inner_radius = options['inner_radius']
     else:
         inner_radius = None
     pts = []
 
     # points du polygone
-    for i in xrange(0, numsides):
+    for i in range(0, numsides):
         (xp, yp) = rad_point(coords, radius, startangle + (anglestep*i))
         pts.append((xp, yp))
 
-        # polygones 'étoiles'
+        # polygones 'Ã©toiles'
         if (inner_radius) :
             (xp, yp) = rad_point(coords, inner_radius,
                                  startangle + (anglestep*(i+ 0.5)))
@@ -915,8 +899,8 @@ def polygon_coords(coords, **options):
     
     pts.reverse()
 
-    if (options.has_key('corner_radius')) :
-        if options.has_key('corners'):
+    if ('corner_radius' in options) :
+        if 'corners' in options:
             corners = options['corners']
         else:
             corners = None
@@ -934,7 +918,7 @@ def rounded_angle(widget, parentgroup, coords, radius) :
     # THIS FUNCTION IS NO MORE USED, NEITHER EXPORTED
     # curve d'angle avec raccord circulaire
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     # widget : identifiant du widget Zinc
     # parentgroup : <tagOrId> identifiant de l'item group parent
     # coords : <coordsList> les 3 points de l'angle
@@ -968,29 +952,29 @@ def rounded_angle_coords (coords, radius) :
     # Graphics::rounded_angle_coords
     # calcul des coords d'un raccord d'angle circulaire
     #---------------------------------------------------------------------------
-    # le raccord circulaire de 2 droites sécantes est traditionnellement
-    # réalisé par un
-    # arc (conique) du cercle inscrit de rayon radius tangent à ces 2 droites
+    # le raccord circulaire de 2 droites sÃ©cantes est traditionnellement
+    # rÃ©alisÃ© par un
+    # arc (conique) du cercle inscrit de rayon radius tangent Ã  ces 2 droites
     #
     # Quadratique :
-    # une approche de cette courbe peut être réalisée simplement par le calcul
+    # une approche de cette courbe peut Ãªtre rÃ©alisÃ©e simplement par le calcul
     # de 4 points
-    # spécifiques qui définiront - quelle que soit la valeur de l'angle formé
+    # spÃ©cifiques qui dÃ©finiront - quelle que soit la valeur de l'angle formÃ©
     # par les 2
     # droites - le segment de raccord :
-    # - les 2 points de tangence au cercle inscrit seront les points de début
+    # - les 2 points de tangence au cercle inscrit seront les points de dÃ©but
     #   et de fin
     # du segment de raccord
-    # - les 2 points de controle seront situés chacun sur le vecteur
+    # - les 2 points de controle seront situÃ©s chacun sur le vecteur
     #   reliant le point de
     # tangence au sommet de l'angle (point secant des 2 droites)
-    # leur position sur ce vecteur peut être simplifiée comme suit :
-    # - à un facteur de 0.5523 de la distance au sommet pour
-    #   un angle >= 90° et <= 270°
-    # - à une 'réduction' de ce point vers le point de tangence
+    # leur position sur ce vecteur peut Ãªtre simplifiÃ©e comme suit :
+    # - Ã  un facteur de 0.5523 de la distance au sommet pour
+    #   un angle >= 90Â° et <= 270Â°
+    # - Ã  une 'rÃ©duction' de ce point vers le point de tangence
     #   pour les angles limites
-    # de 90° vers 0° et de 270° vers 360°
-    # ce facteur sera légérement modulé pour recouvrir plus précisement
+    # de 90Â° vers 0Â° et de 270Â° vers 360Â°
+    # ce facteur sera lÃ©gÃ©rement modulÃ© pour recouvrir plus prÃ©cisement
     # l'arc correspondant
     #---------------------------------------------------------------------------
     # coords : <coordsList> les 3 points de l'angle
@@ -999,7 +983,7 @@ def rounded_angle_coords (coords, radius) :
     """
     (pt0, pt1, pt2) = coords
 
-    # valeur d'angle et angle formé par la bisectrice
+    # valeur d'angle et angle formÃ© par la bisectrice
     (angle, bisecangle)  = vertex_angle(pt0, pt1, pt2)
 
     # distance au centre du cercle inscrit : rayon/sinus demi-angle
@@ -1057,28 +1041,28 @@ def roundedcurve_coords(coords, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::roundedcurve_coords
-    # retourne les coordonnées d'une curve à coins arrondis
+    # retourne les coordonnÃ©es d'une curve Ã  coins arrondis
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordsList> liste de coordonnées des points de la curve
+    # paramÃ¨tres :
+    # coords : <coordsList> liste de coordonnÃ©es des points de la curve
     # options :
     #  -radius : <dimension> rayon de raccord d'angle
     #  -corners : <booleanList> liste des raccords de sommets [0|1]
-    # par défaut [1,1,1,1]
+    # par dÃ©faut [1,1,1,1]
     #---------------------------------------------------------------------------
     """
     numfaces = len(coords)
     curve_pts = []
 
-    if (options.has_key('radius')) :
+    if ('radius' in options) :
         radius = options['radius']
     else:
         radius = 0
     corners = None
-    if options.has_key('corners') :
+    if 'corners' in options :
         corners = options['corners']
 
-    for index in xrange(numfaces):
+    for index in range(numfaces):
         if (corners is not None) :
             if (index+1 > len(corners)) or not corners[index] :
                 curve_pts.append(coords[index])
@@ -1103,35 +1087,35 @@ def polyline_coords(coords, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::polyline_coords
-    # retourne les coordonnées d'une polyline
+    # retourne les coordonnÃ©es d'une polyline
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordsList> liste de coordonnées des sommets de la polyline
+    # paramÃ¨tres :
+    # coords : <coordsList> liste de coordonnÃ©es des sommets de la polyline
     # options :
     #  -radius : <dimension> rayon global de raccord d'angle
     # -corners : <booleanList> liste des raccords de sommets [0|1]
-    #            par défaut [1,1,1,1],
+    #            par dÃ©faut [1,1,1,1],
     # -corners_radius : <dimensionList> liste des rayons de raccords de sommets
     #---------------------------------------------------------------------------
     """
     numfaces = len(coords)
     curve_pts = []
 
-    if (options.has_key('radius')) :
+    if ('radius' in options) :
         radius = options['radius']
     else:
         radius = 0
-    if options.has_key('corners_radius'):
+    if 'corners_radius' in options:
         corners_radius = options['corners_radius']
         corners = corners_radius
     else:
         corners_radius = None
-        if options.has_key('corners'):
+        if 'corners' in options:
             corners = options['corners']
         else:
             corners = None
 
-    for index in xrange(0, numfaces):
+    for index in range(0, numfaces):
         if (corners is not None
             and (len(corners) - 1 < index
                  or not corners[index])):
@@ -1160,29 +1144,29 @@ def pathline_coords (coords, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::pathline_coords
-    # retourne les coordonnées d'une pathline
+    # retourne les coordonnÃ©es d'une pathline
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordsList> liste de coordonnées des points du path
+    # paramÃ¨tres :
+    # coords : <coordsList> liste de coordonnÃ©es des points du path
     # options :
-    #    -closed : <boolean> ligne fermée
-    #  -shifting : <out|center|in> sens de décalage du path (par défaut center)
+    #    -closed : <boolean> ligne fermÃ©e
+    #  -shifting : <out|center|in> sens de dÃ©calage du path (par dÃ©faut center)
     # -linewidth : <dimension> epaisseur de la ligne
     #---------------------------------------------------------------------------
     """
     numfaces = len(coords)
     pts = []
 
-    if options.has_key('closed'):
+    if 'closed' in options:
         closed = options['closed']
     else:
         closed = None
-    if (options.has_key('linewidth')) :
+    if ('linewidth' in options) :
         linewidth = options['linewidth']
     else:
         linewidth = 2
           
-    if (options.has_key('shifting')) :
+    if ('shifting' in options) :
         shifting = options['shifting']
     else:
         shifting = 'center'
@@ -1199,11 +1183,11 @@ def pathline_coords (coords, **options):
     if (shifting == 'center'):
         linewidth /= 2
 
-    for i in xrange(0, numfaces):
+    for i in range(0, numfaces):
         pt = coords[i]
 
         if (previous is None) :
-            # extrémité de curve sans raccord -> angle plat
+            # extrÃ©mitÃ© de curve sans raccord -> angle plat
             previous = (pt[0] + (pt[0] - next[0]), pt[1] + (pt[1] - next[1]))
 
         (angle, bisecangle) = vertex_angle(previous, pt, next)
@@ -1250,14 +1234,14 @@ def curveline_coords(coords, **options) :
     """
     #---------------------------------------------------------------------------
     # Graphics::curveline_coords
-    # retourne les coordonnées d'une curveLine
+    # retourne les coordonnÃ©es d'une curveLine
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordsList> liste de coordonnées des points de la ligne
+    # paramÃ¨tres :
+    # coords : <coordsList> liste de coordonnÃ©es des points de la ligne
     # options :
-    #    -closed : <boolean> ligne fermée
-    #  -shifting : <out|center|in> sens de décalage du contour
-    #              (par défaut center)
+    #    -closed : <boolean> ligne fermÃ©e
+    #  -shifting : <out|center|in> sens de dÃ©calage du contour
+    #              (par dÃ©faut center)
     # -linewidth : <dimension> epaisseur de la ligne
     #---------------------------------------------------------------------------
     """
@@ -1266,15 +1250,15 @@ def curveline_coords(coords, **options) :
     backpts = []
     pts = []
 
-    if options.has_key('closed'):
+    if 'closed' in options:
         closed = options['closed']
     else:
         closed = None
-    if (options.has_key('linewidth')) :
+    if ('linewidth' in options) :
         linewidth = options['linewidth']
     else:
         linewidth = 2
-    if (options.has_key('shifting')) :
+    if ('shifting' in options) :
         shifting = options['shifting']
     else:
         shifting = 'center'
@@ -1291,11 +1275,11 @@ def curveline_coords(coords, **options) :
     if (shifting == 'center'):
         linewidth /= 2 
 
-    for i in xrange(0, numfaces):
+    for i in range(0, numfaces):
         pt = coords[i]
 
         if ( previous is None ) :
-            # extrémité de curve sans raccord -> angle plat
+            # extrÃ©mitÃ© de curve sans raccord -> angle plat
             previous = (pt[0] + (pt[0] - next[0]), pt[1] + (pt[1] - next[1]))
             
 
@@ -1346,27 +1330,27 @@ def shiftpath_coords(coords, **options) :
     """
     #---------------------------------------------------------------------------
     # Graphics::shiftpath_coords
-    # retourne les coordonnées d'un décalage de path
+    # retourne les coordonnÃ©es d'un dÃ©calage de path
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordsList> liste de coordonnées des points du path
+    # paramÃ¨tres :
+    # coords : <coordsList> liste de coordonnÃ©es des points du path
     # options :
-    #   -closed : <boolean> ligne fermée
-    # -shifting : <'out'|'in'> sens de décalage du path (par défaut out)
-    #    -width : <dimension> largeur de décalage (par défaut 1)
+    #   -closed : <boolean> ligne fermÃ©e
+    # -shifting : <'out'|'in'> sens de dÃ©calage du path (par dÃ©faut out)
+    #    -width : <dimension> largeur de dÃ©calage (par dÃ©faut 1)
     #---------------------------------------------------------------------------
     """
     numfaces = len(coords)
 
-    if options.has_key('closed'):
+    if 'closed' in options:
         closed = options['closed']
     else:
         closed = None
-    if (options.has_key('width')) :
+    if ('width' in options) :
         width = options['width']
     else:
         width = 1
-    if (options.has_key('shifting')) :
+    if ('shifting' in options) :
         shifting = options['shifting']
     else:
         shifting = 'out'
@@ -1382,11 +1366,11 @@ def shiftpath_coords(coords, **options) :
         previous = None
     next = coords[1]
 
-    for i in xrange(0, numfaces):
+    for i in range(0, numfaces):
         pt = coords[i]
 
         if ( previous is None ) :
-            # extrémité de curve sans raccord -> angle plat
+            # extrÃ©mitÃ© de curve sans raccord -> angle plat
             previous = (pt[0] + (pt[0] - next[0]), pt[1] + (pt[1] - next[1]))
             
 
@@ -1428,16 +1412,16 @@ def curveitem2polyline_coords(widget, item, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::curveitem2polyline_coords
-    # Conversion des coordonnées Znitem curve (multicontours)
-    # en coordonnées polyline(s)
+    # Conversion des coordonnÃ©es Znitem curve (multicontours)
+    # en coordonnÃ©es polyline(s)
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     # widget : <widget> identifiant du widget zinc
     #   item : <tagOrId> identifiant de l'item source
     # options :
     # -tunits : <integer> nombre pas de division des segments bezier
-    #           (par défaut 20)
-    # -adjust : <boolean> ajustement de la courbe de bezier (par défaut 1)
+    #           (par dÃ©faut 20)
+    # -adjust : <boolean> ajustement de la courbe de bezier (par dÃ©faut 1)
     #---------------------------------------------------------------------------
     """
     if (not widget.type(item)):
@@ -1446,7 +1430,7 @@ def curveitem2polyline_coords(widget, item, **options):
     numcontours = widget.contour(item)
     #parentgroup = widget.group(item)
 
-    for contour in xrange(0, numcontours):
+    for contour in range(0, numcontours):
         points = widget.coords(item, contour)
         contourcoords = curve2polyline_coords(points, **options)
 
@@ -1460,19 +1444,19 @@ def curve2polyline_coords(points, **options):
     # Graphics::curve2polyline_coords
     # Conversion curve -> polygone
     #---------------------------------------------------------------------------
-    # paramètres :
-    # points : <coordsList> liste des coordonnées curve à transformer
+    # paramÃ¨tres :
+    # points : <coordsList> liste des coordonnÃ©es curve Ã  transformer
     # options :
     # -tunits : <integer> nombre pas de division des segments bezier
-    #           (par défaut 20)
-    # -adjust : <boolean> ajustement de la courbe de bezier (par défaut 1)
+    #           (par dÃ©faut 20)
+    # -adjust : <boolean> ajustement de la courbe de bezier (par dÃ©faut 1)
     #---------------------------------------------------------------------------
     """
-    if (options.has_key('tunits')) :
+    if ('tunits' in options) :
         tunits = options['tunits']
     else:
         tunits = 20
-    if (options.has_key('adjust')) :
+    if ('adjust' in options) :
         adjust = options['adjust']
     else:
         adjust = 1
@@ -1528,61 +1512,61 @@ def build_tabboxitem(widget, parentgroup, **options):
     """
     #-------------------------------------------------------------------------------
     # Graphics::build_tabboxitem
-    # construit les items de représentations Zinc d'une boite à onglets
+    # construit les items de reprÃ©sentations Zinc d'une boite Ã  onglets
     #-------------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #      widget : <widget> identifiant du widget zinc
     # parentgroup : <tagOrId> identifiant de l'item group parent
     #
     #    options :
-    #     -coords : <coordsList> coordonnées haut-gauche et bas-droite
+    #     -coords : <coordsList> coordonnÃ©es haut-gauche et bas-droite
     #               du rectangle
     #               englobant du Tabbox
-    #     -params : <hastable> arguments spécifiques des items curve
-    #               à passer au widget
+    #     -params : <hastable> arguments spÃ©cifiques des items curve
+    #               Ã  passer au widget
     #    -texture : <imagefile> ajout d'une texture aux items curve
-    #  -tabtitles : <hashtable> table de hash de définition des titres onglets
-    #  -pageitems : <hashtable> table de hash de définition des pages internes
-    #     -relief : <hashtable> table de hash de définition du relief de forme
+    #  -tabtitles : <hashtable> table de hash de dÃ©finition des titres onglets
+    #  -pageitems : <hashtable> table de hash de dÃ©finition des pages internes
+    #     -relief : <hashtable> table de hash de dÃ©finition du relief de forme
     #
-    # (options de construction géometrique passées à tabbox_coords)
+    # (options de construction gÃ©ometrique passÃ©es Ã  tabbox_coords)
     #  -numpages : <integer> nombre de pages (onglets) de la boite
     #    -anchor : <'n'|'e'|'s'|'w'> ancrage (positionnement) de la ligne
     #              d'onglets
-    # -alignment : <'left'|'center'|'right'> alignement des onglets sur le coté
+    # -alignment : <'left'|'center'|'right'> alignement des onglets sur le cotÃ©
     #              d'ancrage
     #  -tabwidth : <'auto'>|<dimension>|<dimensionList> : largeur des onglets
-    #              'auto' largeur répartie, les largeurs sont auto-ajustée
+    #              'auto' largeur rÃ©partie, les largeurs sont auto-ajustÃ©e
     #              si besoin.
     # -tabheight : <'auto'>|<dimension> : hauteur des onglets
     #  -tabshift : <'auto'>|<dimension> offset de 'biseau' entre base et haut de
-    #              l'onglet (défaut auto)
+    #              l'onglet (dÃ©faut auto)
     #    -radius : <dimension> rayon des arrondis d'angle
-    #   -overlap : <'auto'>|<dimension> offset de recouvrement/séparation entre
+    #   -overlap : <'auto'>|<dimension> offset de recouvrement/sÃ©paration entre
     #              onglets
-    #   -corners : <booleanList> liste 'spécifique' des raccords de sommets [0|1]
+    #   -corners : <booleanList> liste 'spÃ©cifique' des raccords de sommets [0|1]
     #---------------------------------------------------------------------------
     """
-    if options.has_key('coords') :
+    if 'coords' in options :
         coords = options['coords']
     else:
         raise ValueError("Coords needed")
-    if options.has_key('params'):
+    if 'params' in options:
         params = options['params']
     else:
         params = {}
-    if params.has_key('tags'):
+    if 'tags' in params:
         tags = params['tags']
     else :
         tags = []
     texture = None
 
-    if (options.has_key('texture')) :
+    if ('texture' in options) :
         texture = get_texture(widget,
                              options['texture'])
         
 
-    if options.has_key('tabtitles'):
+    if 'tabtitles' in options:
         titlestyle = options['tabtitles']
     else :
         titlestyle = None
@@ -1613,11 +1597,11 @@ def build_tabboxitem(widget, parentgroup, **options):
         if texture :
             widget.itemconfigure(form, tile = texture)
 
-        if (options.has_key('relief')) :
+        if ('relief' in options) :
             graphicitem_relief(widget, form, **options['relief'])
             
 
-        if (options.has_key('page')) :
+        if ('page' in options) :
             build_zinc_item(widget, group, **options['page'])
     
         if (titles) :
@@ -1641,27 +1625,27 @@ def tabbox_coords(coords, **options):
     """
     #---------------------------------------------------------------------------
     # tabbox_coords
-    # Calcul des shapes de boites à onglets
+    # Calcul des shapes de boites Ã  onglets
     #---------------------------------------------------------------------------
-    # paramètres :
-    # coords : <coordList> coordonnées haut-gauche bas-droite du rectangle
+    # paramÃ¨tres :
+    # coords : <coordList> coordonnÃ©es haut-gauche bas-droite du rectangle
     #          englobant de la tabbox
     # options
     #  -numpages : <integer> nombre de pages (onglets) de la boite
     #    -anchor : <'n'|'e'|'s'|'w'> ancrage (positionnement) de la
     #              ligne d'onglets
     # -alignment : <'left'|'center'|'right'> alignement des onglets
-    #              sur le coté d'ancrage
+    #              sur le cotÃ© d'ancrage
     #  -tabwidth : <'auto'>|<dimension>|<dimensionList> : largeur des onglets
-    #              'auto' largeur répartie, les largeurs sont auto-ajustée
+    #              'auto' largeur rÃ©partie, les largeurs sont auto-ajustÃ©e
     #               si besoin.
     # -tabheight : <'auto'>|<dimension> : hauteur des onglets
     #  -tabshift : <'auto'>|<dimension> offset de 'biseau' entre base et haut
-    #              de l'onglet (défaut auto)
+    #              de l'onglet (dÃ©faut auto)
     #    -radius : <dimension> rayon des arrondis d'angle
-    #   -overlap : <'auto'>|<dimension> offset de recouvrement/séparation
+    #   -overlap : <'auto'>|<dimension> offset de recouvrement/sÃ©paration
     #              entre onglets
-    #   -corners : <booleanList> liste 'spécifique' des raccords
+    #   -corners : <booleanList> liste 'spÃ©cifique' des raccords
     #              de sommets [0|1]
     #---------------------------------------------------------------------------
     """
@@ -1671,46 +1655,46 @@ def tabbox_coords(coords, **options):
     inverse = None
 
     #loptions = options.keys()
-    if options.has_key('numpages'):
+    if 'numpages' in options:
         numpages = options['numpages']
     else:
         numpages = 0
     
     if (not x_0 or not y_0 or not x_n or not y_n or not numpages) :
-        raise ValueError("Vous devez au minimum spécifier\
+        raise ValueError("Vous devez au minimum spÃ©cifier\
         le rectangle englobant et le nombre de pages")
 
-    if (options.has_key('anchor')) :
+    if ('anchor' in options) :
         anchor = options['anchor']
     else:
         anchor = 'n'
-    if (options.has_key('alignment')) :
+    if ('alignment' in options) :
         alignment = options['alignment']
     else:
         alignment ='left'
 
 
-    if (options.has_key('tabwidth')) :
+    if ('tabwidth' in options) :
         nlen = options['tabwidth']
     else:
         nlen ='auto'
-    if (options.has_key('tabheight')) :
+    if ('tabheight' in options) :
         thick = options['tabheight']
     else:
         thick ='auto'
-    if (options.has_key('tabshift')) :
+    if ('tabshift' in options) :
         biso = options['tabshift']
     else:
         biso = 'auto'
-    if (options.has_key('radius')) :
+    if ('radius' in options) :
         radius = options['radius']
     else:
         radius = 0
-    if (options.has_key('overlap')) :
+    if ('overlap' in options) :
         overlap = options['overlap']
     else:
         overlap = 0
-    if (options.has_key('corners')):
+    if ('corners' in options):
         corners = options['corners']
     else:
         corners = None
@@ -1729,7 +1713,7 @@ def tabbox_coords(coords, **options):
         tabswidth = maxwidth
         nlen = float(tabswidth + (overlap * (numpages - 1)))/numpages
     else :
-        if (type(nlen) in (types.TupleType, types.ListType )) :
+        if (type(nlen) in (tuple, list )) :
             for w in nlen :
                 tabswidth += (w - overlap)
       
@@ -1760,8 +1744,8 @@ def tabbox_coords(coords, **options):
     if ((alignment == 'right' and anchor != 'w') or
         (anchor == 'w' and alignment != 'right')) :
 
-        if (type(nlen) in (types.TupleType, types.ListType)) :
-            for p in xrange(0, numpages):
+        if (type(nlen) in (tuple, list)) :
+            for p in range(0, numpages):
                 nlen[p] *= -1
         else :
             nlen *= -1
@@ -1799,7 +1783,7 @@ def tabbox_coords(coords, **options):
 
         cadre = ((xref, endy), (endx, endy), (endx, starty), (xref, starty))
 
-        # flag de retournement de la liste des pts de curve si nécessaire
+        # flag de retournement de la liste des pts de curve si nÃ©cessaire
         # -> sens anti-horaire
         inverse = (alignment == 'right')
 
@@ -1824,16 +1808,16 @@ def tabbox_coords(coords, **options):
 
         cadre = ((endx, yref), (endx, endy), (startx, endy), (startx, yref))
 
-        # flag de retournement de la liste des pts de curve si nécessaire
+        # flag de retournement de la liste des pts de curve si nÃ©cessaire
         # -> sens anti-horaire
         inverse = ((anchor == 'n' and alignment != 'right')
                    or (anchor == 's' and alignment == 'right'))
          
         
-    for i in xrange(0, numpages):
+    for i in range(0, numpages):
         pts = []
 
-        # décrochage onglet
+        # dÃ©crochage onglet
         #push (pts, ([xref, yref])) if i > 0
 
         # cadre
@@ -1843,12 +1827,12 @@ def tabbox_coords(coords, **options):
         if (i > 0 or not align) :
             pts.append((xref, yref)) 
 
-        if (type(nlen) in (types.TupleType, types.ListType)) :
+        if (type(nlen) in (tuple, list)) :
             tw = nlen[i]
         else:
             tw = nlen
 
-        if (type(nlen) in (types.TupleType, types.ListType)) :
+        if (type(nlen) in (tuple, list)) :
             slen = len(nlen)
         else:
             slen = nlen
@@ -1862,7 +1846,7 @@ def tabbox_coords(coords, **options):
     
 
         if (radius) :
-            if (not options.has_key('corners')) :
+            if ('corners' not in options) :
                 if (i > 0 or not align) :
                     corners =  (0, 1, 1, 0, 0, 1, 1, 0)
                 else :
@@ -1897,29 +1881,29 @@ def graphicitem_relief(widget, item, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::graphicitem_relief
-    # construit un relief à l'item Zinc en utilisant des items Triangles
+    # construit un relief Ã  l'item Zinc en utilisant des items Triangles
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #  widget : <widget> identifiant du widget zinc
     #    item : <tagOrId> identifiant de l'item zinc
     # options : <hash> table d'options
-    #     -closed : <boolean> le relief assure la fermeture de forme (défaut 1)
+    #     -closed : <boolean> le relief assure la fermeture de forme (dÃ©faut 1)
     #     -profil : <'rounded'|'flat'> type de profil (defaut 'rounded')
-    #     -relief : <'raised'|'sunken'> (défaut 'raised')
-    #       -side : <'inside'|'outside'> relief interne ou externe à la forme
-    #               (défaut 'inside')
-    #      -color : <color> couleur du relief (défaut couleur de la forme)
-    #   -smoothed : <boolean> facettes relief lissées ou non (défaut 1)
-    # -lightangle : <angle> angle d'éclairage (défaut valeur générale widget)
-    #      -width : <dimension> 'épaisseur' du relief en pixel
-    #       -fine : <boolean> mode précision courbe de bezier
-    #               (défaut 0 : auto-ajustée)
+    #     -relief : <'raised'|'sunken'> (dÃ©faut 'raised')
+    #       -side : <'inside'|'outside'> relief interne ou externe Ã  la forme
+    #               (dÃ©faut 'inside')
+    #      -color : <color> couleur du relief (dÃ©faut couleur de la forme)
+    #   -smoothed : <boolean> facettes relief lissÃ©es ou non (dÃ©faut 1)
+    # -lightangle : <angle> angle d'Ã©clairage (dÃ©faut valeur gÃ©nÃ©rale widget)
+    #      -width : <dimension> 'Ã©paisseur' du relief en pixel
+    #       -fine : <boolean> mode prÃ©cision courbe de bezier
+    #               (dÃ©faut 0 : auto-ajustÃ©e)
     #-------------------------------------------------------------------------------
     """
     items = []
 
-    # relief d'une liste d'items -> appel récursif
-    if (type(item) in (types.TupleType, types.ListType)) :
+    # relief d'une liste d'items -> appel rÃ©cursif
+    if (type(item) in (tuple, list)) :
         for part in item :
             items.extend(graphicitem_relief(widget, part, **options))
     else :
@@ -1928,12 +1912,12 @@ def graphicitem_relief(widget, item, **options):
             raise ValueError("Bad Item")
 
         parentgroup = widget.group(item)
-        if (options.has_key('priority')) :
+        if ('priority' in options) :
             priority = options['priority']
         else :
             priority = widget.itemcget(item, 'priority')+1
 
-        # coords transformés (polyline) de l'item
+        # coords transformÃ©s (polyline) de l'item
         adjust = not options['fine']
         for coords in zincitem_2_curvecoords(widget,
                                            item, linear = 1,
@@ -1964,55 +1948,55 @@ def polyline_relief_params(widget, item, coords, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::polyline_relief_params
-    # retourne la liste des points et des couleurs nécessaires à la construction
+    # retourne la liste des points et des couleurs nÃ©cessaires Ã  la construction
     # de l'item Triangles du relief
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #  widget : <widget> identifiant widget Zinc
     #    item : <tagOrId> identifiant item Zinc
     # options : <hash> table d'options
-    #     -closed : <boolean> le relief assure la fermeture de forme (défaut 1)
+    #     -closed : <boolean> le relief assure la fermeture de forme (dÃ©faut 1)
     #     -profil : <'rounded'|'flat'> type de profil (defaut 'rounded')
-    #     -relief : <'raised'|'sunken'> (défaut 'raised')
-    #       -side : <'inside'|'outside'> relief interne ou externe à la forme
-    #               (défaut 'inside')
-    #      -color : <color> couleur du relief (défaut couleur de la forme)
-    #   -smoothed : <boolean> facettes relief lissées ou non (défaut 1)
-    # -lightangle : <angle> angle d'éclairage (défaut valeur générale widget)
-    #      -width : <dimension> 'épaisseur' du relief en pixel
+    #     -relief : <'raised'|'sunken'> (dÃ©faut 'raised')
+    #       -side : <'inside'|'outside'> relief interne ou externe Ã  la forme
+    #               (dÃ©faut 'inside')
+    #      -color : <color> couleur du relief (dÃ©faut couleur de la forme)
+    #   -smoothed : <boolean> facettes relief lissÃ©es ou non (dÃ©faut 1)
+    # -lightangle : <angle> angle d'Ã©clairage (dÃ©faut valeur gÃ©nÃ©rale widget)
+    #      -width : <dimension> 'Ã©paisseur' du relief en pixel
     #---------------------------------------------------------------------------
     """
 
-    if (options.has_key('closed')) :
+    if ('closed' in options) :
         closed = options['closed']
     else:
         closed = 1
-    if (options.has_key('profil')) :
+    if ('profil' in options) :
         profil = options['profil']
     else:
         profil = 'rounded'
-    if (options.has_key('relief')) :
+    if ('relief' in options) :
         relief = options['relief']
     else :
         relief = 'raised'
-    if (options.has_key('side')) :
+    if ('side' in options) :
         side = options['side']
     else:
         side = 'inside'
-    if (options.has_key('color')) :
+    if ('color' in options) :
         basiccolor = options['color']
     else:
         basiccolor = zincitem_predominantcolor(widget, item)
-    if (options.has_key('smooth')) :
+    if ('smooth' in options) :
         smoothed = options['smooth']
     else:
         smoothed = 1
-    if (options.has_key('lightangle')) :
+    if ('lightangle' in options) :
         lightangle = options['lightangle']
     else:
         lightangle = widget.cget('lightangle')
 
-    if options.has_key('width'):
+    if 'width' in options:
         width = options['width']
     else:
         raise ValueError('Options must have width field')
@@ -2032,12 +2016,12 @@ def polyline_relief_params(widget, item, coords, **options):
     pts = []
     colors = []
     alpha = 100
-    m = re.compile("^(?P<color>#[0-9a-fA-F]{6});(?P<alpha>\d{1,2})$")
+    m = re.compile(r"^(?P<color>#[0-9a-fA-F]{6});(?P<alpha>\d{1,2})$")
     res = m.match(basiccolor)
     if (res is not None) :
         (basiccolor, alpha) = res.group('color'), res.group('alpha')
 
-    if ( options.has_key('color')):
+    if ( 'color' in options):
         color = options['color']
         res = m.match(color)
         if ((res is None) and (profil == 'flat')):
@@ -2048,11 +2032,11 @@ def polyline_relief_params(widget, item, coords, **options):
     else:
         reliefalphas = [alpha, alpha]
 
-    for i in xrange(0, numfaces):
+    for i in range(0, numfaces):
         pt = coords[i]
 
         if (previous) :
-            # extrémité de curve sans raccord -> angle plat
+            # extrÃ©mitÃ© de curve sans raccord -> angle plat
             previous = (pt[0] + (pt[0] - next[0]), pt[1] + (pt[1] - next[1]))
     
 
@@ -2097,7 +2081,7 @@ def polyline_relief_params(widget, item, coords, **options):
             colors.extend((colors[-2], colors[-1]))
 
         if (basiccolor) :
-            # création des couleurs dérivées
+            # crÃ©ation des couleurs dÃ©rivÃ©es
             shade = lightingcolor(basiccolor, lumratio)
             color0 = "%s;%s"% (shade, reliefalphas[0])
             color1 = "%s;%s"% (shade, reliefalphas[1])
@@ -2136,25 +2120,25 @@ def graphicitem_shadow(widget, item, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::graphicitem_shadow
-    # Création d'une ombre portée à l'item
+    # CrÃ©ation d'une ombre portÃ©e Ã  l'item
     #---------------------------------------------------------------------------
-    # paramètres :
+    # paramÃ¨tres :
     #  widget : <widget> identifiant widget Zinc
     #    item : <tagOrId> identifiant item Zinc
     # options : <hash> table d'options
-    #    -opacity : <percent> opacité de l'ombre (défaut 50)
+    #    -opacity : <percent> opacitÃ© de l'ombre (dÃ©faut 50)
     #     -filled : <boolean> remplissage totale de l'ombre (hors bordure) (defaut 1)
-    # -lightangle : <angle> angle d'éclairage (défaut valeur générale widget)
+    # -lightangle : <angle> angle d'Ã©clairage (dÃ©faut valeur gÃ©nÃ©rale widget)
     #   -distance : <dimension> distance de projection de l'ombre en pixel
-    #  -enlarging : <dimension> grossi de l'ombre portée en pixels (defaut 0)
-    #      -width : <dimension> taille de diffusion/diffraction (défaut 4)
-    #      -color : <color> couleur de l'ombre portée (défaut black)
+    #  -enlarging : <dimension> grossi de l'ombre portÃ©e en pixels (defaut 0)
+    #      -width : <dimension> taille de diffusion/diffraction (dÃ©faut 4)
+    #      -color : <color> couleur de l'ombre portÃ©e (dÃ©faut black)
     #---------------------------------------------------------------------------
     """
     items = []
 
-    # relief d'une liste d'items -> appel récursif
-    if (type(item) in (types.TupleType, types.ListType)) :
+    # relief d'une liste d'items -> appel rÃ©cursif
+    if (type(item) in (tuple, list)) :
         for part in item :
             items.append(graphicitem_shadow(widget, part, **options))
         return items
@@ -2166,12 +2150,12 @@ def graphicitem_shadow(widget, item, **options):
         if not itemtype :
             raise ValueError("Not a valid Item Id %s"%item)
 
-        # création d'un groupe à l'ombre portée
-        if (options.has_key('parentgroup')) :
+        # crÃ©ation d'un groupe Ã  l'ombre portÃ©e
+        if ('parentgroup' in options) :
             parentgroup = options['parentgroup']
         else:
             parentgroup = widget.group(item)
-        if (options.has_key('priority')) :
+        if ('priority' in options) :
             priority = options['priority']
         else:
             priority = widget.itemcget(item, 'priority')-1
@@ -2180,7 +2164,7 @@ def graphicitem_shadow(widget, item, **options):
         shadow = widget.add('group', parentgroup, priority = priority)
             
         if (itemtype == 'text') :
-            if (options.has_key('opacity')) :
+            if ('opacity' in options) :
                 opacity = options['opacity']
             else:
                 opacity = 50
@@ -2194,13 +2178,13 @@ def graphicitem_shadow(widget, item, **options):
 
         else :
 
-            # création des items (de dessin) de l'ombre
-            if ( options.has_key('filled')) :
+            # crÃ©ation des items (de dessin) de l'ombre
+            if ( 'filled' in options) :
                 filled = options['filled']
             else:
                 filled = 1
       
-            # coords transformés (polyline) de l'item
+            # coords transformÃ©s (polyline) de l'item
             for coords in zincitem_2_curvecoords(widget,
                                                item,
                                                linear = 1,
@@ -2209,11 +2193,11 @@ def graphicitem_shadow(widget, item, **options):
                                                                **options)
                 
                 # option filled : remplissage hors bordure
-                # de l'ombre portée (item curve)
+                # de l'ombre portÃ©e (item curve)
                 if (filled) :
                     if (len(items)) :
                         widget.contour(items[0], 'add', 0, i_pts)
-	
+
                     else :
                         items.append( widget.add('curve', shadow, i_pts,
                                                   linewidth = 0,
@@ -2226,12 +2210,12 @@ def graphicitem_shadow(widget, item, **options):
                                           colors = colors))
       
 
-        # positionnement de l'ombre portée
-        if (options.has_key('distance')) :
+        # positionnement de l'ombre portÃ©e
+        if ('distance' in options) :
             distance = options['distance']
         else:
             distance = 10
-        if (options.has_key('lightangle')) :
+        if ('lightangle' in options) :
             lightangle = options['lightangle']
         else:
             lightangle = widget.cget('lightangle')
@@ -2248,40 +2232,40 @@ def polyline_shadow_params(coords, **options):
     """
     #---------------------------------------------------------------------------
     # Graphics::polyline_shadow_params
-    # retourne les listes des points et de couleurs nécessaires à la 
+    # retourne les listes des points et de couleurs nÃ©cessaires Ã  la
     # construction des items triangles (bordure externe) et curve
-    # (remplissage interne) de l'ombre portée
+    # (remplissage interne) de l'ombre portÃ©e
     #---------------------------------------------------------------------------
-    # paramètres :
-    #    coords : coordonnées
+    # paramÃ¨tres :
+    #    coords : coordonnÃ©es
     # options : <hash> table d'options
-    #    -opacity : <percent> opacité de l'ombre (défaut 50)
-    # -lightangle : <angle> angle d'éclairage (défaut valeur générale widget)
+    #    -opacity : <percent> opacitÃ© de l'ombre (dÃ©faut 50)
+    # -lightangle : <angle> angle d'Ã©clairage (dÃ©faut valeur gÃ©nÃ©rale widget)
     #   -distance : <dimension> distance de projection de l'ombre en pixel
-    #               (défaut 10)
-    #  -enlarging : <dimension> grossi de l'ombre portée en pixels (defaut 2)
+    #               (dÃ©faut 10)
+    #  -enlarging : <dimension> grossi de l'ombre portÃ©e en pixels (defaut 2)
     #      -width : <dimension> taille de diffusion/diffraction
-    #               (défaut distance -2)
-    #      -color : <color> couleur de l'ombre portée (défaut black)
+    #               (dÃ©faut distance -2)
+    #      -color : <color> couleur de l'ombre portÃ©e (dÃ©faut black)
     #---------------------------------------------------------------------------
     """
-    if (options.has_key('distance')) :
+    if ('distance' in options) :
         distance = options['distance']
     else:
         distance = 10
-    if (options.has_key('width')) :
+    if ('width' in options) :
         width = options['width']
     else:
         width = distance-2
-    if (options.has_key('opacity')) :
+    if ('opacity' in options) :
         opacity = options['opacity']
     else:
         opacity = 50
-    if (options.has_key('color')) :
+    if ('color' in options) :
         color = options['color']
     else:
         color ='#000000'
-    if (options.has_key('enlarging')) :
+    if ('enlarging' in options) :
         enlarging = options['enlarging']
     else :
         enlarging = 2
@@ -2301,13 +2285,13 @@ def polyline_shadow_params(coords, **options):
     colors = []
     (color0, color1) = ("%s;%s"% (color, opacity), "%s;0"% color)
 
-    for i in xrange(0, numfaces):
+    for i in range(0, numfaces):
         pt = coords[i]
 
         #A VOIR
         #Je ne vois pas quand cela peut arriver
         if (not previous) :
-            # extrémité de curve sans raccord -> angle plat
+            # extrÃ©mitÃ© de curve sans raccord -> angle plat
             previous = (pt[0] + (pt[0] - next[0]), pt[1] + (pt[1] - next[1]))
 
         (angle, bisecangle) = vertex_angle(previous, pt, next)

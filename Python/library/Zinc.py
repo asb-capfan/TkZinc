@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# -*- coding: iso-8859-1 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 # Zinc.py -- Python interface to the tkzinc widget.
 #
@@ -16,21 +16,18 @@
 #
 #
 
-__version__  = "$Revision$"
-__revision__ = "$Revision$"
+__version__  = "1.0"
+__revision__ = __version__
 
-from Tkinter import *
-import new
+from tkinter import *
+import tkinter
 import os
-import locale, types
-import traceback
+import locale
 
 ZINC_CURRENT_POSITION = -2
 ZINC_SPEED_VECTOR     = -3
 ZINC_LEADER           = -4
 ZINC_CONNECTION       = -5
-_LIBLOADED            = 0
-_VERSION              = ""
 ZINC_NO_PART          = ""
 
 # current part dictionnary
@@ -40,34 +37,22 @@ ZINC_DPART = { 'position'      : ZINC_CURRENT_POSITION,
          'connection'    : ZINC_CONNECTION}
 # notes : 'field' will be return when currentpart is a field 
 
-def havetkzinc( window ):
-  '''load Zinc dynamic sharable object library , test if everything is ok
-if  ok :return zinc version
-if nok : return 0 '''
-  global _LIBLOADED
-  global _VERSION
-  if ( _LIBLOADED == 1 ) : 
-    return _VERSION
+def havetkzinc(window):
+  """Load TkZinc into this widget's Tcl interpreter; return 0 if unavailable."""
   try:
-    if os.environ.has_key( 'auto_path' ):
-      ldir = os.environ['auto_path'].split( ':' )
-      ldir.reverse()
-      for adir in ldir :
-        window.tk.call( 'eval', 
-                  "set auto_path "
-                  + "[linsert $auto_path 0 %s]" % ( adir ) )
-    window.tk.call( 'eval', 'package require Tkzinc' )
-    # Call a function from the package to autoload it
-    # and verify that all is OK.
-    sversion = window.tk.call( 'zinc' ) + " Zinc.py %s" % __version__
+    # Use Tcl objects so paths containing spaces or special characters stay intact.
+    for directory in reversed(os.environ.get("auto_path", "").split(os.pathsep)):
+      if directory:
+        paths = window.tk.call("linsert", window.tk.call("set", "auto_path"),
+                               0, directory)
+        window.tk.call("set", "auto_path", paths)
+    window.tk.call("package", "require", "Tkzinc")
+    return str(window.tk.call("zinc")) + " Zinc.py %s" % __version__
   except TclError:
-    traceback.print_exc()
     return 0
-  _LIBLOADED = 1
-  _VERSION = sversion
-  return sversion
 
-class ZincException:
+
+class ZincException(RuntimeError):
   def __call__( self ):
     raise self
 
@@ -81,31 +66,31 @@ class Zinc( Widget ):
   def __str__( self ):
     return( "Zinc instance" )
   def __init__( self, master = None, cnf = None, **kw ):
-    if kw.has_key( 'backward_compatibility' ):
+    if 'backward_compatibility' in kw:
       self.currentpart = self.__oldcurrentpart
       self.configure   = self.__oldconfigure
       self.scale       = self.__oldscale
       self.translate   = self.__oldtranslate
       del kw['backward_compatibility']
-      #Pour éviter des effets de bord 
-      #si on met comme valeur par défaut de cnf
-      #à {} 
+      #Pour Ã©viter des effets de bord
+      #si on met comme valeur par dÃ©faut de cnf
+      #Ã  {}
     if cnf is None :
       cnf = {}
-    if master :
-      self.version = havetkzinc( master )
-    else:
-      master = Frame()
-      master.pack()
-      self.version = havetkzinc( master )
-    Widget.__init__( self, master, 'zinc', cnf, kw )
-    self.items = {}
-    #BootStrap Root
-    classe = eval( 'Group' )
-    obj = None
-    kw['id'] = 1
-    obj = new.instance( classe, kw )
-    self.items[1] = obj
+    if master is None:
+      master = tkinter._default_root
+      if master is None:
+        master = Tk()
+    self.version = havetkzinc(master)
+    if not self.version:
+      raise ZincException("Cannot load the Tcl/Tk Tkzinc package. "
+                          "Install TkZinc and set TCLLIBPATH if necessary.")
+    Widget.__init__(self, master, 'zinc', cnf, kw)
+    # Wrap the existing root group without creating a second Tcl item.
+    root_group = object.__new__(Group)
+    root_group.id = 1
+    root_group.zinc = self
+    self.items = {1: root_group}
 
   def mainloop( self ):
     """
@@ -125,7 +110,7 @@ class Zinc( Widget ):
     try:
       return self.tk.getint( 
         self.tk.call( self._w, 'add', itemType, *args ) )
-    except TclError, excpt :
+    except TclError as excpt :
       ZincException( "%s\nType %s\nArgs : %s"%( excpt, itemType, args ) )()
   
   def addtag( self, *args ):
@@ -262,7 +247,7 @@ class Zinc( Widget ):
     res  = Widget.configure( self, **kw )
     dico = {}
     if res:
-      for i, j in res.items():
+      for i, j in list(res.items()):
         dico[i] = j[3:]
       return dico
 
@@ -319,7 +304,7 @@ ex:
 no part return '', ZINC_NO_PART
 '''
     scurrentp = self.tk.call( self._w, 'currentpart' )
-    print "Zinc::__oldcurrentpart scurrentp = [%s]" % scurrentp
+    print("Zinc::__oldcurrentpart scurrentp = [%s]" % scurrentp)
     # warning : read this first :
     # return a string among 'position', 'speedvector', 'leader', 'connection' ,''
     #        or an int representing the number of a field label
@@ -337,7 +322,7 @@ no part return '', ZINC_NO_PART
       try:
         rvalue = ZINC_DPART[scurrentp]
       except:
-        print "Zinc::currentpart unknown item part" 
+        print("Zinc::currentpart unknown item part")
         rvalue = ZINC_NO_PART
 
     return scurrentp, rvalue
@@ -380,7 +365,7 @@ no part return '', ZINC_NO_PART
     return self.find( 'above', tagOrId )
 
   def find_all( self ):
-    return self.find( 'all' )
+    return self.find( 'withtag', 'all' )
   
   def find_ancestors( self, newtag, tagOrId, *tagOrId2 ):
     """
@@ -523,11 +508,12 @@ no part return '', ZINC_NO_PART
     '''
     if not kw:
       cnf = {}
-      for var_x in self.tk.split( 
-        field != None and self.tk.call( self._w, 'itemconfigure', 
-                          ( tagOrId, field ) ) or
-        self.tk.call( self._w, 'itemconfigure', ( tagOrId, ) ) ):
-        cnf[var_x[0][1:]] = ( var_x[0][1:], ) + var_x[1:]
+      args = (tagOrId,) if field is None else (tagOrId, field)
+      options = self.tk.call(self._w, 'itemconfigure', *args)
+      for option in self.tk.splitlist(options):
+        values = self.tk.splitlist(option)
+        name = values[0][1:]
+        cnf[name] = (name,) + values[1:]
       return cnf
     if field != None:
       args = ( tagOrId, str( field ), )+ self._options( {}, kw )
@@ -585,8 +571,8 @@ no part return '', ZINC_NO_PART
 
   def raiseitem( self, *args ):
     """
-    Correspond à l'appel raise de la documentation
-    le mot raise est reservé en python
+    Correspond Ã  l'appel raise de la documentation
+    le mot raise est reservÃ© en python
     zinc.raiseitem(tagOrId)
     zinc.raiseitem(tagOrId, aboveThis)
     """
@@ -905,27 +891,27 @@ class ZincItem:
     fillpatern = None
     scale      = None
     translate  = None
-    if kw.has_key( 'texture' ):
+    if 'texture' in kw:
       texture = kw['texture']
       del kw['texture']
 
-    if kw.has_key( 'fillpatern' ):
+    if 'fillpatern' in kw:
       fillpastern = kw['fillpatern']
       del kw['fillpatern']
 
-    if kw.has_key( 'scale' ):
+    if 'scale' in kw:
       scale = kw['scale']
       del kw['scale']
 
-    if kw.has_key( 'rotate' ):
+    if 'rotate' in kw:
       rotate = kw['rotate']
       del kw['rotate']
 
-    if kw.has_key( 'translate' ):
+    if 'translate' in kw:
       translate = kw['translate']
       del kw['translate']
       
-    if kw.has_key( 'cloneid' ):
+    if 'cloneid' in kw:
       cloneid = kw['cloneid']
       del kw['cloneid']
     else:
@@ -988,7 +974,7 @@ class ZincItem:
     a["position"]    = (x,y)
     Notes : when setting multiple attributes
     using itemconfigure is more efficient '''
-    if ( key is "coords" ):
+    if ( key == "coords" ):
       self.zinc.coords( self.id, value )
     else:
       self.zinc.itemconfigure( self.id, **{key:value} )
@@ -1001,12 +987,12 @@ class ZincItem:
     if not hasattr( self, '_keys' ):
       self._keys = {}
       config = self.zinc.itemconfig( self.id )
-      for x in config.keys():
+      for x in list(config.keys()):
         self._keys[x] = config[x][1]
     return self._keys
 
-  def has_key( self, key ):
-    return key in self.keys()
+  def __contains__( self, key ):
+    return key in list(self.keys())
 
   def bind( self, sequence=None, command=None, add=None ):
     '''return a funcid which can be used to unbind
@@ -1144,7 +1130,7 @@ class Group( ZincItem ):
         else:
             return ZincItem.getGroup( self )
 
-  #TODO: Extension. Renvoie les références aux ZincItems contenus dans le Groupe
+  #TODO: Extension. Renvoie les rÃ©fÃ©rences aux ZincItems contenus dans le Groupe
     def getNode( self ):
         """
         """
@@ -1192,7 +1178,7 @@ class Curve( ZincItem ):
         
         """
         contours = []
-        if kw.has_key( 'contours' ):
+        if 'contours' in kw:
             contours = kw['contours']
             del kw['contours']
         ZincItem.__init__( self, zinc, 'curve', *args, **kw )
@@ -1244,25 +1230,31 @@ class Mapinfo:
         Create a new empty map description.
         The new mapinfo object named name or internal id if name is omitted
         """
+        self.interp = interp.tk
         if name :
             self.name = name
         else:
-            self.name = `id( self )`
-            self.interp = interp.tk
-            apply( self.interp.call, ( 'mapinfo', self.name, 'create' ) )
+            self.name = repr(id( self ))
+            self.interp.call(*( 'mapinfo', self.name, 'create' ))
     
     def __repr__( self ):
         return self.name
 
     def __del__( self ):
-        self.delete()
+        try:
+            self.delete()
+        except (AttributeError, TclError):
+            # The interpreter may already be gone during Python shutdown.
+            pass
 
     def delete( self ):
         """
         Delete the mapinfo object.
         All maps that refer to the deleted mapinfo are updated to reflect the change.
         """
-        self.interp.call( 'mapinfo', self.name, 'delete' )
+        if not getattr(self, '_deleted', False):
+            self.interp.call( 'mapinfo', self.name, 'delete' )
+            self._deleted = True
 
 
     def duplicate( self, *args ):
@@ -1273,12 +1265,14 @@ class Mapinfo:
         Create a new mapinfo that is a exact copy of this mapinfo Object.
         """
         classe = Mapinfo
-        obj = new.instance( classe )
+        obj = object.__new__(classe)
         if len( args ):
             new_name = args[0]
         else:
-            new_name = str( obj )
+            new_name = str(id(obj))
         self.interp.call( 'mapinfo', self.name, 'duplicate', new_name )
+        obj.name = new_name
+        obj.interp = self.interp
         return obj
     
     def add_text( self, text_style, line_style, x, y, text ):
@@ -1436,7 +1430,7 @@ class Videomap ( Mapinfo ):
 
 class Colors:
   """
-  Classe abstraite utilitaire permettant de gérer sous forme d'objet
+  Classe abstraite utilitaire permettant de gÃ©rer sous forme d'objet
   les couleurs aux formats Zinc
   """
   def __init__( self ):
@@ -1445,7 +1439,7 @@ class Colors:
   #TODO:
   def getColorsIter( self ):
     """
-    Renvoie un itérateur sur les couleurs
+    Renvoie un itÃ©rateur sur les couleurs
     """
     return self.lColors.__iter__()
     
@@ -1566,28 +1560,28 @@ class ConicalGradientColor( Colors ):
         
 # ---- self-test ----------------------------------------------------------
 if __name__ == '__main__':
-  from Tkinter import *
-  import Zinc
+  from tkinter import *
+  import sys
   def createItem( zinc, group, ev ):
-    print >> sys.stdout, "CreateIHM"
+    print("CreateIHM", file=sys.stdout)
     sys.stdout.flush()
-    Zinc.Rectangle( zinc, group, 
+    Rectangle( zinc, group,
              ( 100, 100, 150, 150 ), 
              linewidth = "10", linecolor = '#FFFF00', 
              relief = "roundgroove", filled = 1, 
              fillcolor = "red", tags = ( "hello", "test" ) )
     sys.stdout.write( "hello_clic" + str( ev ) )
     
-  z  = Zinc.Zinc( master = None, render = 1, height = 200, width = 400 )
-  g1 = Zinc.Group( z, 1 ) 
-  r  = Zinc.Rectangle( z, g1, ( 0, 0, 400, 200 ), 
+  z  = Zinc( master = None, render = 1, height = 200, width = 400 )
+  g1 = Group( z, 1 )
+  r  = Rectangle( z, g1, ( 0, 0, 400, 200 ),
                  linewidth = "10", 
                  linecolor = '#FFFF00', 
                  relief    = "roundgroove", 
                  filled    = 1, 
                  fillcolor = "#FFFFFF", 
                  tags      = ( "hello", "test" ) )
-  t = Zinc.Text( z, g1, position = ( 40, 100 ), text = z.version )
+  t = Text( z, g1, position = ( 40, 100 ), text = z.version )
 # z.bind_tag("hello","<1>",lambda ev,z=z,g=g1 : createItem(z,g,ev)) 
   z.configure( backcolor = 'black' )
   z.pack()

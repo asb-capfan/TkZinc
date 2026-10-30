@@ -15,8 +15,6 @@ TMP_PERL=`pwd`/debian/zinc-perl
 TMP_PYTHON=$(shell echo `pwd`/debian/zinc-python)
 
 
-DEFAULT_VERSION_PYTHON=$(shell echo `dpkg -p python| grep -e "^Version:" |cut -d" " -f2|cut -d"." -f1-2`)
-
 build: build-stamp
 
 build-stamp:
@@ -31,7 +29,7 @@ clean:
 	-rm -f config.cache
 	-$(MAKE) clean
 
-	-cd Python && python setup.py clean
+	-cd Python && python3 setup.py clean --all
 	dh_clean
 
 install: build
@@ -55,7 +53,7 @@ install: build
 
 #
 # Configuring/compiling/installing for Python.
-	-cd Python && python setup.py install --prefix=$(TMP_PYTHON)/usr
+	cd Python && python3 -m pip install --no-deps --no-build-isolation --prefix=/usr --root=$(TMP_PYTHON) .
 
 #
 # Configuring/compiling/installing for perl/Tk.

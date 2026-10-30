@@ -1,4 +1,4 @@
-from Zinc import *
-import graphics
-import geometry
-import pictorial
+from .Zinc import *
+from . import graphics
+from . import geometry
+from . import pictorial
