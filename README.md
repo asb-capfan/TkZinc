@@ -226,6 +226,10 @@ overwritten; move or remove it before running the script again. To export an
 older release, first check out the desired Git revision. The script accepts
 no arguments and does not create a release archive.
 
+The export includes a `MANIFEST` listing all exported source files. After
+building and testing, run `make disttest` (`gmake disttest` on Strawberry Perl)
+to check that the distribution can also be built and tested from that list.
+
 The Perl export includes GLEW 2.3.1 source and its license under
 `third_party/glew`. GLEW is compiled into the Perl extension with private
 symbols, so no separate GLEW installation or GLEW DLL is required. The

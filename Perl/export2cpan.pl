@@ -6,7 +6,8 @@
 
 use strict;
 use warnings;
-use Cwd qw(abs_path);
+use Cwd qw(abs_path getcwd);
+use ExtUtils::Manifest qw(maniadd manifind);
 use File::Basename qw(dirname);
 use File::Copy qw(copy);
 use File::Find qw(find);
@@ -53,6 +54,19 @@ for my $directory ('generic', 'win') {
                   File::Spec->catfile($export, $file));
     }
 }
+
+# Record only exported sources, before MakeMaker creates build artifacts.
+# maniadd handles MANIFEST quoting and portable path separators.
+my $original_directory = getcwd();
+chdir($export) or die "Cannot change to $export: $!\n";
+my $manifest = manifind();
+$manifest->{'MANIFEST'} = '';
+open(my $manifest_file, '>', 'MANIFEST') or die "Cannot create MANIFEST: $!\n";
+print {$manifest_file} "MANIFEST\n" or die "Cannot write MANIFEST: $!\n";
+close($manifest_file) or die "Cannot close MANIFEST: $!\n";
+maniadd($manifest);
+die "MANIFEST was not created in $export\n" unless -f 'MANIFEST';
+chdir($original_directory) or die "Cannot return to $original_directory: $!\n";
 
 print "Exported Tk::Zinc $version to $export\n";
 print "Change to that directory and run: perl Makefile.PL\n";
